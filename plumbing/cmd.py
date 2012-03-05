@@ -182,7 +182,7 @@ class command(object):
         remote_cmd = " ( " + remote_cmd + " ) >& " + stderr
         # Compose the 'bsub' command #
         bsub_cmd = ["bsub"]
-        if 'queue' in kwargs: bsub_cmd += ["-q", kwargs['queue']]
+        if 'queue' in kwargs: bsub_cmd += ["-q", kwargs.pop('queue')]
         bsub_cmd += ["-o", "/dev/null", "-e", "/dev/null", "-K", "-r", remote_cmd]
         # Run this function in a thread #
         def target_function():
