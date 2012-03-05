@@ -67,7 +67,7 @@ are captured and returned in the ``CommandOutput`` object.
 """
 
 # Built-in modules #
-import os, time, tempfile, subprocess, threading
+import os, time, subprocess
 
 # Internal modules #
 from plumbing.common import temporary_path, non_blocking
@@ -145,7 +145,7 @@ class command(object):
         result = cmd_dict.get("return_value")
         return result if not callable(result) else result(output)
 
-    def parralel(self, *args, **kwargs):
+    def parallel(self, *args, **kwargs):
         """Run a program in an other thread and return a Future object."""
         future = Future(self.__call__)
         future.start(args, kwargs)

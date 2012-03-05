@@ -2,6 +2,9 @@
 Common functions
 """
 
+# Built-in modules #
+import threading
+
 ################################################################################
 class ReturnThread(threading.Thread):
     """Like a normal thread, but the target function's return value is captured."""
@@ -11,8 +14,10 @@ class ReturnThread(threading.Thread):
 
     def run(self):
         try:
-            if self._Thread__target: self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
-        finally: del self._Thread__target, self._Thread__args, self._Thread__kwargs
+            if self._Thread__target:
+                self._return = self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
+        finally:
+            del self._Thread__target, self._Thread__args, self._Thread__kwargs
 
     def join(self, timeout = None):
         threading.Thread.join(self, timeout)
