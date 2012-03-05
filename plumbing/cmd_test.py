@@ -47,7 +47,7 @@ class Test(unittest.TestCase):
         os.remove(name2)
         # LSF touch #
         path = "/scratch/cluster/el/daily/%s/plumbing_test" % os.environ['USER']
-        os.mkdirs(path)
+        os.makedirs(path)
         future = touch.lsf(path)
         got = future.wait()
         self.assertEqual(got, path)
