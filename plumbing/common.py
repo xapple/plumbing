@@ -50,14 +50,7 @@ def non_blocking(func):
     return non_blocking_version
 
 ###############################################################################
-def temporary_path(suffix=''):
-    """
-    Often, one needs a new random and temporary file path
-    instead of the random and temporary file object provided
-    by the 'tempfile' module.
-    """
-    import tempfile
-    file = tempfile.NamedTemporaryFile(suffix=suffix)
-    path = file.name
-    file.close()
-    return path
+def random_name():
+    """Return a random name twenty alphanumeric characters long."""
+    import random, string
+    return "".join([random.choice(string.letters + string.digits) for x in range(20)])

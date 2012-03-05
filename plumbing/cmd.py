@@ -70,7 +70,11 @@ are captured and returned in the ``CommandOutput`` object.
 import os, time, subprocess
 
 # Internal modules #
-from plumbing.common import temporary_path, non_blocking
+from plumbing.common import random_name, non_blocking
+
+# Special variables #
+default_lsf_dir = "/scratch/cluster/weekly/%s/" % os.environ['USER']
+if not os.path.exists(default_lsf_dir): os.mkdir(default_lsf_dir)
 
 ################################################################################
 class Future(object):
@@ -153,27 +157,33 @@ class command(object):
 
     def lsf(self, *args, **kwargs):
         """Run a program via the LSF system and return a Future object."""
+        # Get a directory writable by the cluster #
+        if 'tmp_dir' in kwargs: tmp_dir = kwargs['tmp_dir']
+        else: tmp_dir = default_lsf_dir
         # Get the standard out #
         if 'stdout' in kwargs:
             stdout = kwargs.pop('stdout')
             load_stdout = False
         else:
-            stdout = temporary_path()
+            stdout = tmp_dir + random_name()
             load_stdout = True
         # Get the standard error #
         if 'stderr' in kwargs:
             stderr = kwargs.pop('stderr')
             load_stderr = False
         else:
-            stderr = temporary_path()
+            stderr = tmp_dir + random_name()
             load_stderr = True
         # Call the user function #
         cmd_dict = self.function(*args, **kwargs)
-        # Compose the 'bsub' command #
+        # Compose the remote command #
         remote_cmd = " ".join(cmd_dict["arguments"])
         remote_cmd += " > " + stdout
         remote_cmd = " ( " + remote_cmd + " ) >& " + stderr
-        bsub_cmd = ["bsub", "-o", "/dev/null", "-e", "/dev/null", "-K", "-r", remote_cmd]
+        # Compose the 'bsub' command #
+        bsub_cmd = ["bsub"]
+        if 'queue' in kwargs: bsub_cmd += ["-q", kwargs['queue']]
+        bsub_cmd += ["-o", "/dev/null", "-e", "/dev/null", "-K", "-r", remote_cmd]
         # Run this function in a thread #
         def target_function():
             nullout = open(os.path.devnull, 'w')
@@ -181,15 +191,17 @@ class command(object):
             except OSError: raise ValueError("Program %s does not seem to exist in your $PATH." % cmd_dict['arguments'][0])
             return_code = proc.wait()
             # We need to wait until the stdout file actually show up #
-            while not(os.path.exists(stdout)): time.sleep(0.1)
+            while not os.path.exists(stdout): time.sleep(0.1)
             if load_stdout:
                 with open(stdout, 'r') as f: stdout_value = f.readlines()
+                os.remove(stdout)
             else:
                 stdout_value = None
             # We need to wait until the stderr file actually show up #
-            while not(os.path.exists(stderr)): time.sleep(0.1)
+            while not os.path.exists(stderr): time.sleep(0.1)
             if load_stderr:
                 with open(stderr, 'r') as f: stderr_value = f.readlines()
+                os.remove(stderr)
             else:
                 stderr_value = None
             # Get the output #
