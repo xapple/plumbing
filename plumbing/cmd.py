@@ -174,6 +174,8 @@ class command(object):
         else:
             stderr = tmp_dir + random_name()
             load_stderr = True
+        # Get other optional parameters
+        queue = kwargs.pop('queue') if 'queue' in kwargs else None
         # Call the user function #
         cmd_dict = self.function(*args, **kwargs)
         # Compose the remote command #
@@ -182,7 +184,7 @@ class command(object):
         remote_cmd = " ( " + remote_cmd + " ) >& " + stderr
         # Compose the 'bsub' command #
         bsub_cmd = ["bsub"]
-        if 'queue' in kwargs: bsub_cmd += ["-q", kwargs.pop('queue')]
+        if queue: bsub_cmd += ["-q", queue]
         bsub_cmd += ["-o", "/dev/null", "-e", "/dev/null", "-K", "-r", remote_cmd]
         # Run this function in a thread #
         def target_function():
