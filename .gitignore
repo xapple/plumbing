@@ -1,0 +1,21 @@
+# Temporary files #
+.DS_Store
+*.pyc
+*.swp
+*.swo
+*~
+\#*
+.#*
+._*
+
+# IDE files #
+/.idea
+
+# Build stuff #
+_build/
+/MANIFEST
+/build/
+/dist/
+
+# Git files #
+/.gitattributes
