@@ -158,7 +158,7 @@ class command(object):
     def lsf(self, *args, **kwargs):
         """Run a program via the LSF system and return a Future object."""
         # Get a directory writable by the cluster #
-        if 'tmp_dir' in kwargs: tmp_dir = kwargs['tmp_dir']
+        if 'tmp_dir' in kwargs: tmp_dir = kwargs.pop('tmp_dir')
         else: tmp_dir = default_lsf_dir
         # Get the standard out #
         if 'stdout' in kwargs:
