@@ -80,7 +80,7 @@ class Future(object):
     def __init__(self, target_fn):
         self.fn = non_blocking(target_fn)
 
-    def start(self, args, kwargs):
+    def start(self, *args, **kwargs):
         self.thread = self.fn(*args, **kwargs)
 
     def wait(self):
@@ -148,10 +148,10 @@ class command(object):
     def parallel(self, *args, **kwargs):
         """Run a program in an other thread and return a Future object."""
         future = Future(self.__call__)
-        future.start(args, kwargs)
+        future.start(*args, **kwargs)
         return future
 
-    def lsf(self, ex, *args, **kwargs):
+    def lsf(self, *args, **kwargs):
         """Run a program via the LSF system and return a Future object."""
         # Get the standard out #
         if 'stdout' in kwargs:
@@ -173,13 +173,12 @@ class command(object):
         remote_cmd = " ".join(cmd_dict["arguments"])
         remote_cmd += " > " + stdout
         remote_cmd = " ( " + remote_cmd + " ) >& " + stderr
-        remote_cmd = ["bsub", "-cwd", ex.remote_working_directory, "-o", "/dev/null",
-                      "-e", "/dev/null", "-K", "-r", remote_cmd]
+        bsub_cmd = ["bsub", "-o", "/dev/null", "-e", "/dev/null", "-K", "-r", remote_cmd]
         # Run this function in a thread #
         def target_function():
             nullout = open(os.path.devnull, 'w')
-            try: proc = subprocess.Popen(remote_cmd, bufsize=-1, stdout=nullout, stderr=nullout)
-            except OSError: raise ValueError("Program %s does not seem to exist in your $PATH." % d['arguments'][0])
+            try: proc = subprocess.Popen(bsub_cmd, bufsize=-1, stdout=nullout, stderr=nullout)
+            except OSError: raise ValueError("Program %s does not seem to exist in your $PATH." % cmd_dict['arguments'][0])
             return_code = proc.wait()
             # We need to wait until the stdout file actually show up #
             while not(os.path.exists(stdout)): time.sleep(0.1)
@@ -194,7 +193,7 @@ class command(object):
             else:
                 stderr_value = None
             # Get the output #
-            output = CommandOutput(return_code, proc.pid, remote_cmd, stdout_value, stderr_value)
+            output = CommandOutput(return_code, proc.pid, bsub_cmd, stdout_value, stderr_value)
             # Check for sucess #
             if return_code != 0: raise CommandFailed(output)
             # Return result #
