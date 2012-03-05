@@ -9,10 +9,8 @@ easy to write and easy to use.
 To wrap a program, write a function that takes whatever arguments
 you will need. The function should return a dictionary containing two keys,
 ``arguments`` and optionally ``return_value``.
-
 Firstly, ``arguments`` should point to a list of strings which is
 the actual command and arguments to be executed (e.g. ``["touch", filename]``).
-
 Secondly, ``return_value`` can point to a value to return, or a callable
 object which takes a ``CommandOutput`` object and returns the value
 that will be passed back to the user when this program is run.
@@ -67,14 +65,13 @@ are captured and returned in the ``CommandOutput`` object.
 """
 
 # Built-in modules #
-import os, time, subprocess
+import os, tempfile, time, subprocess
 
 # Internal modules #
 from plumbing.common import random_name, non_blocking
 
-# Special variables #
-default_lsf_dir = "/scratch/cluster/weekly/%s/" % os.environ['USER']
-if not os.path.exists(default_lsf_dir): os.mkdir(default_lsf_dir)
+# Cluster directory #
+base_lsf_dir = "/scratch/cluster/weekly/"
 
 ################################################################################
 class Future(object):
@@ -159,7 +156,12 @@ class command(object):
         """Run a program via the LSF system and return a Future object."""
         # Get a directory writable by the cluster #
         if 'tmp_dir' in kwargs: tmp_dir = kwargs.pop('tmp_dir')
-        else: tmp_dir = default_lsf_dir
+        else:
+            if os.path.exists(base_lsf_dir):
+                tmp_dir = base_lsf_dir + os.environ['USER'] + "/"
+                if not os.path.exists(tmp_dir): os.mkdir(tmp_dir)
+            else:
+                tmp_dir = tempfile.tempdir()
         # Get the standard out #
         if 'stdout' in kwargs:
             stdout = kwargs.pop('stdout')

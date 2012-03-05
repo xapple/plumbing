@@ -1,6 +1,6 @@
-===============================
-Package *'empty'* documentation
-===============================
+==================================
+Package *'plumbing'* documentation
+==================================
 
-.. automodule:: empty
-   :members:
+.. automodule:: plumbing
+.. automodule:: plumbing.cmd
