@@ -54,3 +54,13 @@ def random_name():
     """Return a random name twenty alphanumeric characters long."""
     import random, string
     return "".join([random.choice(string.letters + string.digits) for x in range(20)])
+
+###############################################################################
+def check_executable(exe_name):
+    """Returns false if the executable *tool_name* is not found."""
+    import subprocess
+    try:
+        subprocess.Popen([exe_name], stderr=subprocess.PIPE)
+        return True
+    except OSError:
+        return False

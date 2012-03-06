@@ -68,7 +68,7 @@ are captured and returned in the ``CommandOutput`` object.
 import os, tempfile, time, subprocess
 
 # Internal modules #
-from plumbing.common import random_name, non_blocking
+from plumbing.common import random_name, non_blocking, check_executable
 
 # Cluster directory #
 base_lsf_dir = "/scratch/cluster/weekly/"
@@ -154,6 +154,9 @@ class command(object):
 
     def lsf(self, *args, **kwargs):
         """Run a program via the LSF system and return a Future object."""
+        # Check that bsub is available #
+        if not check_executable('bsub'):
+            raise OSError("The executable 'bsub' cannot be found on this machine.")
         # Get a directory writable by the cluster #
         if 'tmp_dir' in kwargs: tmp_dir = kwargs.pop('tmp_dir')
         else:
