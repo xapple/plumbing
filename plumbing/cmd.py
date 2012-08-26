@@ -73,7 +73,7 @@ from plumbing.common import random_name, non_blocking, check_executable
 ################################################################################
 class Future(object):
     """Object returned when functions decorated with ``@command``
-    are exectued in parreled with ``parrelel()`` or ``lsf()``"""
+    are executed in parallel with ``parallel()`` or ``lsf()``"""
 
     def __init__(self, target_fn):
         self.fn = non_blocking(target_fn)

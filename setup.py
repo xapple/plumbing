@@ -3,9 +3,9 @@ from distutils.core import setup
 setup(
         name             = 'plumbing',
         version          = '1.0.0',
-        description      = 'Empty template',
+        description      = 'Helps with plumbing-type programmation in python',
         long_description = open('README.txt').read(),
-        license          = 'Kopimi',
+        license          = 'MIT',
         url              = 'http://xapple.github.com/plumbing/',
         author           = 'Lucas Sinclair',
         author_email     = 'lucas.sinclair@me.com',
