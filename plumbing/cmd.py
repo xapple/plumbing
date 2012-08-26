@@ -48,7 +48,7 @@ started, you would write::
     b.wait()
 
 The ``parallel`` method will runs processes in different threads.
-Other methods exists for running commands in parralel.
+Other methods exists for running commands in parallel.
 For example, on systems using the LSF batch submission
 system, you can run commands via batch submission by using the
 ``lsf`` method::
@@ -70,9 +70,6 @@ import os, tempfile, time, subprocess
 # Internal modules #
 from plumbing.common import random_name, non_blocking, check_executable
 
-# Cluster directory #
-base_lsf_dir = "/scratch/cluster/weekly/"
-
 ################################################################################
 class Future(object):
     """Object returned when functions decorated with ``@command``
@@ -92,8 +89,7 @@ class CommandOutput(object):
     """Object passed to return_value functions after commands are done.
     Programs bound with ``@command`` can call a function when they are
     finished to create a return value from their output. The output
-    is passed as a ``ProgramObject``, containing all the information
-    available to bein about that program.
+    is passed as a ``CommandOutput`` object.
     """
 
     def __init__(self, return_code, pid, arguments, stdout, stderr):
@@ -134,7 +130,7 @@ class command(object):
         cmd_dict = self.function(*args, **kwargs)
         # Run it #
         try: proc = subprocess.Popen(cmd_dict["arguments"], bufsize=-1, stdout=stdout, stderr=stderr)
-        except OSError: raise ValueError("Program %s does not seem to exist in your $PATH." % d['arguments'][0])
+        except OSError: raise ValueError("Program %s does not seem to exist in your $PATH." % cmd_dict['arguments'][0])
         return_code = proc.wait()
         # Get the output #
         stdout_value = proc.stdout.readlines() if not isinstance(stdout,file) else None
@@ -158,10 +154,11 @@ class command(object):
         if not check_executable('bsub'):
             raise OSError("The executable 'bsub' cannot be found on this machine.")
         # Get a directory writable by the cluster #
+        default_lsf_dir = "/scratch/cluster/weekly/"
         if 'tmp_dir' in kwargs: tmp_dir = kwargs.pop('tmp_dir')
         else:
-            if os.path.exists(base_lsf_dir):
-                tmp_dir = base_lsf_dir + os.environ['USER'] + "/"
+            if os.path.exists(default_lsf_dir):
+                tmp_dir = default_lsf_dir + os.environ['USER'] + "/"
                 if not os.path.exists(tmp_dir): os.mkdir(tmp_dir)
             else:
                 tmp_dir = tempfile.tempdir()
