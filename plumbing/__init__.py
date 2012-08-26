@@ -11,13 +11,10 @@ To install you can simply type::
 
     $ sudo easy_install plumbing
 
-If you don't have permission to install it like that, you can simply download the code and include the directory in your python path::
+That's it. However, if that doesn't work because you don't have sufficient permissions, you can simply install it somewhere else (for instance in your home)::
 
-    $ wget http://pypi.python.org/packages/source/e/plumbing/plumbing-1.0.0.tar.gz
-    $ tar -xzf plumbing-1.0.0.tar.gz
-    $ cd plumbing-1.0.0/
-    $ sed -i "$ a\export PYTHONPATH=`pwd`/:\$PYTHONPATH" ~/.bashrc
-    $ source ~/.bashrc
+    $ cd ~
+    $ pip install -e git+https://github.com/xapple/plumbing
 """
 
 b'This module needs Python 2.6 or later.'
