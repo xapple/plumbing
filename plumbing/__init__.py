@@ -20,7 +20,7 @@ That's it. However, if that doesn't work because you don't have sufficient permi
 b'This module needs Python 2.6 or later.'
 
 # Special variables #
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 # Export some objects #
 from cmd import command

@@ -7,13 +7,23 @@ The ``@command`` decorator makes binding command line executables
 easy to write and easy to use.
 
 To wrap a program, write a function that takes whatever arguments
-you will need. The function should return a dictionary containing two keys,
-``arguments`` and optionally ``return_value``.
-Firstly, ``arguments`` should point to a list of strings which is
+you will need to run the program like if it where on the shell.
+The function should return a dictionary containing several keys:
+
+    * mandatory: ``arguments``
+    * optional: ``stdin``
+    * optional: ``return_value``.
+
+Firstly, ``arguments`` should be a list of strings which is
 the actual command and arguments to be executed (e.g. ``["touch", filename]``).
-Secondly, ``return_value`` can point to a value to return, or a callable
+
+Secondly, ``stdin`` should be a value to feed the subprocess once it is launched.
+
+Thirdly, ``return_value`` be a value to return, or a callable
 object which takes a ``CommandOutput`` object and returns the value
 that will be passed back to the user when this program is run.
+You can also simply specify ``stdout`` to have the output of the
+process returned directly.
 
 For example, to wrap ``touch``, we write a one argument function that
 takes the filename of the file to touch, and apply the ``@command``
@@ -33,6 +43,25 @@ We can now call this function directly::
 The value returned by touch is ``"myfile"``, the name of
 the touched file.
 
+A more complicated example would include binding the BLASTP alogrithm::
+
+    from plumbing import command, CommandOutput
+
+    @command
+    def blastp(database, sequences, **kwargs):
+        \"\"\"Will launch the 'blastp' algorithm from the NCBI executable.
+
+       :param database: The path to the database to blast against.
+       :param sequences: A generator yielding sequences as strings.
+       :param **kwargs: Extra parameters that will be passed to the executable
+                        For instance you could specify "e=1e-20".
+       :returns: a list of HITs.
+       \"\"\"
+        return {"arguments": ["blastall", "-p", "blastp", "-d" database] +
+                             [a for k,v in kwargs.items() for a in ('-'+k,v)],
+                "stdin": sequences)
+                "return_value": 'stdout'}
+
 Often you want to call a function, but not block when it returns
 so you can run several in parallel. ``@command`` also creates a
 method ``parallel`` which does this. The return value is a
@@ -42,33 +71,26 @@ same value that you would get from calling the function directly.
 So, to touch two files, and not block until both commands have
 started, you would write::
 
-    a = touch.parallel("myfile1")
-    b = touch.parallel("myfile2")
-    a.wait()
-    b.wait()
+    a = blastp.parallel("nr", open("fasta1".read(), e=1e-20)
+    b = blastp.parallel("nr", open("fasta2".read(), e=1e-20)
+    hitsA = a.wait()
+    hitsB = b.wait()
 
 The ``parallel`` method will runs processes in different threads.
 Other methods exists for running commands in parallel.
-For example, on systems using the LSF batch submission
+For example, on systems using the SLURM batch submission
 system, you can run commands via batch submission by using the
 ``lsf`` method::
 
-    a = touch.lsf("myfile")
-    f = a.wait()
-
-Some programs do not accept an output file as an argument and only
-write to ``stdout``. Alternately, you might need to capture
-``stderr`` to a file. All the methods of ``@command`` accept
-keyword arguments ``stdout`` and ``stderr`` to specify files to
-write these streams to. If they are omitted, then both streams
-are captured and returned in the ``CommandOutput`` object.
+    p = blastp.slurm("nr", open("fasta".read())
+    hits = p.wait()
 """
 
 # Built-in modules #
-import os, tempfile, time, subprocess
+import subprocess
 
 # Internal modules #
-from plumbing.common import random_name, non_blocking, check_executable
+from plumbing.common import non_blocking
 
 ################################################################################
 class Future(object):
@@ -104,13 +126,13 @@ class CommandFailed(Exception):
     """Thrown when a program bound by ``@command``
     exits with a value other than ``0``."""
 
-    def __init__(self, output):
-        self.output = output
+    def __init__(self, command, stderr):
+        self.command = command
+        self.stderr = stderr
 
     def __str__(self):
-        message = "Running '%s' failed." % " ".join(self.output.arguments)
-        if self.output.stdout: message += "stdout:\n%s" % "".join(self.output.stdout)
-        if self.output.stderr: message += "stderr:\n%s" % "".join(self.output.stderr)
+        message = "Running '%s' failed." % " ".join(command)
+        if self.stderr: message += "\nSTDERR:\n" % "" + self.stderr
         return message
 
 ################################################################################
@@ -125,22 +147,18 @@ class command(object):
     def __call__(self, *args, **kwargs):
         """Run a program locally, and block until it completes."""
         # Get the input #
-        stdout = subprocess.PIPE if not 'stdout' in kwargs else open(kwargs.pop('stdout'), 'w')
-        stderr = subprocess.PIPE if not 'stderr' in kwargs else open(kwargs.pop('stderr'), 'w')
         cmd_dict = self.function(*args, **kwargs)
+        cmd = cmd_dict["arguments"]
         # Run it #
-        try: proc = subprocess.Popen(cmd_dict["arguments"], bufsize=-1, stdout=stdout, stderr=stderr)
-        except OSError: raise ValueError("Program %s does not seem to exist in your $PATH." % cmd_dict['arguments'][0])
-        return_code = proc.wait()
-        # Get the output #
-        stdout_value = proc.stdout.readlines() if not isinstance(stdout,file) else None
-        stderr_value = proc.stderr.readlines() if not isinstance(stderr,file) else None
-        output = CommandOutput(return_code, proc.pid, cmd_dict["arguments"], stdout_value, stderr_value)
-        # Check for sucess #
-        if return_code != 0: raise CommandFailed(output)
+        try: proc = subprocess.Popen(cmd, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except OSError: raise ValueError("Program '%s' does not seem to exist in your $PATH." % cmd_dict['arguments'][0])
+        stdout, stderr = proc.communicate(cmd_dict.get("stdin"))
+        if proc.returncode != 0: raise CommandFailed(cmd, stderr)
         # Return result #
         result = cmd_dict.get("return_value")
-        return result if not callable(result) else result(output)
+        if callable(result): return result(CommandOutput(proc.returncode, proc.pid, cmd, stdout, stderr))
+        elif result == 'stdout': return stdout
+        else: return result
 
     def parallel(self, *args, **kwargs):
         """Run a program in an other thread and return a Future object."""
@@ -148,74 +166,6 @@ class command(object):
         future.start(*args, **kwargs)
         return future
 
-    def lsf(self, *args, **kwargs):
-        """Run a program via the LSF system and return a Future object."""
-        # Check that bsub is available #
-        if not check_executable('bsub'):
-            raise OSError("The executable 'bsub' cannot be found on this machine.")
-        # Get a directory writable by the cluster #
-        default_lsf_dir = "/scratch/cluster/weekly/"
-        if 'tmp_dir' in kwargs: tmp_dir = kwargs.pop('tmp_dir')
-        else:
-            if os.path.exists(default_lsf_dir):
-                tmp_dir = default_lsf_dir + os.environ['USER'] + "/"
-                if not os.path.exists(tmp_dir): os.mkdir(tmp_dir)
-            else:
-                tmp_dir = tempfile.tempdir()
-        # Get the standard out #
-        if 'stdout' in kwargs:
-            stdout = kwargs.pop('stdout')
-            load_stdout = False
-        else:
-            stdout = tmp_dir + random_name()
-            load_stdout = True
-        # Get the standard error #
-        if 'stderr' in kwargs:
-            stderr = kwargs.pop('stderr')
-            load_stderr = False
-        else:
-            stderr = tmp_dir + random_name()
-            load_stderr = True
-        # Get other optional parameters
-        queue = kwargs.pop('queue') if 'queue' in kwargs else None
-        # Call the user function #
-        cmd_dict = self.function(*args, **kwargs)
-        # Compose the remote command #
-        remote_cmd = " ".join(cmd_dict["arguments"])
-        remote_cmd += " > " + stdout
-        remote_cmd = " ( " + remote_cmd + " ) >& " + stderr
-        # Compose the 'bsub' command #
-        bsub_cmd = ["bsub"]
-        if queue: bsub_cmd += ["-q", queue]
-        bsub_cmd += ["-o", "/dev/null", "-e", "/dev/null", "-K", "-r", remote_cmd]
-        # Run this function in a thread #
-        def target_function():
-            nullout = open(os.path.devnull, 'w')
-            try: proc = subprocess.Popen(bsub_cmd, bufsize=-1, stdout=nullout, stderr=nullout)
-            except OSError: raise ValueError("Program %s does not seem to exist in your $PATH." % cmd_dict['arguments'][0])
-            return_code = proc.wait()
-            # We need to wait until the stdout file actually show up #
-            while not os.path.exists(stdout): time.sleep(0.1)
-            if load_stdout:
-                with open(stdout, 'r') as f: stdout_value = f.readlines()
-                os.remove(stdout)
-            else:
-                stdout_value = None
-            # We need to wait until the stderr file actually show up #
-            while not os.path.exists(stderr): time.sleep(0.1)
-            if load_stderr:
-                with open(stderr, 'r') as f: stderr_value = f.readlines()
-                os.remove(stderr)
-            else:
-                stderr_value = None
-            # Get the output #
-            output = CommandOutput(return_code, proc.pid, bsub_cmd, stdout_value, stderr_value)
-            # Check for sucess #
-            if return_code != 0: raise CommandFailed(output)
-            # Return result #
-            result = cmd_dict.get("return_value")
-            return result if not callable(result) else result(output)
-        # Create a Future object #
-        future = Future(target_function)
-        future.start()
-        return future
+    def slurm(self, *args, **kwargs):
+        """Run a program via the SLURM system."""
+        pass
