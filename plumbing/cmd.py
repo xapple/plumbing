@@ -20,9 +20,9 @@ the actual command and arguments to be executed (e.g. ``["touch", filename]``).
 Secondly, ``stdin`` should be a value to feed the subprocess once it is launched.
 
 Thirdly, ``return_value`` be a value to return, or a callable
-object which takes a ``CommandOutput`` object and returns the value
+object which takes a stdout plus strerr as parameters and returns the value
 that will be passed back to the user when this program is run.
-You can also simply specify ``stdout`` to have the output of the
+You can also simply specify ``"stdout"`` to have the output of the
 process returned directly.
 
 For example, to wrap ``touch``, we write a one argument function that
@@ -43,19 +43,19 @@ We can now call this function directly::
 The value returned by touch is ``"myfile"``, the name of
 the touched file.
 
-A more complicated example would include binding the BLASTP alogrithm::
+A more complicated example would include binding the BLASTP algorithm::
 
-    from plumbing import command, CommandOutput
+    from plumbing import command
 
     @command
     def blastp(database, sequences, **kwargs):
-        \"\"\"Will launch the 'blastp' algorithm from the NCBI executable.
+        \"\"\"Will launch the 'blastp' algorithm using the NCBI executable.
 
        :param database: The path to the database to blast against.
-       :param sequences: A generator yielding sequences as strings.
+       :param sequences: A fasta string.
        :param **kwargs: Extra parameters that will be passed to the executable
                         For instance you could specify "e=1e-20".
-       :returns: a list of HITs.
+       :returns: A list of top hits in blast format.
        \"\"\"
         return {"arguments": ["blastall", "-p", "blastp", "-d" database] +
                              [a for k,v in kwargs.items() for a in ('-'+k,v)],
@@ -80,10 +80,17 @@ The ``parallel`` method will runs processes in different threads.
 Other methods exists for running commands in parallel.
 For example, on systems using the SLURM batch submission
 system, you can run commands via batch submission by using the
-``lsf`` method::
+``slurm`` method and adding the mandatory time and account info::
 
-    p = blastp.slurm("nr", open("fasta".read())
+    p = blastp.slurm("nr", open("fasta".read(), time='1:00:00', account='b2011035')
     hits = p.wait()
+
+On systems using the LSF batch submission system, you can run
+commands via batch submission by using the ``lsf`` method::
+
+    p = blastp.lsf("nr", open("fasta".read())
+    hits = p.wait()
+
 """
 
 # Built-in modules #
@@ -105,21 +112,6 @@ class Future(object):
 
     def wait(self):
         return self.thread.join()
-
-################################################################################
-class CommandOutput(object):
-    """Object passed to return_value functions after commands are done.
-    Programs bound with ``@command`` can call a function when they are
-    finished to create a return value from their output. The output
-    is passed as a ``CommandOutput`` object.
-    """
-
-    def __init__(self, return_code, pid, arguments, stdout, stderr):
-        self.return_code = return_code
-        self.pid = pid
-        self.arguments = arguments
-        self.stdout = stdout
-        self.stderr = stderr
 
 ################################################################################
 class CommandFailed(Exception):
@@ -146,26 +138,48 @@ class command(object):
 
     def __call__(self, *args, **kwargs):
         """Run a program locally, and block until it completes."""
-        # Get the input #
-        cmd_dict = self.function(*args, **kwargs)
-        cmd = cmd_dict["arguments"]
-        # Run it #
-        try: proc = subprocess.Popen(cmd, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except OSError: raise ValueError("Program '%s' does not seem to exist in your $PATH." % cmd_dict['arguments'][0])
-        stdout, stderr = proc.communicate(cmd_dict.get("stdin"))
-        if proc.returncode != 0: raise CommandFailed(cmd, stderr)
-        # Return result #
-        result = cmd_dict.get("return_value")
-        if callable(result): return result(CommandOutput(proc.returncode, proc.pid, cmd, stdout, stderr))
-        elif result == 'stdout': return stdout
-        else: return result
+        return self.run(self.function(*args, **kwargs))
 
     def parallel(self, *args, **kwargs):
         """Run a program in an other thread and return a Future object."""
-        future = Future(self.__call__)
-        future.start(*args, **kwargs)
+        return self.run_non_blocking(self.function(*args, **kwargs))
+
+    def run(self, cmd_dict):
+        """Core function, spans the subprocess"""
+        # Start it #
+        cmd = cmd_dict["arguments"]
+        try: proc = subprocess.Popen(cmd, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+        except OSError: raise ValueError("Program '%s' does not seem to exist in your $PATH." % cmd_dict['arguments'][0])
+        # Communicate with it #
+        try: stdout, stderr = proc.communicate(cmd_dict.get("stdin"))
+        except KeyboardInterrupt as err:
+            print "(pid %s) You aborted the following command: %s " % (cmd, proc.pid)
+            raise err
+        # Check for failure #
+        if proc.returncode != 0: raise CommandFailed(cmd, stderr)
+        # Return result #
+        result = cmd_dict.get("return_value")
+        if callable(result): return result(stdout, stderr)
+        elif result == 'stdout': return stdout
+        else: return result
+
+    def run_non_blocking(self, cmd_dict):
+        """Same thing as run, but does it in a different thread"""
+        future = Future(self.run)
+        future.start(cmd_dict)
         return future
 
+    #-------------------------------------------------------------------------#
     def slurm(self, *args, **kwargs):
         """Run a program via the SLURM system."""
-        pass
+        time = kwargs.pop('time') if 'time' in kwargs else '1:00:00'
+        account = kwargs.pop('account') if 'account' in kwargs else 'b2011035'
+        cmd_dict = self.function(*args, **kwargs)
+        cmd_dict["arguments"] = ['salloc', '-n', '1', '-t', time, '-A', account, '-Q'] + cmd_dict["arguments"]
+        return self.run_non_blocking(cmd_dict)
+
+    def lsf(self, *args, **kwargs):
+        """Run a program via the LSF system."""
+        cmd_dict = self.function(*args, **kwargs)
+        cmd_dict["arguments"].insert(0,)
+        return self.run_non_blocking(cmd_dict)
