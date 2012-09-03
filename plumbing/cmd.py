@@ -172,10 +172,16 @@ class command(object):
     #-------------------------------------------------------------------------#
     def slurm(self, *args, **kwargs):
         """Run a program via the SLURM system."""
-        time = kwargs.pop('time') if 'time' in kwargs else '1:00:00'
-        account = kwargs.pop('account') if 'account' in kwargs else 'b2011035'
+        # Get extra parameters #
+        time = kwargs.pop('time') if 'time' in kwargs else None
+        account = kwargs.pop('account') if 'account' in kwargs else None
+        # Compose the command #
         cmd_dict = self.function(*args, **kwargs)
-        cmd_dict["arguments"] = ['salloc', '-n', '1', '-t', time, '-A', account, '-Q'] + cmd_dict["arguments"]
+        slurm_cmd = ['salloc', '-n', '1', '-t', time, '-A', account, '-Q']
+        slurm_cmd += ['-A', account] if account else []
+        slurm_cmd += ['-t', time] if time else []
+        cmd_dict["arguments"] = slurm_cmd + cmd_dict["arguments"]
+        # Retrurn it #
         return self.run_non_blocking(cmd_dict)
 
     def lsf(self, *args, **kwargs):
