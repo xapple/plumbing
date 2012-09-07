@@ -52,9 +52,9 @@ A more complicated example would include binding the BLASTP algorithm::
         \"\"\"Will launch the 'blastp' algorithm using the NCBI executable.
 
        :param database: The path to the database to blast against.
-       :param sequences: A fasta string.
+       :param sequences: A fasta formated string.
        :param **kwargs: Extra parameters that will be passed to the executable
-                        For instance you could specify "e=1e-20".
+                        For instance, you could specify "e=1e-20".
        :returns: A list of top hits in blast format.
        \"\"\"
         return {"arguments": ["blastall", "-p", "blastp", "-d" database] +
@@ -71,8 +71,8 @@ same value that you would get from calling the function directly.
 So, to touch two files, and not block until both commands have
 started, you would write::
 
-    a = blastp.parallel("nr", open("fasta1".read(), e=1e-20)
-    b = blastp.parallel("nr", open("fasta2".read(), e=1e-20)
+    a = blastp.parallel("nr", open("fasta1").read(), e=1e-20)
+    b = blastp.parallel("nr", open("fasta2").read(), e=1e-20)
     hitsA = a.wait()
     hitsB = b.wait()
 
@@ -80,52 +80,53 @@ The ``parallel`` method will runs processes in different threads.
 Other methods exists for running commands in parallel.
 For example, on systems using the SLURM batch submission
 system, you can run commands via batch submission by using the
-``slurm`` method and adding the mandatory time and account info::
+``slurm`` method and optionally adding the time and account info::
 
-    p = blastp.slurm("nr", open("fasta".read(), time='1:00:00', account='b2011035')
+    p = blastp.slurm("nr", open("fasta").read(), time='1:00:00')
     hits = p.wait()
 
 On systems using the LSF batch submission system, you can run
 commands via batch submission by using the ``lsf`` method::
 
-    p = blastp.lsf("nr", open("fasta".read())
+    p = blastp.lsf("nr", open("fasta").read(), queue='long')
     hits = p.wait()
-
 """
 
 # Built-in modules #
-import subprocess
+import subprocess, sys, time
 
-# Internal modules #
-from plumbing.common import non_blocking
+# Variables #
+PARRALEL_JOBS = []
 
 ################################################################################
-class Future(object):
-    """Object returned when functions decorated with ``@command``
-    are executed in parallel with ``parallel()`` or ``lsf()``"""
+def start_process(args):
+    """Run a process using subprocess module"""
+    try: return subprocess.Popen(args, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    except OSError: raise ValueError("Program '%s' does not seem to exist in your $PATH." % args[0])
 
-    def __init__(self, target_fn):
-        self.fn = non_blocking(target_fn)
-
-    def start(self, *args, **kwargs):
-        self.thread = self.fn(*args, **kwargs)
-
-    def wait(self):
-        return self.thread.join()
+################################################################################
+def pause_for_parralel_jobs(update_interval=2):
+    """Wait until all parallel jobs are done and print a status update"""
+    global PARRALEL_JOBS
+    while True:
+        PARRALEL_JOBS = [job for job in PARRALEL_JOBS if not job.finished]
+        if not PARRALEL_JOBS:
+            sys.stdout.write("\r")
+            sys.stdout.flush()
+            return
+        sys.stdout.write("\r    %i parallel jobs still running." % len(PARRALEL_JOBS))
+        sys.stdout.flush()
+        time.sleep(update_interval)
 
 ################################################################################
 class CommandFailed(Exception):
     """Thrown when a program bound by ``@command``
     exits with a value other than ``0``."""
 
-    def __init__(self, command, stderr):
-        self.command = command
-        self.stderr = stderr
-
-    def __str__(self):
-        message = "Running '%s' failed." % " ".join(command)
-        if self.stderr: message += "\nSTDERR:\n" % "" + self.stderr
-        return message
+    def __init__(self, args, stderr=None):
+        message = "Running '%s' failed." % " ".join(args)
+        if stderr: message += " The error reported is:\n\n" + stderr
+        Exception.__init__(self, message)
 
 ################################################################################
 class command(object):
@@ -138,54 +139,120 @@ class command(object):
 
     def __call__(self, *args, **kwargs):
         """Run a program locally, and block until it completes."""
-        return self.run(self.function(*args, **kwargs))
-
-    def parallel(self, *args, **kwargs):
-        """Run a program in an other thread and return a Future object."""
-        return self.run_non_blocking(self.function(*args, **kwargs))
-
-    def run(self, cmd_dict):
-        """Core function, spans the subprocess"""
-        # Start it #
-        cmd = cmd_dict["arguments"]
-        try: proc = subprocess.Popen(cmd, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        except OSError: raise ValueError("Program '%s' does not seem to exist in your $PATH." % cmd_dict['arguments'][0])
-        # Communicate with it #
+        # Call the user defined function #
+        cmd_dict = self.function(*args, **kwargs)
+        args = cmd_dict['arguments']
+        # Start a process #
+        proc = start_process(args)
+        # Wait until completion #
         try: stdout, stderr = proc.communicate(cmd_dict.get("stdin"))
         except KeyboardInterrupt as err:
-            print "(pid %s) You aborted the following command: %s " % (cmd, proc.pid)
+            print "You aborted the process pid %i. It was: %s " % (proc.pid, args)
             raise err
         # Check for failure #
-        if proc.returncode != 0: raise CommandFailed(cmd, stderr)
+        if proc.returncode != 0: raise CommandFailed(args, stderr)
         # Return result #
         result = cmd_dict.get("return_value")
         if callable(result): return result(stdout, stderr)
         elif result == 'stdout': return stdout
         else: return result
 
-    def run_non_blocking(self, cmd_dict):
-        """Same thing as run, but does it in a different thread"""
-        future = Future(self.run)
-        future.start(cmd_dict)
+    def parallel(self, *args, **kwargs):
+        """Run a program and return a Future object."""
+        # Call the user defined function #
+        cmd_dict = self.function(*args, **kwargs)
+        # Not yet implemented #
+        if cmd_dict['return_value'] == 'stdout':
+            raise Exception("Can't use stdout in parallel mode... yet.")
+        # Start a process #
+        proc = start_process(cmd_dict['arguments'])
+        # Write the standard in #
+        if 'stdin' in cmd_dict:
+            proc.stdin.write(cmd_dict["stdin"])
+            proc.stdin.close()
+        # The Future object takes it from here #
+        future = Future(proc, cmd_dict)
+        # Let's keep a reference of it #
+        PARRALEL_JOBS.append(future)
+        # Hand it back to the user #
         return future
 
-    #-------------------------------------------------------------------------#
     def slurm(self, *args, **kwargs):
-        """Run a program via the SLURM system."""
-        # Get extra parameters #
+        """Run a program via the SLURM system and return a Future object."""
+        # Get extra optional keyword parameters #
         time = kwargs.pop('time') if 'time' in kwargs else None
         account = kwargs.pop('account') if 'account' in kwargs else None
-        # Compose the command #
+        qos = kwargs.pop('qos') if 'qos' in kwargs else None
+        # Call the user defined function #
         cmd_dict = self.function(*args, **kwargs)
-        slurm_cmd = ['salloc', '-n', '1', '-t', time, '-A', account, '-Q']
-        slurm_cmd += ['-A', account] if account else []
-        slurm_cmd += ['-t', time] if time else []
+        # Compose the command #
+        slurm_cmd = ['srun', '-n', '1', '-Q']
+        if account: slurm_cmd += ['-A', account]
+        if time: slurm_cmd += ['-t', time]
+        if qos: slurm_cmd += ['--qos='+qos]
         cmd_dict["arguments"] = slurm_cmd + cmd_dict["arguments"]
-        # Retrurn it #
-        return self.run_non_blocking(cmd_dict)
+        # Start a process #
+        proc = start_process(cmd_dict['arguments'])
+        # Write the standard in #
+        if 'stdin' in cmd_dict:
+            proc.stdin.write(cmd_dict["stdin"])
+            proc.stdin.close()
+        # The Future object takes it from here #
+        future = Future(proc, cmd_dict)
+        # Let's keep a reference of it #
+        PARRALEL_JOBS.append(future)
+        # Hand it back to the user #
+        return future
 
     def lsf(self, *args, **kwargs):
-        """Run a program via the LSF system."""
+        """Run a program via the LSF system and return a Future object."""
+        # Get extra optional keyword parameters #
+        queue = kwargs.pop('queue') if 'queue' in kwargs else None
+        # Call the user defined function #
         cmd_dict = self.function(*args, **kwargs)
-        cmd_dict["arguments"].insert(0,)
-        return self.run_non_blocking(cmd_dict)
+        # Compose the command #
+        bsub_cmd = ["bsub", "-o", "/dev/null", "-e", "/dev/null", "-K", "-r"]
+        if queue: bsub_cmd += ['-q', queue]
+        cmd_dict["arguments"] = bsub_cmd + cmd_dict["arguments"]
+        # Start a process #
+        proc = start_process(cmd_dict['arguments'])
+        # Write the standard in #
+        if 'stdin' in cmd_dict:
+            proc.stdin.write(cmd_dict["stdin"])
+            proc.stdin.close()
+        # The FutureLSF object takes it from here #
+        future = Future(proc, cmd_dict)
+        # Let's keep a reference of it #
+        PARRALEL_JOBS.append(future)
+        # Hand it back to the user #
+        return future
+
+################################################################################
+class Future(object):
+    """Object returned when functions decorated with ``@command``
+    are executed in parallel with ``parallel()``."""
+
+    def __init__(self, proc, cmd_dict):
+        self.proc = proc
+        self.cmd_dict = cmd_dict
+
+    @property
+    def finished(self):
+        if self.proc.poll() == None: return False
+        else: return True
+
+    def wait(self):
+        # Wait until completion #
+        try: return_code = self.proc.wait()
+        except KeyboardInterrupt as err:
+            print "You aborted the process pid %i. It was: %s " % (self.proc.pid, self.cmd_dict["arguments"])
+            raise err
+        # Read result #
+        stdout, stderr = self.proc.stdout.read(), self.proc.stderr.read()
+        # Check for failure #
+        if return_code != 0: raise CommandFailed(self.cmd_dict["arguments"], stderr)
+        # Return result #
+        result = self.cmd_dict.get("return_value")
+        if callable(result): return result(stdout, stderr)
+        elif result == 'stdout': return stdout
+        else: return result
