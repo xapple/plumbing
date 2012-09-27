@@ -105,7 +105,7 @@ def start_process(args):
     except OSError: raise ValueError("Program '%s' does not seem to exist in your $PATH." % args[0])
 
 ################################################################################
-def pause_for_parralel_jobs(update_interval=2):
+def pause_for_parallel_jobs(update_interval=2):
     """Wait until all parallel jobs are done and print a status update"""
     global PARRALEL_JOBS
     while True:
@@ -123,8 +123,9 @@ class CommandFailed(Exception):
     """Thrown when a program bound by ``@command``
     exits with a value other than ``0``."""
 
-    def __init__(self, args, stderr=None):
+    def __init__(self, args, stderr, name=None):
         message = "Running '%s' failed." % " ".join(args)
+        if name: message += " The job name was: '%s'." % name
         if stderr: message += " The error reported is:\n\n" + stderr
         Exception.__init__(self, message)
 
@@ -161,9 +162,6 @@ class command(object):
         """Run a program and return a Future object."""
         # Call the user defined function #
         cmd_dict = self.function(*args, **kwargs)
-        # Not yet implemented #
-        if cmd_dict['return_value'] == 'stdout':
-            raise Exception("Can't use stdout in parallel mode... yet.")
         # Start a process #
         proc = start_process(cmd_dict['arguments'])
         # Write the standard in #
@@ -171,7 +169,7 @@ class command(object):
             proc.stdin.write(cmd_dict["stdin"])
             proc.stdin.close()
         # The Future object takes it from here #
-        future = Future(proc, cmd_dict)
+        future = Future(proc, cmd_dict, kwargs.get('name'))
         # Let's keep a reference of it #
         PARRALEL_JOBS.append(future)
         # Hand it back to the user #
@@ -179,17 +177,21 @@ class command(object):
 
     def slurm(self, *args, **kwargs):
         """Run a program via the SLURM system and return a Future object."""
-        # Get extra optional keyword parameters #
-        time = kwargs.pop('time') if 'time' in kwargs else None
-        account = kwargs.pop('account') if 'account' in kwargs else None
-        qos = kwargs.pop('qos') if 'qos' in kwargs else None
-        # Call the user defined function #
-        cmd_dict = self.function(*args, **kwargs)
+        # Optional name #
+        name = kwargs.get('name')
+        # Define special parameters #
+        special_params = (('time','-t'), ('account','-A'), ('name','-J'))
         # Compose the command #
         slurm_cmd = ['srun', '-n', '1', '-Q']
-        if account: slurm_cmd += ['-A', account]
-        if time: slurm_cmd += ['-t', time]
+        # Get optional parameters #
+        for param,key in special_params:
+            if param in kwargs: slurm_cmd += [key, kwargs.pop(param)]
+        # Call the user defined function #
+        cmd_dict = self.function(*args, **kwargs)
+        # Get optional keyword parameters #
+        qos = kwargs.pop('qos') if 'qos' in kwargs else None
         if qos: slurm_cmd += ['--qos='+qos]
+        # Update the command #
         cmd_dict["arguments"] = slurm_cmd + cmd_dict["arguments"]
         # Start a process #
         proc = start_process(cmd_dict['arguments'])
@@ -198,7 +200,7 @@ class command(object):
             proc.stdin.write(cmd_dict["stdin"])
             proc.stdin.close()
         # The Future object takes it from here #
-        future = Future(proc, cmd_dict)
+        future = Future(proc, cmd_dict, name)
         # Let's keep a reference of it #
         PARRALEL_JOBS.append(future)
         # Hand it back to the user #
@@ -206,6 +208,8 @@ class command(object):
 
     def lsf(self, *args, **kwargs):
         """Run a program via the LSF system and return a Future object."""
+        # Optional name #
+        name = kwargs.get('name')
         # Get extra optional keyword parameters #
         queue = kwargs.pop('queue') if 'queue' in kwargs else None
         # Call the user defined function #
@@ -221,7 +225,7 @@ class command(object):
             proc.stdin.write(cmd_dict["stdin"])
             proc.stdin.close()
         # The FutureLSF object takes it from here #
-        future = Future(proc, cmd_dict)
+        future = Future(proc, cmd_dict, name)
         # Let's keep a reference of it #
         PARRALEL_JOBS.append(future)
         # Hand it back to the user #
@@ -232,14 +236,19 @@ class Future(object):
     """Object returned when functions decorated with ``@command``
     are executed in parallel with ``parallel()``."""
 
-    def __init__(self, proc, cmd_dict):
+    def __init__(self, proc, cmd_dict, name=None):
         self.proc = proc
         self.cmd_dict = cmd_dict
+        self.name = name
 
     @property
     def finished(self):
         if self.proc.poll() == None: return False
         else: return True
+
+    @property
+    def return_code(self):
+        return self.proc.poll()
 
     def wait(self):
         # Wait until completion #
@@ -250,7 +259,7 @@ class Future(object):
         # Read result #
         stdout, stderr = self.proc.stdout.read(), self.proc.stderr.read()
         # Check for failure #
-        if return_code != 0: raise CommandFailed(self.cmd_dict["arguments"], stderr)
+        if return_code != 0: raise CommandFailed(self.cmd_dict["arguments"], stderr, self.name)
         # Return result #
         result = self.cmd_dict.get("return_value")
         if callable(result): return result(stdout, stderr)
