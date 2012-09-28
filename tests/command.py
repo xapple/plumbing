@@ -1,5 +1,5 @@
 """
-Contains the unittests for plumbing
+Contains the unittests for plumbing.command
 """
 
 # Built-in module #
@@ -7,7 +7,6 @@ import os
 
 # Internal modules #
 from plumbing import command
-from plumbing.common import check_executable
 
 # Testing module #
 from nose.plugins.skip import SkipTest
@@ -17,6 +16,16 @@ from nose.plugins.skip import SkipTest
 def touch(filename):
     return {"arguments": ["touch", filename],
             "return_value": filename}
+
+###############################################################################
+def check_executable(exe_name):
+    """Returns false if the executable *tool_name* is not found."""
+    import subprocess
+    try:
+        subprocess.Popen([exe_name], stderr=subprocess.PIPE)
+        return True
+    except OSError:
+        return False
 
 ###################################################################################
 def test_simple_touch():
@@ -41,6 +50,17 @@ def test_parallel_touch():
     os.remove(name2)
 
 def test_lsf_touch():
+    if not check_executable('bsub'): raise SkipTest
+    path = "/scratch/cluster/daily/%s/plumbing_test" % os.environ['USER']
+    directory = os.path.dirname(path)
+    if not os.path.exists(directory): os.makedirs(directory)
+    future = touch.lsf(path)
+    got = future.wait()
+    assert got == path
+    assert os.path.exists(path)
+    os.remove(path)
+
+def test_slurm_touch():
     if not check_executable('bsub'): raise SkipTest
     path = "/scratch/cluster/daily/%s/plumbing_test" % os.environ['USER']
     directory = os.path.dirname(path)

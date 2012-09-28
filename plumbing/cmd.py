@@ -19,8 +19,8 @@ the actual command and arguments to be executed (e.g. ``["touch", filename]``).
 
 Secondly, ``stdin`` should be a value to feed the subprocess once it is launched.
 
-Thirdly, ``return_value`` be a value to return, or a callable
-object which takes a stdout plus strerr as parameters and returns the value
+Thirdly, ``return_value`` should be a value to return, or a callable
+object which takes ``(stdout,strerr)`` as parameters and returns the value
 that will be passed back to the user when this program is run.
 You can also simply specify ``"stdout"`` to have the output of the
 process returned directly.
@@ -62,6 +62,13 @@ A more complicated example would include binding the BLASTP algorithm::
                 "stdin": sequences)
                 "return_value": 'stdout'}
 
+As shown above, we can now call this function directly::
+
+     hits = blastp("swissprot", open("proteins.fasta").read())
+
+The value returned by blastp is a long string containing all the
+results from the BLASTP algorithm.
+
 Often you want to call a function, but not block when it returns
 so you can run several in parallel. ``@command`` also creates a
 method ``parallel`` which does this. The return value is a
@@ -76,7 +83,7 @@ started, you would write::
     hitsA = a.wait()
     hitsB = b.wait()
 
-The ``parallel`` method will runs processes in different threads.
+The ``parallel`` method will runs processes without blocking.
 Other methods exists for running commands in parallel.
 For example, on systems using the SLURM batch submission
 system, you can run commands via batch submission by using the
@@ -101,8 +108,10 @@ PARRALEL_JOBS = []
 ################################################################################
 def start_process(args):
     """Run a process using subprocess module"""
-    try: return subprocess.Popen(args, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-    except OSError: raise ValueError("Program '%s' does not seem to exist in your $PATH." % args[0])
+    try:
+        return subprocess.Popen(args, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    except OSError:
+        raise ValueError("Program '%s' does not seem to exist in your $PATH." % args[0])
 
 ################################################################################
 def pause_for_parallel_jobs(update_interval=2):
