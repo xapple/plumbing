@@ -61,11 +61,9 @@ def test_lsf_touch():
     os.remove(path)
 
 def test_slurm_touch():
-    if not check_executable('bsub'): raise SkipTest
-    path = "/scratch/cluster/daily/%s/plumbing_test" % os.environ['USER']
-    directory = os.path.dirname(path)
-    if not os.path.exists(directory): os.makedirs(directory)
-    future = touch.lsf(path)
+    if not check_executable('srun'): raise SkipTest
+    path = "plumbing_test"
+    future = touch.slurm(path)
     got = future.wait()
     assert got == path
     assert os.path.exists(path)
