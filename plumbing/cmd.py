@@ -120,10 +120,10 @@ def pause_for_parallel_jobs(update_interval=2):
     while True:
         PARRALEL_JOBS = [job for job in PARRALEL_JOBS if not job.finished]
         if not PARRALEL_JOBS:
-            sys.stdout.write("\r")
+            sys.stdout.write("\r\033[K")
             sys.stdout.flush()
             return
-        sys.stdout.write("\r    %i parallel jobs still running." % len(PARRALEL_JOBS))
+        sys.stdout.write("\r    %i parallel jobs still running.\033[K" % len(PARRALEL_JOBS))
         sys.stdout.flush()
         time.sleep(update_interval)
 
@@ -151,6 +151,7 @@ class command(object):
         """Run a program locally, and block until it completes."""
         # Call the user defined function #
         cmd_dict = self.function(*args, **kwargs)
+        cmd_dict['arguments'] = [str(a) for a in cmd_dict['arguments']]
         args = cmd_dict['arguments']
         # Start a process #
         proc = start_process(args)
@@ -171,14 +172,15 @@ class command(object):
         """Run a program and return a Future object."""
         # Call the user defined function #
         cmd_dict = self.function(*args, **kwargs)
+        cmd_dict['arguments'] = [str(a) for a in cmd_dict['arguments']]
         # Start a process #
         proc = start_process(cmd_dict['arguments'])
-        # Write the standard in #
+        # Write to the standard in #
         if 'stdin' in cmd_dict:
             proc.stdin.write(cmd_dict["stdin"])
             proc.stdin.close()
         # The Future object takes it from here #
-        future = Future(proc, cmd_dict, kwargs.get('name'))
+        future = Future(proc, cmd_dict)
         # Let's keep a reference of it #
         PARRALEL_JOBS.append(future)
         # Hand it back to the user #
@@ -197,6 +199,7 @@ class command(object):
             if param in kwargs: slurm_cmd += [key, kwargs.pop(param)]
         # Call the user defined function #
         cmd_dict = self.function(*args, **kwargs)
+        cmd_dict['arguments'] = [str(a) for a in cmd_dict['arguments']]
         # Get optional keyword parameters #
         qos = kwargs.pop('qos') if 'qos' in kwargs else None
         if qos: slurm_cmd += ['--qos='+qos]
@@ -223,6 +226,7 @@ class command(object):
         queue = kwargs.pop('queue') if 'queue' in kwargs else None
         # Call the user defined function #
         cmd_dict = self.function(*args, **kwargs)
+        cmd_dict['arguments'] = [str(a) for a in cmd_dict['arguments']]
         # Compose the command #
         bsub_cmd = ["bsub", "-o", "/dev/null", "-e", "/dev/null", "-K", "-r"]
         if queue: bsub_cmd += ['-q', queue]
