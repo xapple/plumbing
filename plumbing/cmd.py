@@ -49,14 +49,14 @@ A more complicated example would include binding the BLASTP algorithm::
 
     @command
     def blastp(database, sequences, **kwargs):
-        \"\"\"Will launch the 'blastp' algorithm using the NCBI executable.
+         \"\"\"Will launch the 'blastp' algorithm using the NCBI executable.
 
-       :param database: The path to the database to blast against.
-       :param sequences: A fasta formated string.
-       :param **kwargs: Extra parameters that will be passed to the executable
+        :param database: The path to the database to blast against.
+        :param sequences: A fasta formated string.
+        :param **kwargs: Extra parameters that will be passed to the executable
                         For instance, you could specify "e=1e-20".
-       :returns: A list of top hits in blast format.
-       \"\"\"
+        :returns: A list of top hits in blast format.
+        \"\"\"
         return {"arguments": ["blastall", "-p", "blastp", "-d" database] +
                              [a for k,v in kwargs.items() for a in ('-'+k,v)],
                 "stdin": sequences)
