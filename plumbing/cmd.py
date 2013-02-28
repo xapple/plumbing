@@ -256,7 +256,7 @@ class Future(object):
 
     @property
     def finished(self):
-        if self.proc.poll() == None: return False
+        if self.proc.poll() is None: return False
         else: return True
 
     @property

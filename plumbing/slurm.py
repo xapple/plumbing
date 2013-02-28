@@ -38,7 +38,7 @@ current_dir = os.getcwd() + '/'
 default_slurm_params = {
 'change_dir': current_dir,
 'job_name': 'test_slurm',
-'out_file': current_dir + 'slurm.out',
+'out_file': '/tmp/slurm.out',
 'project': os.environ['SLURM_ACCOUNT'],
 'time': '0:15:00',
 'machines': '1',
