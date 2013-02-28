@@ -61,7 +61,7 @@ class AutoPaths(object):
 
     @property
     def tmp_dir(self):
-        if not self._tmp_dir: self._tmp_dir = tempfile.mkdtemp()
+        if not self._tmp_dir: self._tmp_dir = tempfile.mkdtemp() + '/'
         return self._tmp_dir
 
     @property
@@ -84,7 +84,7 @@ class Path(object):
     def __contains__(self, i):
         return i in self.all_items
 
-    def __len__(self, i):
+    def __len__(self):
         return len(self.name_items)
 
     def score(self, items):
