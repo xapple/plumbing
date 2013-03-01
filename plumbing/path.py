@@ -52,6 +52,9 @@ class AutoPaths(object):
         if len(result) > 1:
             shortest = min([len(p) for p in result])
             result = [p for p in result if len(p) <= shortest]
+        # Maybe it's a directory #
+        if len(result) > 1 and directory:
+            if len(set([p.dir for p in result])) == 1: result = [result[0]]
         # Error #
         if len(result) > 1:
             raise Exception("Found several paths matching '%s'" % key)
@@ -96,4 +99,4 @@ class Path(object):
 
     @property
     def real_dir(self):
-        return os.path.realpath(self.base_dir + self.dir)
+        return os.path.realpath(self.base_dir + self.dir) + '/'
