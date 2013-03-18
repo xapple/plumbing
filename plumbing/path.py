@@ -13,11 +13,20 @@ import tempfile, os, re
 ################################################################################
 class AutoPaths(object):
     """
-    self.p.raw_sff         /raw/raw.sff
-    self.p.sff             /raw/raw.sff
-    self.p.raw_dir         /raw/
-    self.p.manifest        /raw/manifest.txt
-    self.p.blast_out       /blast/blast.out.xml
+    You can use this class like this when making pipelines:
+
+        class Sample(object):
+            all_paths = '''
+                /raw/raw.sff
+                /raw/raw.fastq
+                /clean/trim.fastq
+                /clean/clean.fastq'''
+
+            def __init__(self, base_dir):
+                self.p = AutoPaths(base_dir, self.all_paths)
+
+            def clean(self):
+                shutil.move(self.p.raw_sff, self.p.clean_fastq)
     """
 
     def __init__(self, base_dir, all_paths):
@@ -29,6 +38,8 @@ class AutoPaths(object):
         self._paths = [Path(p.lstrip(' '),base_dir) for p in all_paths.split('\n')]
 
     def __getattr__(self, key):
+        # Let magic pass through #
+        if key.startswith('__') and key.endswith('__'): return object.__getattr__(key)
         # Special cases #
         if key.startswith('_'): return self.__dict__[key]
         if key == 'tmp_dir': return self.__dict__['tmp_dir']
@@ -44,23 +55,25 @@ class AutoPaths(object):
         # No matches #
         if len(result) == 0:
             raise Exception("Could not find any path matching '%s'" % key)
-        # Multiple matches #
+        # Multiple matches, advantage file name #
         if len(result) > 1:
             best_score = max([p.score(items) for p in result])
             result = [p for p in result if p.score(items) >= best_score]
-        # Still multiple matches #
+        # Multiple matches, take the one with less parts #
         if len(result) > 1:
             shortest = min([len(p) for p in result])
             result = [p for p in result if len(p) <= shortest]
-        # Maybe it's a directory #
+        # Multiple matches, maybe it's a directory #
         if len(result) > 1 and directory:
             if len(set([p.dir for p in result])) == 1: result = [result[0]]
-        # Error #
+        # Multiple matches, error #
         if len(result) > 1:
             raise Exception("Found several paths matching '%s'" % key)
+        # Make the directory #
+        result = result.pop()
+        if not os.path.exists(result.complete_dir): os.makedirs(result.complete_dir)
         # Directory case #
-        if directory: return result.pop().real_dir
-        else: return result.pop().real_path
+        return result.complete_dir if directory else result.complete_path
 
     @property
     def tmp_dir(self):
@@ -91,12 +104,12 @@ class Path(object):
         return len(self.name_items)
 
     def score(self, items):
-        return 1
+        return sum([1.0 if i in self.name_items else 0.5 for i in items if i in self])
 
     @property
-    def real_path(self):
-        return os.path.realpath(self.base_dir + self.path)
+    def complete_path(self):
+        return '/' + os.path.relpath(self.base_dir + self.path, '/')
 
     @property
-    def real_dir(self):
-        return os.path.realpath(self.base_dir + self.dir) + '/'
+    def complete_dir(self):
+        return '/' + os.path.relpath(self.base_dir + self.dir, '/') + '/'
