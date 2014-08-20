@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
         name             = 'plumbing',
-        version          = '1.1.1',
+        version          = '2.0.0',
         description      = 'Helps with plumbing-type programing in python',
         long_description = open('README.txt').read(),
         license          = 'MIT',
@@ -11,4 +11,5 @@ setup(
         author_email     = 'lucas.sinclair@me.com',
         classifiers      = ['Topic :: Scientific/Engineering :: Bio-Informatics'],
         packages         = ['plumbing'],
+        install_requires = ['sh', 'biopython'],
     )
