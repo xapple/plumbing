@@ -2,7 +2,7 @@
 import tempfile
 
 # Internal modules #
-from gefes.common.autopaths import FilePath
+from autopaths import FilePath, DirectoryPath
 
 ################################################################################
 def new_temp_path(**kwargs):
@@ -13,7 +13,7 @@ def new_temp_path(**kwargs):
 
 ################################################################################
 def new_temp_dir(**kwargs):
-    return tempfile.mkdtemp() + '/'
+    return DirectoryPath(tempfile.mkdtemp() + '/')
 
 ################################################################################
 class TmpFile(FilePath):

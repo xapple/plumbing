@@ -63,3 +63,16 @@ def pickled_property(f):
     # Return a wrapper #
     get_method.__doc__ = f.__doc__
     return property(get_method)
+
+###############################################################################
+class LazyString(object):
+    """A string-like object that will only compute its value when accessed"""
+    def __str__(self): return self.value
+    def __init__(self, function):
+        self._value = None
+        self.function = function
+
+    @property
+    def value(self):
+        if self._value == None: self._value = self.function()
+        return self._value

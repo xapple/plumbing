@@ -1,8 +1,21 @@
 # Built-in modules #
 import subprocess, sys
 
+# Constants #
+module_names = {
+    "biopython": "Bio",
+    "ipython": "IPython",
+    "scikit-learn": "sklearn",
+    "scikit-bio": "skbio",
+}
+
 ################################################################################
-# We might be missing some executables #
+def check_setup(mod_name):
+    """Parses the required modules from a setup.py file and check they are
+    available in the PYTHONPATH"""
+    pass
+
+################################################################################
 def check_executable(tool_name):
     """Raises an exception if the executable *tool_name* is not found."""
     result = subprocess.call(['which', tool_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -10,11 +23,7 @@ def check_executable(tool_name):
         message = "The executable '%s' cannot be found in your $PATH" % tool_name
         raise Exception(message)
 
-def check_executables():
-    for exe in executables: check_executable(exe)
-
 ################################################################################
-# We might be missing some modules #
 def check_module(mod_name):
     """Raises an exception if the module *mod_name* is not found."""
     # Special cases #
@@ -30,6 +39,3 @@ def check_module(mod_name):
               ' Either you never installed it or your $PYTHONPATH is not set up correctly.' \
               ' For more instructions see the README file. (%s)' % (mod_name, e)
         sys.exit()
-
-def check_modules():
-    for mod_name in modules: check_module(mod_name)

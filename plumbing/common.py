@@ -1,8 +1,42 @@
+# -*- coding: utf-8 -*-
+
 # Built-in modules #
-import sys, os, time, shutil, re, random, math
+import sys, os, time, shutil, re, random, math, getpass, hashlib, datetime
 
 # Third party modules #
-import sh, numpy
+import sh, numpy, dateutil
+
+# One liners #
+flatten = lambda x: [item for sublist in x for item in sublist]
+
+################################################################################
+class GenWithLength(object):
+    """A generator with a length attribute"""
+    def __init__(self, gen, length): self.gen, self.length = gen, length
+    def __iter__(self): return self.gen
+    def __len__(self): return self.length
+
+###############################################################################
+class Password(object):
+    """A password object that will only prompt the user once per session"""
+    def __str__(self): return self.value
+    def __init__(self, prompt=None):
+        self._value = None
+        self.prompt = prompt
+
+    @property
+    def value(self):
+        if self._value == None: self._value = getpass.getpass(self.prompt)
+        return self._value
+
+################################################################################
+def md5sum(file_path, blocksize=65536):
+    """Compute the md5 of a file. Pretty fast"""
+    md5 = hashlib.md5()
+    with open(file_path, "r+b") as f:
+        for block in iter(lambda: f.read(blocksize), ""):
+            md5.update(block)
+    return md5.hexdigest()
 
 ################################################################################
 def average(iterator):
@@ -253,7 +287,65 @@ def split_thousands(s, tSep='\'', dSep='.'):
     return lhs + splt[:-1] + rhs
 
 ################################################################################
+def gps_deg_to_float(data):
+    m = re.search(u"(\d+?)°(\d+?)\'(\d+?)\'\'", data.strip())
+    degs, mins, secs = [0.0 if m.group(i) is None else int(m.group(i)) for i in range(1, 4)]
+    comp_dir = -1 if data[-1] in ('N', 'E') else 1
+    return (degs + (mins / 60) + (secs / 3600)) * comp_dir
+
+################################################################################
 def is_integer(string):
     try: int(string)
     except ValueError: return False
     return True
+
+################################################################################
+def reverse_compl_with_name(old_seq):
+    """Reverse a SeqIO sequence, but keep its name intact"""
+    new_seq = old_seq.reverse_complement()
+    new_seq.id = old_seq.id
+    new_seq.description = old_seq.description
+    return new_seq
+
+################################################################################
+def prepend_to_file(path, data, bufsize=1<<15):
+    # Backup the file #
+    backupname = path + os.extsep + 'bak'
+    # Remove previous backup if it exists #
+    try: os.unlink(backupname)
+    except OSError: pass
+    os.rename(path, backupname)
+    # Open input/output files,  note: outputfile's permissions lost #
+    with open(backupname) as inputfile:
+        with open(path, 'w') as outputfile:
+            outputfile.write(data)
+            buf = inputfile.read(bufsize)
+            while buf:
+                outputfile.write(buf)
+                buf = inputfile.read(bufsize)
+    # Remove backup on success #
+    os.remove(backupname)
+
+def append_to_file(path, data):
+    with open(path, "a") as handle:
+        handle.write(data)
+
+################################################################################
+def pretty_now():
+    """Prints some thing like '2014-07-24 11:12:45 CEST+0200'"""
+    now = datetime.datetime.now(dateutil.tz.tzlocal())
+    return now.strftime("%Y-%m-%d %H:%M:%S %Z%z")
+
+################################################################################
+def andify(list_of_strings):
+    """
+    Given a list of strings will join them with commas
+    and a final "and" word.
+
+    >>> andify(['Apples', 'Oranges', 'Mangos'])
+    'Apples, Oranges and Mangos'
+    """
+    result = ', '.join(list_of_strings)
+    comma_index = result.rfind(',')
+    if comma_index > -1: result = result[:comma_index] + ' and' + result[comma_index+1:]
+    return result

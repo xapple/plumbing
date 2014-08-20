@@ -29,7 +29,7 @@ For example, to wrap ``touch``, we write a one argument function that
 takes the filename of the file to touch, and apply the ``@command``
 decorator to it::
 
-    from plumbing import command
+    from plumbing.common import command
 
     @command
     def touch(filename):
@@ -45,7 +45,7 @@ the touched file.
 
 A more complicated example would include binding the BLASTP algorithm::
 
-    from plumbing import command
+    from plumbing.common import command
 
     @command
     def blastp(database, sequences, **kwargs):

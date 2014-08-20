@@ -6,7 +6,7 @@ Contains the unittests for plumbing.command
 import os
 
 # Internal modules #
-from plumbing import command
+from plumbing.common import command
 
 # Testing module #
 from nose.plugins.skip import SkipTest
