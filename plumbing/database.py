@@ -1,21 +1,3 @@
-"""
-========
-Examples
-========
-Here is a way to use it::
-
-    from fastsql import convert_to_sql
-    convert_to_sql('sample.fasta', 'sample.db') # If you don't specify destination you will get 'name.db'
-    # You can also use from the command line: $ fastasql convert sample.fasta sample.db
-    # To go back, use convert_to_fasta('sample.db')
-    from pyfasta import load_sql
-    proteins = load_sql('sample.db')
-    # This is the main object
-    coligase = proteins.get('P86831')
-    # It is linked to biopython standards
-    print type(coligase) # Bio.SeqRecord
-"""
-
 # Built-in modules #
 import sqlite3
 

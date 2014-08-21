@@ -213,7 +213,7 @@ class FilePath(str):
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
     def __iter__(self): return open(self.path)
-    def __nonzero__(self): return self.count_bytes != 0
+    def __nonzero__(self): return self.path != None and self.count_bytes != 0
     def __len__(self): return int(sh.wc('-l', self.path).split()[0])
 
     def __new__(cls, path, *args, **kwargs):
@@ -286,15 +286,23 @@ class FilePath(str):
         with codecs.open(self.path, 'w', encoding) as handle: handle.writelines(content)
 
     def link_from(self, path, safe=False):
-        # Standard #
         if not safe:
             self.remove()
             return os.symlink(path, self.path)
-        # No errors #
-        else:
+        if safe:
             try: os.remove(self.path)
             except OSError: pass
             try: os.symlink(path, self.path)
+            except OSError: pass
+
+    def link_to(self, path, safe=False):
+        if not safe:
+            os.remove(path)
+            os.symlink(self.path, path)
+        if safe:
+            try: os.remove(path)
+            except OSError: pass
+            try: os.symlink(self.path, path)
             except OSError: pass
 
     def copy(self, path):
