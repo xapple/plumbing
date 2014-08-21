@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
 
 # Built-in modules #
-import sys, os, time, shutil, re, random, math, getpass, hashlib, datetime
+import sys, os, time, shutil, re, random, math
+import getpass, hashlib, datetime, collections
 
 # Third party modules #
 import sh, numpy, dateutil
 
 # One liners #
 flatten = lambda x: [item for sublist in x for item in sublist]
+
+################################################################################
+def iflatten(L):
+    for sublist in L:
+        if hasattr(sublist, '__iter__'):
+            for item in flatten(sublist): yield item
+        else: yield sublist
 
 ################################################################################
 class GenWithLength(object):
@@ -349,3 +357,59 @@ def andify(list_of_strings):
     comma_index = result.rfind(',')
     if comma_index > -1: result = result[:comma_index] + ' and' + result[comma_index+1:]
     return result
+
+################################################################################
+class OrderedSet(collections.OrderedDict, collections.MutableSet):
+    """A recipe for an ordered set.
+    http://stackoverflow.com/a/1653978/287297"""
+
+    def update(self, *args, **kwargs):
+        if kwargs:
+            raise TypeError("update() takes no keyword arguments")
+
+        for s in args:
+            for e in s:
+                self.add(e)
+
+    def add(self, elem):
+        self[elem] = None
+
+    def discard(self, elem):
+        self.pop(elem, None)
+
+    def __le__(self, other):
+        return all(e in other for e in self)
+
+    def __lt__(self, other):
+        return self <= other and self != other
+
+    def __ge__(self, other):
+        return all(e in self for e in other)
+
+    def __gt__(self, other):
+        return self >= other and self != other
+
+    def __repr__(self):
+        return 'OrderedSet([%s])' % (', '.join(map(repr, self.keys())))
+
+    def __str__(self):
+        return '{%s}' % (', '.join(map(repr, self.keys())))
+
+    difference = property(lambda self: self.__sub__)
+    difference_update = property(lambda self: self.__isub__)
+    intersection = property(lambda self: self.__and__)
+    intersection_update = property(lambda self: self.__iand__)
+    issubset = property(lambda self: self.__le__)
+    issuperset = property(lambda self: self.__ge__)
+    symmetric_difference = property(lambda self: self.__xor__)
+    symmetric_difference_update = property(lambda self: self.__ixor__)
+    union = property(lambda self: self.__or__)
+
+################################################################################
+def get_next_item(iterable):
+    """Gets the next item of an iterable.
+    If the iterable is exhausted, returns None."""
+    try: x = iterable.next()
+    except StopIteration: x = None
+    except AttributeError: x = None
+    return x

@@ -209,8 +209,8 @@ class DirectoryPath(str):
 class FilePath(str):
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
-
     def __iter__(self): return open(self.path)
+    def __nonzero__(self): return self.count_bytes != 0
 
     def __new__(cls, path, *args, **kwargs):
         return str.__new__(cls, path)

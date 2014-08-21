@@ -1,0 +1,105 @@
+#!/usr/bin/env python
+
+"""
+A script made to test the fastsql library.
+
+Written by Lucas Sinclair.
+Kopimi.
+
+You can use this script from the shell like this:
+$ build_reads_db reads.fa reads.db
+"""
+
+# Built-in modules #
+import sys, os, shlex
+
+# Third party modules #
+from Bio import SeqIO
+
+# Internal modules #
+import fastsql
+from fastsql.common import OrderedSet
+
+# Nice progress bar #
+import progressbar
+from progressbar import ProgressBar
+pbar_widgets = [progressbar.Counter(), progressbar.Percentage(), progressbar.Bar(), progressbar.ETA()]
+
+# Constants #
+LENGTH = 27
+
+################################################################################
+def seqs_to_keys(seqs):
+    seqs = SeqIO.parse(seqs, 'fasta')
+    all_keys = OrderedSet()
+    all_keys.add('id')
+    all_keys.add('seq')
+    # Main loop #
+    i = 0
+    print "Getting all keys..."
+    pbar = ProgressBar(widgets=pbar_widgets, maxval=LENGTH).start()
+    for seq in seqs:
+        # Progress bar #
+        i += 1
+        pbar.update(i)
+        if i == LENGTH: pbar.finish()
+        # Entry #
+        keys = shlex.split(seq.description)
+        keys = [f.split('=') for f in keys[1:]]
+        keys = [f[0][1:] for f in keys]
+        all_keys.update(keys)
+    print "Done getting all keys."
+    if 'ip_notice' in all_keys: all_keys.discard('ip_notice')
+    return tuple(all_keys)
+
+def seqs_to_values(seqs, keys):
+    seqs = SeqIO.parse(seqs, 'fasta')
+    keys = [k for k in keys if k != 'id' and k != 'seq']
+    # Main loop #
+    i = 0
+    print "Inserting entries into database..."
+    pbar = ProgressBar(widgets=pbar_widgets, maxval=LENGTH).start()
+    for seq in seqs:
+        # Progress bar #
+        i += 1
+        pbar.update(i)
+        if i == LENGTH: pbar.finish()
+        # Entry #
+        fields = shlex.split(seq.description)
+        fields = [f.split('=') for f in fields[1:]]
+        fields = dict([(f[0][1:],f[1]) for f in fields])
+        if 'ip_notice' in fields: fields.pop('ip_notice')
+        values = [seq.id, str(seq.seq)] + [fields.get(k,'') for k in keys]
+        yield tuple(values)
+    print "Done inserting entries into database."
+
+sql_field_types = {'begin':           'integer',
+                   'end':             'integer',
+                   'orientation':     'integer',
+                   'length':          'integer',
+                   'ttable':          'integer',
+                   'thick_start':     'integer',
+                   'thick_end':       'integer',
+                   'number_of_sites': 'integer',
+                   }
+
+################################################################################
+def seq_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
+################################################################################
+# Check usage #
+if len(sys.argv) < 2: sys.exit(sys.modules[__name__].__doc__)
+# Get the shell arguments #
+source, dest  = sys.argv[1], sys.argv[2]
+# Check that the path is valid #
+if not os.path.exists(source): raise Exception("No file at '%s.'" % source)
+# Do it #
+fastsql.convert_to_sql(source, dest, seqs_to_keys, seqs_to_values, sql_field_types)
+# Load it #
+reads = fastsql.load_db(dest, seq_factory)
+print "Read with specific ID:"
+print reads['JCVI_PEP_1112677232278']
