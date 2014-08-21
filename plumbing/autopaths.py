@@ -267,6 +267,11 @@ class FilePath(str):
         """The contents as a string"""
         return open(self.path).read()
 
+    @property
+    def relative_path(self):
+        """The relative path when compared with current directory"""
+        return os.path.relpath(self.path)
+
     def remove(self):
         if not self.exists: return False
         os.remove(self.path)
