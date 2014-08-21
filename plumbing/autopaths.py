@@ -4,6 +4,9 @@ import os, stat, tempfile, re, subprocess, shutil, codecs, gzip
 # Internal modules #
 from plumbing.common import append_to_file, prepend_to_file
 
+# Third party modules #
+import sh
+
 ################################################################################
 class AutoPaths(object):
     """
@@ -211,6 +214,7 @@ class FilePath(str):
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
     def __iter__(self): return open(self.path)
     def __nonzero__(self): return self.count_bytes != 0
+    def __len__(self): return int(sh.wc('-l', self.path).split()[0])
 
     def __new__(cls, path, *args, **kwargs):
         return str.__new__(cls, path)

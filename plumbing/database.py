@@ -67,9 +67,9 @@ def convert_to_sql(source, dest, keys, values, sql_field_types=None):
 ################################################################################
 class Database(FilePath):
 
-    def __init__(self, path):
+    def __init__(self, path, factory=None):
         self.path = path
-        self._factory = None
+        self.factory = factory
 
     def __repr__(self):
         """Called when evaluating ``print seqs``."""
@@ -92,13 +92,13 @@ class Database(FilePath):
 
     def __contains__(self, key):
         """Called when evaluating ``"P81239A" in seqs``."""
-        self.cursor.execute("SELECT EXISTS(SELECT 1 FROM '%s' WHERE id=='%s' LIMIT 1);" % (self.main_table, key))
-        return bool(self.cursor.fetchone())
+        self._cursor.execute("SELECT EXISTS(SELECT 1 FROM '%s' WHERE id=='%s' LIMIT 1);" % (self.main_table, key))
+        return bool(self._cursor.fetchone())
 
     def __len__(self):
         """Called when evaluating ``len(seqs)``."""
-        self.cursor.execute("SELECT COUNT(1) FROM '%s';" % self.main_table)
-        return int(self.cursor.fetchone())
+        self._cursor.execute("SELECT COUNT(1) FROM '%s';" % self.main_table)
+        return int(self._cursor.fetchone())
 
     def __nonzero__(self):
         """Called when evaluating ``if seqs: pass``."""
@@ -118,31 +118,37 @@ class Database(FilePath):
             raise Exception("The file '" + self.path + "' does not contain any 'data' table.")
         return 'data'
 
-    @property_cached
-    def connection(self):
+    def check_format(self):
         with open(self.path, 'r') as f: header = f.read(15)
         if header != 'SQLite format 3':
             raise Exception("The file '" + self.path + "' is not an SQLite database.")
-        return sqlite3.connect(self.path)
+
+    @property_cached
+    def connection(self):
+        self.check_format()
+        con = sqlite3.connect(self.path)
+        con.row_factory = self.factory
+        return con
 
     @property_cached
     def cursor(self):
         return self.connection.cursor()
 
-    @property
-    def factory(self):
-        return self._factory
-    @factory.setter
-    def factory(self, value):
-        self._factory = value
-        self.connection.row_factory = self.factory
+    @property_cached
+    def _connection(self):
+        self.check_format()
+        return sqlite3.connect(self.path)
+
+    @property_cached
+    def _cursor(self):
+        return self._connection.cursor()
 
     @property
     def tables(self):
         """The complete list of SQL tables."""
         self.connection.row_factory = sqlite3.Row
-        self.cursor.execute("select name from sqlite_master where type='table'")
-        result = [x[0].encode('ascii') for x in self.cursor.fetchall()]
+        self._cursor.execute("select name from sqlite_master where type='table'")
+        result = [x[0].encode('ascii') for x in self._cursor.fetchall()]
         self.connection.row_factory = self.factory
         return result
 
@@ -162,8 +168,8 @@ class Database(FilePath):
         # Check the table exists #
         if not table in self.tables: return []
         # A PRAGMA statement will implicitly issue a commit, don't use #
-        self.cursor.execute("SELECT * from '%s' LIMIT 1" % table)
-        fields = [x[0] for x in self.cursor.description]
+        self._cursor.execute("SELECT * from '%s' LIMIT 1" % table)
+        fields = [x[0] for x in self._cursor.description]
         self.cursor.fetchall()
         return fields
 
