@@ -286,7 +286,7 @@ class FilePath(str):
     @property
     def relative_path(self):
         """The relative path when compared with current directory"""
-        return os.path.relpath(self.path.absolute_path)
+        return os.path.relpath(self.absolute_path)
 
     def remove(self):
         if not self.exists: return False
