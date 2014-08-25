@@ -14,9 +14,12 @@ def property_cached(f):
         class Employee(object):
             @property_cached
             def salary(self):
+                print "Evaluating..."
                 return time.time()
         bob = Employee()
         print bob.salary
+        print bob.salary
+        bob.salary = "10000$"
     """
     def add_to_cache(self):
         if inspect.isgeneratorfunction(f): result = tuple(f(self))
@@ -69,7 +72,7 @@ def pickled_property(f):
 
 ###############################################################################
 class LazyString(object):
-    """A string-like object that will only compute its value when accessed"""
+    """A string-like object that will only compute its value once when accessed"""
     def __str__(self): return self.value
     def __init__(self, function):
         self._value = None

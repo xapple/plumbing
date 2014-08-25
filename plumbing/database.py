@@ -91,6 +91,7 @@ class Database(FilePath):
         if isinstance(key, int):
             self.cursor.execute("SELECT * from '%s' LIMIT 1 OFFSET %i;" % (self.main_table, key))
         else:
+            key = key.replace("'","''")
             self.cursor.execute("SELECT * from '%s' where id=='%s' LIMIT 1;" % (self.main_table, key))
         return self.cursor.fetchone()
 
