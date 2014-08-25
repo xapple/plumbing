@@ -280,13 +280,18 @@ class FilePath(str):
 
     @property
     def absolute_path(self):
-        """The absolute path like in pwd -P"""
+        """The absolute path starting with a /"""
         return os.path.abspath(self.path)
+
+    @property
+    def physical_path(self):
+        """The physical path like in pwd -P"""
+        return os.path.realpath(self.path)
 
     @property
     def relative_path(self):
         """The relative path when compared with current directory"""
-        return os.path.relpath(self.absolute_path)
+        return os.path.relpath(self.physical_path)
 
     def remove(self):
         if not self.exists: return False
