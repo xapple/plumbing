@@ -3,6 +3,7 @@ import os, stat, tempfile, re, subprocess, shutil, codecs, gzip
 
 # Internal modules #
 from plumbing.common import append_to_file, prepend_to_file
+from plumbing.cache import property_cached
 
 # Third party modules #
 import sh
@@ -160,6 +161,8 @@ class DirectoryPath(str):
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
 
     def __new__(cls, path, *args, **kwargs):
+        if path is None: return None
+        if isinstance(path, cls): path = path.path
         if not path.endswith('/'): path += '/'
         return str.__new__(cls, path)
 
@@ -169,6 +172,12 @@ class DirectoryPath(str):
 
     def __add__(self, other):
         return self.path + other
+
+    @property_cached
+    def p(self):
+        if not hasattr(self, 'all_paths'):
+            raise Exception("You need to define 'all_paths' to use this function")
+        return AutoPaths(self.path, self.all_paths)
 
     @property
     def name(self):
@@ -217,6 +226,8 @@ class FilePath(str):
     def __len__(self): return int(sh.wc('-l', self.path).split()[0])
 
     def __new__(cls, path, *args, **kwargs):
+        if path is None: return None
+        if isinstance(path, cls): path = path.path
         return str.__new__(cls, path)
 
     def __init__(self, path):
@@ -229,7 +240,7 @@ class FilePath(str):
 
     @property
     def prefix_path(self):
-        """The full path without the extension"""
+        """The full path without the (last) extension"""
         return str(os.path.splitext(self.path)[0])
 
     @property
@@ -268,9 +279,14 @@ class FilePath(str):
         return open(self.path).read()
 
     @property
+    def absolute_path(self):
+        """The absolute path like in pwd -P"""
+        return os.path.abspath(self.path)
+
+    @property
     def relative_path(self):
         """The relative path when compared with current directory"""
-        return os.path.relpath(self.path)
+        return os.path.relpath(self.path.absolute_path)
 
     def remove(self):
         if not self.exists: return False

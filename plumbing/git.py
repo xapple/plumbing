@@ -24,3 +24,11 @@ class GitRepo(object):
     def hash(self):
         sha1 = sh.git("--git-dir=" + self.git_dir, "rev-parse", "HEAD")
         return sha1.strip('\n')
+
+    @property
+    def branch(self):
+        return sh.git('symbolic-ref', '--short', 'HEAD')
+
+    @property
+    def remote_branch(self):
+        return sh.git('rev-parse', '--symbolic-full-name', '--abbrev-ref', '@{u}')

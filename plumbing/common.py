@@ -218,7 +218,7 @@ def natural_sort(item):
 def which(cmd):
     """https://github.com/jc0n/python-which"""
     def is_executable(path):
-        return os.path.exists(path) and os.access(path, os.X_OK)
+        return os.path.exists(path) and os.access(path, os.X_OK) and not os.path.isdir(path)
     path, name = os.path.split(cmd)
     if path:
         if is_executable(cmd): return cmd

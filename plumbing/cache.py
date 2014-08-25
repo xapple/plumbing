@@ -26,8 +26,11 @@ def property_cached(f):
         if '__cache__' not in self.__dict__: self.__cache__ = {}
         if f.__name__ not in self.__cache__: add_to_cache(self)
         return self.__cache__[f.__name__]
+    def overwrite_cache(self, value):
+        if '__cache__' not in self.__dict__: self.__cache__ = {}
+        self.__cache__[f.__name__] = value
     retrieve_from_cache.__doc__ = f.__doc__
-    return property(retrieve_from_cache)
+    return property(retrieve_from_cache, overwrite_cache)
 
 ################################################################################
 def expiry_every(seconds=0):
