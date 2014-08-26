@@ -27,8 +27,8 @@ class GitRepo(object):
 
     @property
     def branch(self):
-        return sh.git('symbolic-ref', '--short', 'HEAD').strip('\n')
+        return sh.git("--git-dir=" + self.git_dir, 'symbolic-ref', '--short', 'HEAD').strip('\n')
 
     @property
     def remote_branch(self):
-        return sh.git('rev-parse', '--symbolic-full-name', '--abbrev-ref', '@{u}').strip('\n')
+        return sh.git("--git-dir=" + self.git_dir, 'rev-parse', '--symbolic-full-name', '--abbrev-ref', '@{u}').strip('\n')
