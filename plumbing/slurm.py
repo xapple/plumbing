@@ -4,7 +4,7 @@ import base64, hashlib, socket
 from collections import OrderedDict
 
 # Internal modules #
-from common import get_git_tag, tail, is_integer, flatten
+from common import get_git_tag, tail, is_integer, flatter
 from color import Color
 from tmpstuff import TmpFile, new_temp_path
 from cache import expiry_every
@@ -169,7 +169,7 @@ class SLURMCommand(object):
             self.script_footer = ['print "SLURM: end at {0}".format(time.asctime())']
         # Script #
         self.script = (self.shebang_header, self.slurm_header, self.script_header, self.command, self.script_footer)
-        self.script = '\n'.join(flatten(self.script))
+        self.script = '\n'.join(flatter(self.script))
 
     @property
     def status(self):

@@ -8,13 +8,13 @@ import getpass, hashlib, datetime, collections
 import sh, numpy, dateutil
 
 # One liners #
-flatten = lambda x: [item for sublist in x for item in sublist]
+flatter = lambda x: [item for sublist in x for item in sublist]
 
 ################################################################################
 def iflatten(L):
     for sublist in L:
         if hasattr(sublist, '__iter__'):
-            for item in flatten(sublist): yield item
+            for item in iflatten(sublist): yield item
         else: yield sublist
 
 ################################################################################
@@ -113,13 +113,6 @@ def wait(predicate, interval=1, message=lambda: "Waiting..."):
         sys.stdout.flush()
     print "\r Done. \033[K"
     sys.stdout.flush()
-
-################################################################################
-def flatten(L):
-    for sublist in L:
-        if hasattr(sublist, '__iter__'):
-            for item in flatten(sublist): yield item
-        else: yield sublist
 
 ################################################################################
 def isubsample(full_sample, k, full_sample_len=None):
