@@ -1,6 +1,6 @@
 # Built-in modules #
 import os, stat, re, getpass, time, shutil
-import base64, hashlib, socket
+import base64, hashlib, socket, multiprocessing
 from collections import OrderedDict
 
 # Internal modules #
@@ -299,7 +299,7 @@ elif 'SLURM_JOB_CPUS_PER_NODE' in os.environ:
         n, N = re.findall("([1-9]+)\(x([1-9]+)\)", text)[0]
         nr_threads = int(n) * int(N)
 else:
-    nr_threads = 1
+    nr_threads = multiprocessing.cpu_count()
 
 ################################################################################
 jobs = ExistingJobs()
