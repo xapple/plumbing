@@ -37,7 +37,7 @@ class Runner(object):
     def find_fns(self, name):
         # Special case #
         if '.' in name:
-            target = self.parents
+            target = self.parent
             for attribute in name.split('.'):
                 target = getattr(target, attribute)
             return [target]

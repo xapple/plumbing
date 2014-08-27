@@ -223,7 +223,7 @@ class FilePath(str):
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
     def __iter__(self): return open(self.path)
     def __nonzero__(self): return self.path != None and self.count_bytes != 0
-    def __len__(self): return int(sh.wc('-l', self.path).split()[0])
+    def __len__(self): return self.count
 
     def __new__(cls, path, *args, **kwargs):
         if path is None: return None
@@ -267,6 +267,11 @@ class FilePath(str):
         """The number of bytes"""
         if not self.exists: return 0
         return os.path.getsize(self.path)
+
+    @property
+    def count(self):
+        """We are going to default to the number of lines"""
+        return int(sh.wc('-l', self.path).split()[0])
 
     @property
     def size(self):
