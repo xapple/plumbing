@@ -27,7 +27,7 @@ class Graph(FilePath):
     right  = 0.98
     formats = ('pdf',)
 
-    def __init__(self, parent, base_dir=None, short_name=None):
+    def __init__(self, parent=None, base_dir=None, short_name=None):
         # Save parent #
         self.parent = parent
         # Base dir #
@@ -72,7 +72,7 @@ class Graph(FilePath):
         from matplotlib import animation
         anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20)
         FFMpegWriter = animation.writers['ffmpeg']
-        writer = FFMpegWriter( bitrate= bitrate, fps=fps)
+        writer = FFMpegWriter(bitrate= bitrate, fps=fps)
         # Save #
         self.avi_path = self.base_dir + self.short_name + '.avi'
         anim.save(self.avi_path, writer=writer, codec='x264')

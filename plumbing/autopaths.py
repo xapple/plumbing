@@ -227,10 +227,11 @@ class FilePath(str):
 
     def __new__(cls, path, *args, **kwargs):
         if path is None: return None
-        if isinstance(path, cls): path = path.path
+        if isinstance(path, FilePath): path = path.path
         return str.__new__(cls, path)
 
     def __init__(self, path):
+        if isinstance(path, FilePath): path = path.path
         self.path = path
 
     @property
@@ -240,12 +241,12 @@ class FilePath(str):
 
     @property
     def prefix_path(self):
-        """The full path without the (last) extension"""
+        """The full path without the (last) extension and trailing period"""
         return str(os.path.splitext(self.path)[0])
 
     @property
     def prefix(self):
-        """Just the filename without the (last) extension"""
+        """Just the filename without the (last) extension and trailing period"""
         return str(os.path.basename(self.prefix_path))
 
     @property

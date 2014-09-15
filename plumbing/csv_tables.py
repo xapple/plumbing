@@ -14,6 +14,7 @@ class CSVTable(FilePath):
     d = ','
 
     def __init__(self, path, d=None):
+        if isinstance(path, FilePath): path = path.path
         self.path = path
         if d is not None: self.d = d
 

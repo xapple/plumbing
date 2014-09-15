@@ -119,7 +119,7 @@ class SLURMCommand(object):
         ('email-when', {'needed': True,  'tag': '#SBATCH --mail-type=%s',   'default': 'END'}),
         ('qos'       , {'needed': False, 'tag': '#SBATCH --qos=%s',         'default': 'short'}),
         ('dependency', {'needed': False, 'tag': '#SBATCH -d %s',            'default': 'afterok:1'}),
-        ('constraint', {'needed': False, 'tag': '#SBATCH -C %s',            'default': 'mem72GB'}),
+        ('constraint', {'needed': False, 'tag': '#SBATCH -C %s',            'default': 'fat'}),
         ('cluster'   , {'needed': False, 'tag': '#SBATCH -M %s',            'default': 'milou'}),
         ('alloc'     , {'needed': False, 'tag': '#SBATCH --reservation=%s', 'default': 'miiiiiine'}),
         ('jobid'     , {'needed': False, 'tag': '#SBATCH --jobid=%i',       'default': 2173455}),
@@ -175,9 +175,12 @@ class SLURMCommand(object):
     def status(self):
         # Does the script exist #
         script_exists = self.save_script and os.path.exists(self.save_script)
-        if not script_exists and self.short_name not in jobs.names: return "READY"
+        # If there is no script it is either ready or a duplicate #
+        if not script_exists:
+            if self.short_name not in jobs.names: return "READY"
+            if self.short_name in jobs.names: return "DUPLICATE JOB NAME"
         # It is in the job names #
-        if script_exists and self.short_name in jobs.names:
+        if self.short_name in jobs.names:
             if jobs[self.short_name]['type'] == 'queued': return "QUEUED"
             if jobs[self.short_name]['type'] == 'running': return "RUNNING"
         # No log file exists #
@@ -253,7 +256,7 @@ class SLURMJob(object):
     """Takes care of running a python job through SLURM and logs results.
     Will run it remotely in a new interpreter with a static copy of a module."""
 
-    def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
+    def __repr__(self): return '<%s object in "%s">' % (self.__class__.__name__, self.log_dir)
 
     def __init__(self, command, log_base_dir, module, **kwargs):
         # Log directory #
