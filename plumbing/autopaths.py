@@ -219,6 +219,14 @@ class DirectoryPath(str):
 
 ################################################################################
 class FilePath(str):
+    """I can never remember all those darn `os.path commands, so I made a class that wraps them with an easier and more pythonic syntax.
+
+        path = FilePath('/home/root/text.txt')
+        print path.extension
+        print path.directory
+        print path.filename
+
+    You can find lots of the common things you would need to do with file paths. Such as: path.make_executable()"""
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
     def __iter__(self): return open(self.path)
@@ -248,6 +256,11 @@ class FilePath(str):
     def prefix(self):
         """Just the filename without the (last) extension and trailing period"""
         return str(os.path.basename(self.prefix_path))
+
+    @property
+    def short_prefix(self):
+        """Just the filename without any extension or periods"""
+        return self.filename.split('.')[0]
 
     @property
     def filename(self):
