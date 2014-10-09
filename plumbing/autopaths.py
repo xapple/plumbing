@@ -219,7 +219,7 @@ class DirectoryPath(str):
 
 ################################################################################
 class FilePath(str):
-    """I can never remember all those darn `os.path commands, so I made a class that wraps them with an easier and more pythonic syntax.
+    """I can never remember all those darn `os.path` commands, so I made a class that wraps them with an easier and more pythonic syntax.
 
         path = FilePath('/home/root/text.txt')
         print path.extension
@@ -388,6 +388,10 @@ class FilePath(str):
         """Append some text or an other file to the current file"""
         if isinstance(what, FilePath): what = what.contents
         prepend_to_file(self.path, what)
+
+    def must_exist(self):
+        """Raise an exception if the path doesn't exist."""
+        if not self.exists: raise Exception("The file path '%s' does not exist." % self.path)
 
 ################################################################################
 class Filesize(object):

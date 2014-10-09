@@ -18,16 +18,16 @@ def property_cached(f):
                 return time.time()
         bob = Employee()
         print bob.salary
-        print bob.salary
         bob.salary = "10000$"
+        print bob.salary
     """
-    def add_to_cache(self):
-        if inspect.isgeneratorfunction(f): result = tuple(f(self))
-        else: result = f(self)
-        self.__cache__[f.__name__] = result
     def retrieve_from_cache(self):
         if '__cache__' not in self.__dict__: self.__cache__ = {}
-        if f.__name__ not in self.__cache__: add_to_cache(self)
+        if f.__name__ not in self.__cache__:
+            # Add result to the property cache #
+            if inspect.isgeneratorfunction(f): result = tuple(f(self))
+            else: result = f(self)
+            self.__cache__[f.__name__] = result
         return self.__cache__[f.__name__]
     def overwrite_cache(self, value):
         if '__cache__' not in self.__dict__: self.__cache__ = {}

@@ -6,6 +6,7 @@ from autopaths import FilePath, DirectoryPath
 
 ################################################################################
 def new_temp_path(**kwargs):
+    """A new temporary path"""
     handle = tempfile.NamedTemporaryFile(**kwargs)
     path = handle.name
     handle.close()
