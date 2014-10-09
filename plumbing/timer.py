@@ -2,7 +2,7 @@
 from datetime import datetime
 
 # Internal modules #
-from seqenv.common.color import Color
+from plumbing.color import Color
 
 ################################################################################
 class Timer(object):
