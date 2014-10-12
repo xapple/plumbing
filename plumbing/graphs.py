@@ -34,7 +34,8 @@ class Graph(FilePath):
         if not base_dir: self.base_dir = self.parent.p.graphs_dir
         else: self.base_dir = base_dir
         # Short name #
-        self.short_name = short_name if short_name else 'graph'
+        if short_name: self.short_name = short_name
+        if not hasattr(self, 'short_name'): self.short_name = 'graph'
         # Paths #
         self.path = FilePath(self.base_dir + self.short_name + '.pdf')
 
