@@ -25,7 +25,7 @@ class CSVTable(FilePath):
         sh.sed('-i', '1s/%s/%s/' % (before, after), self.path)
 
     def rewrite_lines(self, lines, path=None):
-        if not path:
+        if path is None:
             with TmpFile() as tmpfile: tmpfile.handle.writelines(lines)
             os.remove(self.path)
             shutil.move(tmpfile.path, self.path)
