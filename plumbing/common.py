@@ -11,6 +11,27 @@ import sh, numpy, dateutil
 flatter = lambda x: [item for sublist in x for item in sublist]
 
 ################################################################################
+def sort_string_by_pairs(strings):
+    """Group a list of strings by pairs, by matching those with only
+    one character difference between each other together."""
+    assert len(strings) % 2 == 0
+    pairs = []
+    strings = list(strings) # This shallow copies the list
+    while strings:
+        template = strings.pop()
+        for i, candidate in enumerate(strings):
+            if count_string_diff(template, candidate) == 1:
+                pairs.append((template, strings.pop(i)))
+                break
+    return pairs
+
+################################################################################
+def count_string_diff(a,b):
+    """Return the number of characters in a string that don't exactly match"""
+    shortest = min(len(a), len(b))
+    return sum(a[i] != b[i] for i in range(shortest))
+
+################################################################################
 def iflatten(L):
     for sublist in L:
         if hasattr(sublist, '__iter__'):
