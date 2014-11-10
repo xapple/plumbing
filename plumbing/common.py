@@ -21,7 +21,9 @@ def sort_string_by_pairs(strings):
         template = strings.pop()
         for i, candidate in enumerate(strings):
             if count_string_diff(template, candidate) == 1:
-                pairs.append((template, strings.pop(i)))
+                pair = [template, strings.pop(i)]
+                pair.sort()
+                pairs.append(pair)
                 break
     return pairs
 

@@ -14,6 +14,9 @@ import threadpool
 class Runner(object):
     """General purpose runner"""
 
+    def __init__(self, parent):
+        self.parent = parent
+
     @property
     def color(self):
         """Should be use color or not ? If we are not in a shell, then not"""
