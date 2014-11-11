@@ -55,6 +55,10 @@ class CSVTable(FilePath):
     def transpose(self, path=None, d=None):
         self.rewrite_lines(self.transposed_lines(self.d if d is None else d), path)
 
+    def to_dataframe(self, **kwargs):
+        """Load up the CSV file as a pandas dataframe"""
+        return pandas.io.parsers.read_csv(self.path, sep=self.d, **kwargs)
+
 ################################################################################
 class TSVTable(CSVTable):
     d = '\t'
