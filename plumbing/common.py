@@ -11,6 +11,17 @@ import sh, numpy, dateutil
 flatter = lambda x: [item for sublist in x for item in sublist]
 
 ################################################################################
+def pad_with_whitespace(string, pad=None):
+    if pad is None: pad = max(map(len, string.split('\n')))
+    return '\n'.join(('{0: <%i}' % pad).format(line) for line in string.split('\n'))
+
+def mirror_lines(string):
+    return '\n'.join(line[::-1] for line in string.split('\n'))
+
+def concatenate_by_line(first, second):
+    return '\n'.join(x+y for x,y in zip(first.split('\n'), second.split('\n')))
+
+################################################################################
 def sort_string_by_pairs(strings):
     """Group a list of strings by pairs, by matching those with only
     one character difference between each other together."""
@@ -194,19 +205,6 @@ def reversed_blocks(handle, blocksize=4096):
         here -= delta
         handle.seek(here, os.SEEK_SET)
         yield handle.read(delta)
-
-###############################################################################
-def move_with_overwrite(source, dest):
-    if os.path.exists(dest):
-        if os.path.isdir(dest): shutil.rmtree(dest)
-        else: os.remove(dest)
-    shutil.move(source, dest)
-
-###############################################################################
-def replace_extension(path, new_ext):
-    if not new_ext.startswith('.'): new_ext = '.' + new_ext
-    base, ext = os.path.splitext(path)
-    return base + new_ext
 
 ###############################################################################
 def find_file_by_name(name, root=os.curdir):

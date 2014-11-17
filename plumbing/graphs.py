@@ -37,7 +37,7 @@ class Graph(FilePath):
         if short_name: self.short_name = short_name
         if not hasattr(self, 'short_name'): self.short_name = 'graph'
         # Paths #
-        self.path = FilePath(self.base_dir + self.short_name + '.pdf')
+        self.path = self.base_dir + self.short_name + '.pdf'
 
     def save_plot(self, fig, axes, width=None, height=None, bottom=None, top=None, left=None, right=None, sep=()):
         # Attributes or parameters #
