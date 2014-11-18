@@ -12,7 +12,7 @@ flatter = lambda x: [item for sublist in x for item in sublist]
 
 ################################################################################
 def pad_with_whitespace(string, pad=None):
-    if pad is None: pad = max(map(len, string.split('\n')))
+    if pad is None: pad = max(map(len, string.split('\n'))) + 1
     return '\n'.join(('{0: <%i}' % pad).format(line) for line in string.split('\n'))
 
 def mirror_lines(string):
