@@ -210,7 +210,7 @@ def reversed_blocks(handle, blocksize=4096):
 def find_file_by_name(name, root=os.curdir):
     for dirpath, dirnames, filenames in os.walk(os.path.abspath(root)):
         if name in filenames: return os.path.join(dirpath, name)
-    raise Exception("Could not find file '%s' in '%s'") % (name, root)
+    raise Exception("Could not find file '%s' in '%s'" % (name, root))
 
 ###############################################################################
 def natural_sort(item):
