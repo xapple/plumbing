@@ -196,8 +196,10 @@ class DirectoryPath(str):
 
     @property
     def contents(self):
-        """The files and directories as a list"""
-        return os.listdir(self.path)
+        """The files and directories in this directory"""
+        for root, dirs, files in os.walk(self.path, topdown=False):
+            for d in dirs:  yield DirectoryPath(os.path.join(root, d))
+            for f in files: yield FilePath(os.path.join(root, f))
 
     @property
     def exists(self):
@@ -413,6 +415,9 @@ class Filesize(object):
 
     def __int__(self):
         return self.size
+
+    def __eq__(self, other):
+        return self.size == other
 
     def __str__(self):
         if self.size == 0: return '0 bytes'
