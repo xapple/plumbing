@@ -7,6 +7,7 @@ from autopaths import FilePath
 
 # Third party modules #
 import matplotlib, brewer2mpl
+from matplotlib import pyplot
 
 # Constants #
 cool_colors = brewer2mpl.get_map('Set1', 'qualitative', 8).mpl_colors
@@ -34,9 +35,10 @@ class Graph(FilePath):
         if not base_dir: self.base_dir = self.parent.p.graphs_dir
         else: self.base_dir = base_dir
         # Short name #
-        self.short_name = short_name if short_name else 'graph'
+        if short_name: self.short_name = short_name
+        if not hasattr(self, 'short_name'): self.short_name = 'graph'
         # Paths #
-        self.path = FilePath(self.base_dir + self.short_name + '.pdf')
+        self.path = self.base_dir + self.short_name + '.pdf'
 
     def save_plot(self, fig, axes, width=None, height=None, bottom=None, top=None, left=None, right=None, sep=()):
         # Attributes or parameters #
@@ -66,9 +68,22 @@ class Graph(FilePath):
         # Save it as different formats #
         for ext in self.formats: fig.savefig(self.replace_extension(ext))
 
-    def save_anim(self, fig, animate, init, width=15, height=15, bitrate = 10000, fps = 10):
-        fig.set_figwidth(height)
-        fig.set_figheight(width)
+    def plot(self):
+        """An example plot function. You have to subclass this method."""
+        fig = pyplot.figure()
+        axes = fig.add_subplot(111)
+        axes.plot([0,1,10,1000], [0,1,2,3], 'ro')
+        axes.set_title("Rarefaction curve of the diversity estimate")
+        axes.set_xlabel("Sequences rarefied down to this many sequences")
+        axes.set_ylabel("The diversity estimate")
+        axes.yaxis.grid(True)
+        axes.set_xscale('symlog')
+        axes.set_xlim(0, axes.get_xlim()[1])
+        self.save_plot(fig, axes, sep=('x',))
+        pyplot.close(fig)
+
+    def save_anim(self, fig, animate, init, bitrate=10000, fps=30):
+        """Not functional TODO"""
         from matplotlib import animation
         anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20)
         FFMpegWriter = animation.writers['ffmpeg']

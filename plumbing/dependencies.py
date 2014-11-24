@@ -17,7 +17,7 @@ def check_setup(mod_name):
 
 ################################################################################
 def check_executable(tool_name):
-    """Raises an exception if the executable *tool_name* is not found."""
+    """Raises an warning if the executable *tool_name* is not found."""
     result = subprocess.call(['which', tool_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result != 0:
         message = "The executable '%s' cannot be found in your $PATH" % tool_name
@@ -25,7 +25,7 @@ def check_executable(tool_name):
 
 ################################################################################
 def check_module(mod_name):
-    """Raises an exception if the module *mod_name* is not found."""
+    """Calls sys.exit() if the module *mod_name* is not found."""
     # Special cases #
     if mod_name == "biopython": mod_name = "Bio"
     if mod_name == "ipython": mod_name = "IPython"

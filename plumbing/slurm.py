@@ -153,6 +153,8 @@ class SLURMCommand(object):
         if not isinstance(self.command, list): self.command = [self.command]
         # Check name #
         self.name = kwargs.get('job_name', self.slurm_headers['job_name']['default'])
+        # Check it doesn't ask too many hours #
+        #if kwargs['n'] * kwargs['n'] > 1000: warnings.warn("Exceeds 1000 hour policy")
         # Hash the name if it doesn't fit in the limit #
         if len(self.name) <= 25: self.short_name = self.name
         else: self.short_name = base64.urlsafe_b64encode(hashlib.md5(self.name).digest())
@@ -191,7 +193,7 @@ class SLURMCommand(object):
         # If there is no script it is either ready or a duplicate #
         if not script_exists:
             if self.short_name not in jobs.names: return "READY"
-            if self.short_name in jobs.names: return "DUPLICATE JOB NAME"
+            if self.short_name in jobs.names: return "DUPLICATE"
         # It is in the job names #
         if self.short_name in jobs.names:
             if jobs[self.short_name]['type'] == 'queued': return "QUEUED"
@@ -214,6 +216,10 @@ class SLURMCommand(object):
         """Will call launch after performing some checks"""
         # Check already exists #
         if self.status == "READY": return self.launch()
+        # Check name conflict #
+        if self.status == "DUPLICATE":
+            print Color.i_red + "Job with same name '%s' already in queue." % (self.name,) + Color.end
+            return
         # Check already queued #
         if self.status == "QUEUED":
             print Color.i_red + "Job %s already in queue." % (self.name,) + Color.end

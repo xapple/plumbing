@@ -20,7 +20,7 @@ class Runner(object):
 
     @property
     def color(self):
-        """Should we display messages with color?"""
+        """Should be use color or not ? If we are not in a shell, then not"""
         import __main__ as main
         if not hasattr(main, '__file__'): return True
         return False

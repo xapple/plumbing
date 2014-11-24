@@ -25,7 +25,7 @@ class CSVTable(FilePath):
         sh.sed('-i', '1s/%s/%s/' % (before, after), self.path)
 
     def rewrite_lines(self, lines, path=None):
-        if not path:
+        if path is None:
             with TmpFile() as tmpfile: tmpfile.handle.writelines(lines)
             os.remove(self.path)
             shutil.move(tmpfile.path, self.path)
@@ -54,6 +54,10 @@ class CSVTable(FilePath):
         for row in rows: yield d.join(row) + '\n'
     def transpose(self, path=None, d=None):
         self.rewrite_lines(self.transposed_lines(self.d if d is None else d), path)
+
+    def to_dataframe(self, **kwargs):
+        """Load up the CSV file as a pandas dataframe"""
+        return pandas.io.parsers.read_csv(self.path, sep=self.d, **kwargs)
 
 ################################################################################
 class TSVTable(CSVTable):

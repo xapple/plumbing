@@ -1,5 +1,5 @@
 # Built-in modules #
-import time, pickle, inspect
+import os, time, pickle, inspect
 
 # Internal modules #
 
@@ -18,20 +18,52 @@ def property_cached(f):
                 return time.time()
         bob = Employee()
         print bob.salary
-        print bob.salary
         bob.salary = "10000$"
+        print bob.salary
     """
-    def add_to_cache(self):
-        if inspect.isgeneratorfunction(f): result = tuple(f(self))
-        else: result = f(self)
-        self.__cache__[f.__name__] = result
+    # Called when you access the property #
     def retrieve_from_cache(self):
         if '__cache__' not in self.__dict__: self.__cache__ = {}
-        if f.__name__ not in self.__cache__: add_to_cache(self)
+        if f.__name__ not in self.__cache__:
+            if inspect.isgeneratorfunction(f): result = tuple(f(self))
+            else: result = f(self)
+            self.__cache__[f.__name__] = result
         return self.__cache__[f.__name__]
+    # Called when you set the property #
     def overwrite_cache(self, value):
         if '__cache__' not in self.__dict__: self.__cache__ = {}
         self.__cache__[f.__name__] = value
+    # Return a wrapper #
+    retrieve_from_cache.__doc__ = f.__doc__
+    return property(retrieve_from_cache, overwrite_cache)
+
+################################################################################
+def pickled_property(f):
+    """Same thing as above but the result will be stored on disk
+    The path will be determined by questioning the `p` attribue
+    of the class containing the method with the function name."""
+    # Called when you access the property #
+    def retrieve_from_cache(self):
+        # Is it in the cache ? #
+        if '__cache__' not in self.__dict__: self.__cache__ = {}
+        if f.__name__ in self.__cache__: return self.__cache__[f.__name__]
+        # Is it on disk ? #
+        path = getattr(self.p, f.func_name)
+        if path.exists:
+            with open(path) as handle: result = pickle.load(handle)
+            self.__cache__[f.__name__] = result
+            return result
+        # Otherwise let's compute it #
+        result = f(self)
+        with open(path, 'w') as handle: pickle.dump(result, handle)
+        self.__cache__[f.__name__] = result
+        return result
+    # Called when you set the property #
+    def overwrite_cache(self, value):
+        path = getattr(self.p, f.func_name)
+        if value is None: os.remove(path)
+        else: raise Exception("You can't set a pickled property, you can only delete it")
+    # Return a wrapper #
     retrieve_from_cache.__doc__ = f.__doc__
     return property(retrieve_from_cache, overwrite_cache)
 
@@ -52,23 +84,6 @@ def expiry_every(seconds=0):
         # Return #
         return result
     return decorator(memoize_with_expiry)
-
-################################################################################
-def pickled_property(f):
-    def get_method(self):
-        # Is it on disk #
-        path = getattr(self.p, f.func_name)
-        if path.exists:
-            with open(path) as handle: result = pickle.load(handle)
-            f.__cache__ = result
-            return result
-        # Let's compute it #
-        result = f(self)
-        with open(path, 'w') as handle: pickle.dump(result, handle)
-        return result
-    # Return a wrapper #
-    get_method.__doc__ = f.__doc__
-    return property(get_method)
 
 ###############################################################################
 class LazyString(object):

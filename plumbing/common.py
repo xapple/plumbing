@@ -11,6 +11,40 @@ import sh, numpy, dateutil
 flatter = lambda x: [item for sublist in x for item in sublist]
 
 ################################################################################
+def pad_with_whitespace(string, pad=None):
+    if pad is None: pad = max(map(len, string.split('\n'))) + 1
+    return '\n'.join(('{0: <%i}' % pad).format(line) for line in string.split('\n'))
+
+def mirror_lines(string):
+    return '\n'.join(line[::-1] for line in string.split('\n'))
+
+def concatenate_by_line(first, second):
+    return '\n'.join(x+y for x,y in zip(first.split('\n'), second.split('\n')))
+
+################################################################################
+def sort_string_by_pairs(strings):
+    """Group a list of strings by pairs, by matching those with only
+    one character difference between each other together."""
+    assert len(strings) % 2 == 0
+    pairs = []
+    strings = list(strings) # This shallow copies the list
+    while strings:
+        template = strings.pop()
+        for i, candidate in enumerate(strings):
+            if count_string_diff(template, candidate) == 1:
+                pair = [template, strings.pop(i)]
+                pair.sort()
+                pairs.append(pair)
+                break
+    return pairs
+
+################################################################################
+def count_string_diff(a,b):
+    """Return the number of characters in a string that don't exactly match"""
+    shortest = min(len(a), len(b))
+    return sum(a[i] != b[i] for i in range(shortest))
+
+################################################################################
 def iflatten(L):
     for sublist in L:
         if hasattr(sublist, '__iter__'):
@@ -173,23 +207,10 @@ def reversed_blocks(handle, blocksize=4096):
         yield handle.read(delta)
 
 ###############################################################################
-def move_with_overwrite(source, dest):
-    if os.path.exists(dest):
-        if os.path.isdir(dest): shutil.rmtree(dest)
-        else: os.remove(dest)
-    shutil.move(source, dest)
-
-###############################################################################
-def replace_extension(path, new_ext):
-    if not new_ext.startswith('.'): new_ext = '.' + new_ext
-    base, ext = os.path.splitext(path)
-    return base + new_ext
-
-###############################################################################
 def find_file_by_name(name, root=os.curdir):
     for dirpath, dirnames, filenames in os.walk(os.path.abspath(root)):
         if name in filenames: return os.path.join(dirpath, name)
-    raise Exception("Could not find file '%s' in '%s'") % (name, root)
+    raise Exception("Could not find file '%s' in '%s'" % (name, root))
 
 ###############################################################################
 def natural_sort(item):

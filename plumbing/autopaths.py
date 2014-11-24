@@ -196,8 +196,10 @@ class DirectoryPath(str):
 
     @property
     def contents(self):
-        """The files and directories as a list"""
-        return os.listdir(self.path)
+        """The files and directories in this directory"""
+        for root, dirs, files in os.walk(self.path, topdown=False):
+            for d in dirs:  yield DirectoryPath(os.path.join(root, d))
+            for f in files: yield FilePath(os.path.join(root, f))
 
     @property
     def exists(self):
@@ -219,6 +221,14 @@ class DirectoryPath(str):
 
 ################################################################################
 class FilePath(str):
+    """I can never remember all those darn `os.path` commands, so I made a class that wraps them with an easier and more pythonic syntax.
+
+        path = FilePath('/home/root/text.txt')
+        print path.extension
+        print path.directory
+        print path.filename
+
+    You can find lots of the common things you would need to do with file paths. Such as: path.make_executable()"""
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
     def __iter__(self): return open(self.path)
@@ -248,6 +258,11 @@ class FilePath(str):
     def prefix(self):
         """Just the filename without the (last) extension and trailing period"""
         return str(os.path.basename(self.prefix_path))
+
+    @property
+    def short_prefix(self):
+        """Just the filename without any extension or periods"""
+        return self.filename.split('.')[0]
 
     @property
     def filename(self):
@@ -376,6 +391,10 @@ class FilePath(str):
         if isinstance(what, FilePath): what = what.contents
         prepend_to_file(self.path, what)
 
+    def must_exist(self):
+        """Raise an exception if the path doesn't exist."""
+        if not self.exists: raise Exception("The file path '%s' does not exist." % self.path)
+
 ################################################################################
 class Filesize(object):
     """
@@ -396,6 +415,9 @@ class Filesize(object):
 
     def __int__(self):
         return self.size
+
+    def __eq__(self, other):
+        return self.size == other
 
     def __str__(self):
         if self.size == 0: return '0 bytes'
