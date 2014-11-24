@@ -208,7 +208,7 @@ def natural_sort(item):
     return map(try_int, re.findall(r'(\d+|\D+)', item))
 
 ###############################################################################
-def which(cmd):
+def which(cmd, safe=False):
     """https://github.com/jc0n/python-which"""
     def is_executable(path):
         return os.path.exists(path) and os.access(path, os.X_OK) and not os.path.isdir(path)
@@ -219,7 +219,7 @@ def which(cmd):
         for path in os.environ['PATH'].split(os.pathsep):
             candidate = os.path.join(path, cmd)
             if is_executable(candidate): return candidate
-    raise Exception('which failed to locate a proper command path "%s"' % cmd)
+    if not safe: raise Exception('which failed to locate a proper command path "%s"' % cmd)
 
 ################################################################################
 def tail(path, window=20):

@@ -1,13 +1,13 @@
 # Built-in modules #
-import os, stat, re, getpass, time, shutil
+import sys, os, stat, re, getpass, time, shutil
 import base64, hashlib, socket, multiprocessing
 from collections import OrderedDict
 
 # Internal modules #
-from common import get_git_tag, tail, is_integer, flatter
-from color import Color
-from tmpstuff import TmpFile, new_temp_path
-from cache import expiry_every
+from plumbing.common import get_git_tag, tail, is_integer, flatter, which
+from plumbing.color import Color
+from plumbing.tmpstuff import TmpFile, new_temp_path
+from plumbing.cache import expiry_every
 
 # Third party modules #
 import sh
@@ -15,6 +15,17 @@ import sh
 # Constants #
 hostname = socket.gethostname()
 user = getpass.getuser()
+
+################################################################################
+def count_processors():
+    if 'SLURM_NTASKS' in os.environ: return int(os.environ['SLURM_NTASKS'])
+    elif 'SLURM_JOB_CPUS_PER_NODE' in os.environ:
+         text = os.environ['SLURM_JOB_CPUS_PER_NODE']
+         if is_integer(text): return int(text)
+         else:
+            n, N = re.findall("([1-9]+)\(x([1-9]+)\)", text)[0]
+            return int(n) * int(N)
+    else: return multiprocessing.cpu_count()
 
 ################################################################################
 class ExistingJobs(object):
@@ -61,7 +72,7 @@ class ExistingJobs(object):
 
 ################################################################################
 class ExistingProjects(object):
-    """Parses the output of `projinfo`"""
+    """Parses the output of `projinfo` on Uppmax"""
     params = ['name', 'used', 'allowed']
 
     def __iter__(self): return iter(self.status)
@@ -71,10 +82,12 @@ class ExistingProjects(object):
         elif isinstance(key, str): return [s for s in self if s['name'] == key][0]
         else: raise TypeError("Invalid argument type.")
     def __contains__(self, key): return key in [s['name'] for s in self]
+    def __nonzero__(self): return bool(self.status)
 
     @property
     @expiry_every(seconds=3600)
     def status(self):
+        if not which('projinfo', safe=True): return None
         self.output = sh.projinfo()
         self.lines = [line.strip("'\n") for line in self.output if line.startswith('b')]
         cast = lambda x: (str(x[0]), float(x[1]), float(x[2]))
@@ -113,7 +126,7 @@ class SLURMCommand(object):
         ('project'   , {'needed': False, 'tag': '#SBATCH -A %s',            'default': "b2011035"}),
         ('time'      , {'needed': True,  'tag': '#SBATCH -t %s',            'default': '7-00:00:00'}),
         ('machines'  , {'needed': True,  'tag': '#SBATCH -N %s',            'default': '1'}),
-        ('cores'     , {'needed': True,  'tag': '#SBATCH -n %s',            'default': '16'}),
+        ('cores'     , {'needed': True,  'tag': '#SBATCH -n %s',            'default': count_processors()}),
         ('partition' , {'needed': True,  'tag': '#SBATCH -p %s',            'default': 'node'}),
         ('email'     , {'needed': False, 'tag': '#SBATCH --mail-user %s',   'default': os.environ.get('EMAIL')}),
         ('email-when', {'needed': True,  'tag': '#SBATCH --mail-type=%s',   'default': 'END'}),
@@ -146,10 +159,10 @@ class SLURMCommand(object):
         kwargs['job_name'] = self.short_name
         # Check we have a project otherwise choose the one with less hours #
         if 'project' not in kwargs and 'SBATCH_ACCOUNT' not in os.environ:
-            kwargs['project'] = projects[0]['name']
+            if projects: kwargs['project'] = projects[0]['name']
         # Script header #
         self.shebang_header = [self.shebang_headers[language]]
-        # Slurm parameters #
+        # SLURM parameters #
         self.slurm_params = OrderedDict()
         for param, info in self.slurm_headers.items():
             if not info['needed'] and not param in kwargs: continue
@@ -258,13 +271,14 @@ class SLURMJob(object):
 
     def __repr__(self): return '<%s object in "%s">' % (self.__class__.__name__, self.log_dir)
 
-    def __init__(self, command, log_base_dir, module, **kwargs):
+    def __init__(self, command, log_base_dir, module=None, **kwargs):
         # Log directory #
-        dir_name = "%4d-%02d-%02d|%02d-%02d-%02d"
+        dir_name = "%4d-%02d-%02d(%02d-%02d-%02d)"
         dir_name = dir_name % time.localtime()[0:6]
         self.log_dir = log_base_dir + dir_name + '/'
         os.mkdir(self.log_dir)
         # Copy module there #
+        if module is None: module = sys.modules[__name__]
         module_dir = os.path.dirname(module.__file__)
         module_name = module.__name__
         repos_dir = os.path.abspath(module_dir + '/../')
@@ -279,7 +293,8 @@ class SLURMJob(object):
         script =  ["import os, sys"]
         script += ["sys.path.insert(0, '%s')" % static_module_dir]
         script += ["import %s" % module_name]
-        script += ["print 'Using version from {0}'.format(os.path.abspath(%s.__file__))" % module_name]
+        script += ["print 'Using module {0}'.format(os.path.abspath(%s.__file__))" % module_name]
+        script += ["print 'Using version %s'" % self.module_version]
         script += command
         # Output #
         script_path = self.log_dir + "run.py"
@@ -293,17 +308,6 @@ class SLURMJob(object):
         return self.slurm_command.run()
 
 ################################################################################
-if 'SLURM_NTASKS' in os.environ:
-    nr_threads = int(os.environ['SLURM_NTASKS'])
-elif 'SLURM_JOB_CPUS_PER_NODE' in os.environ:
-     text = os.environ['SLURM_JOB_CPUS_PER_NODE']
-     if is_integer(text): nr_threads = int(text)
-     else:
-        n, N = re.findall("([1-9]+)\(x([1-9]+)\)", text)[0]
-        nr_threads = int(n) * int(N)
-else:
-    nr_threads = multiprocessing.cpu_count()
-
-################################################################################
+nr_threads = count_processors()
 jobs = ExistingJobs()
 projects = ExistingProjects()

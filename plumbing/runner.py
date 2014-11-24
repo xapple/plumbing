@@ -4,6 +4,7 @@ import os, sys, time, datetime
 # Internal modules #
 from plumbing.common import iflatten
 from plumbing.color import Color
+from plumbing.slurm import SLURMJob
 
 # Third party modules #
 import threadpool
@@ -14,8 +15,12 @@ import threadpool
 class Runner(object):
     """General purpose runner"""
 
+    def __init__(self, parent):
+        self.parent = parent
+
     @property
     def color(self):
+        """Should we display messages with color?"""
         import __main__ as main
         if not hasattr(main, '__file__'): return True
         return False
@@ -27,7 +32,8 @@ class Runner(object):
         # Do steps #
         if not steps: steps = self.default_steps
         for step in steps:
-            name, params = step.items()[0]
+            if isinstance(step, str):  name, params = step, {}
+            if isinstance(step, dict): name, params = step.items()[0]
             params.update(kwargs)
             fns = self.find_fns(name)
             self.run_step(name, fns, **params)
@@ -64,7 +70,8 @@ class Runner(object):
 
     def run_step(self, name, fns, *args, **kwargs):
         # Default threads #
-        threads = kwargs.pop('threads', True)
+        if '.' in name: threads = kwargs.pop('threads', False)
+        else:           threads = kwargs.pop('threads', True)
         # Start timer #
         start_time = time.time()
         # Message #
@@ -85,6 +92,16 @@ class Runner(object):
         if self.color: print Color.ylw + "Run time: '%s'" % (run_time) + Color.end
         else: print "Run time: '%s'" % (run_time)
         sys.stdout.flush()
+
+    def run_slurm(self, steps=None, **kwargs):
+        # Extra params #
+        if 'time' not in kwargs: kwargs['time'] = self.default_time
+        if 'email' not in kwargs: kwargs['email'] = None
+        if 'dependency' not in kwargs: kwargs['dependency'] = 'singleton'
+        # Send it #
+        if 'job_name' not in kwargs: kwargs['job_name'] = self.job_name
+        self.slurm_job = SLURMJob(self.command(steps), self.parent.p.logs_dir, **kwargs)
+        return self.slurm_job.run()
 
     @property
     def latest_log(self):
