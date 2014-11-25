@@ -327,7 +327,10 @@ class FilePath(str):
         with open(self.path, 'w'): pass
 
     def write(self, content, encoding=None):
-        with codecs.open(self.path, 'w', encoding) as handle: handle.write(content)
+        if encoding is None:
+            with open(self.path, 'w') as handle: handle.write(content)
+        else:
+            with codecs.open(self.path, 'w', encoding) as handle: handle.write(content)
 
     def writelines(self, content, encoding=None):
         with codecs.open(self.path, 'w', encoding) as handle: handle.writelines(content)
