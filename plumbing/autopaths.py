@@ -211,8 +211,11 @@ class DirectoryPath(str):
         shutil.rmtree(self.path, ignore_errors=True)
         return True
 
-    def create(self):
-        os.makedirs(self.path)
+    def create(self, safe=False):
+        if not safe: os.makedirs(self.path)
+        if safe:
+            try: os.makedirs(self.path)
+            except OSError: pass
 
     def zip(self, keep_orig=False):
         """Make a zip archive of the directory"""
@@ -352,7 +355,7 @@ class FilePath(str):
 
     def link_to(self, path, safe=False):
         if not safe:
-            os.remove(path)
+            if os.path.exists(path): os.remove(path)
             os.symlink(self.path, path)
         if safe:
             try: os.remove(path)

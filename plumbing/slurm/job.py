@@ -132,8 +132,8 @@ class JobSLURM(object):
         result = OrderedDict()
         for param, info in self.slurm_headers.items():
             if not info['needed'] and not param in self.kwargs: continue
-            if self.kwargs.get(param): result[param] = self.kwargs.get(param)
-            else:                      result[param] = info['default']
+            if param in self.kwargs: result[param] = self.kwargs.get(param)
+            else:                    result[param] = info['default']
         # Special cases #
         if result.get('cluster') == 'halvan': result['partition'] = 'halvan'
         # Return #
