@@ -1,5 +1,5 @@
 # Built-in modules #
-import os, stat, re, platform
+import os, re, platform
 import base64, hashlib
 from collections import OrderedDict
 
@@ -47,7 +47,7 @@ class JobSLURM(object):
     }
 
     slurm_headers = OrderedDict((
-        ('job_name'  , {'tag': '#SBATCH -J %s'}),
+        ('job_name'  , {'tag': '#SBATCH -J %s',            'needed': True}),
         ('change_dir', {'tag': '#SBATCH -D %s',            'needed': True,  'default': os.path.abspath(os.getcwd())}),
         ('out_file'  , {'tag': '#SBATCH -o %s',            'needed': True,  'default': '/dev/null'}),
         ('project'   , {'tag': '#SBATCH -A %s',            'needed': False, 'default': "b2011035"}),
@@ -118,7 +118,7 @@ class JobSLURM(object):
         # In case there is a base directory #
         if base_dir is not None:
             self.base_dir             = DirectoryPath(os.path.abspath(base_dir))
-            self.script_path          = FilePath(base_dir + "run" + self.extensions[self.language])
+            self.script_path          = FilePath(base_dir + "run." + self.extensions[self.language])
             self.kwargs['change_dir'] = base_dir
             self.kwargs['out_file']   = FilePath(base_dir + "run.out")
         # Other cases #
@@ -128,30 +128,34 @@ class JobSLURM(object):
     @property_cached
     def slurm_params(self):
         """The list of parameters to give to the `sbatch` command."""
-        # Main loop #
+        # Main loop #
         result = OrderedDict()
         for param, info in self.slurm_headers.items():
             if not info['needed'] and not param in self.kwargs: continue
             if self.kwargs.get(param): result[param] = self.kwargs.get(param)
             else:                      result[param] = info['default']
         # Special cases #
-        if self.slurm_params.get('cluster') == 'halvan': self.slurm_params['partition'] = 'halvan'
+        if result.get('cluster') == 'halvan': result['partition'] = 'halvan'
         # Return #
         return result
 
-    def make_script(self):
-        """Return a FilePath object pointing to the script to be submitted
-        to the SLURM queue."""
+    @property
+    def script(self):
+        """The script to be submitted to the SLURM queue."""
         self.shebang_header = self.shebang_headers[self.language]
+        self.slurm_header   = [self.slurm_headers[k]['tag'] % v for k,v in self.slurm_params.items()]
         self.script_header  = self.script_headers[self.language]
         self.script_footer  = self.script_footers[self.language]
-        self.slurm_header   = [self.slurm_headers[k]['tag'] % v for k,v in self.slurm_params.items()]
-        self.script_path.write('\n'.join(flatter(self.shebang_header,
-                                                 self.slurm_header,
-                                                 self.script_header,
-                                                 self.command,
-                                                 self.script_footer)))
-        os.chmod(self.script_path, os.stat(self.script_path).st_mode | stat.S_IEXEC)
+        return '\n'.join(flatter([self.shebang_header,
+                                  self.slurm_header,
+                                  self.script_header,
+                                  self.command,
+                                  self.script_footer]))
+
+    def make_script(self):
+        """Make the script and return a FilePath object pointing to the script above."""
+        self.script_path.write(self.script)
+        self.script_path.permissions.make_executable()
         return self.script_path
 
     @property
@@ -212,3 +216,7 @@ class JobSLURM(object):
         if self.status != "QUEUED" and self.status != "RUNNING":
             raise Exception("Can't cancel job '%s'" % self.name)
         sh.scancel(self.info['id'])
+
+    def wait(self):
+        """Wait until the job is finished"""
+        pass

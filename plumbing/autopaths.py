@@ -295,6 +295,11 @@ class FilePath(str):
         return Filesize(self.count_bytes)
 
     @property
+    def permissions(self):
+        """Convenience object for dealing with permissions"""
+        return FilePermissions(self.path)
+
+    @property
     def contents(self):
         """The contents as a string"""
         return open(self.path).read()
@@ -358,9 +363,6 @@ class FilePath(str):
     def copy(self, path):
         shutil.copy2(self.path, path)
 
-    def make_executable(self):
-        return os.chmod(self.path, os.stat(self.path).st_mode | stat.S_IEXEC)
-
     def execute(self):
         return subprocess.call([self.path])
 
@@ -381,6 +383,14 @@ class FilePath(str):
         if path is None: path = self + ".gz"
         with open(self, 'rb') as orig_file:
             with gzip.open(path, 'wb') as new_file:
+                new_file.writelines(orig_file)
+        return FilePath(path)
+
+    def ungzip_to(self, path=None):
+        """Make a unzipped version of the file at a given path"""
+        if path is None: path = path[:3]
+        with gzip.open(self, 'rb') as orig_file:
+            with open(path, 'wb') as new_file:
                 new_file.writelines(orig_file)
         return FilePath(path)
 
@@ -436,3 +446,17 @@ class Filesize(object):
         precision = self.precisions[exponent]
         format_string = '{:.%sf} {}' % (precision)
         return format_string.format(quotient, unit)
+
+################################################################################
+class FilePermissions(object):
+    """Container for reading and setting a files permissions"""
+
+    def __init__(self, path):
+        self.path = path
+
+    def make_executable(self):
+        return os.chmod(self.path, os.stat(self.path).st_mode | stat.S_IEXEC)
+
+    def only_readable(self):
+        """Remove all writing privileges"""
+        return os.chmod(self.path, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
