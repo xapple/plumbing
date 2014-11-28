@@ -38,7 +38,7 @@ def property_cached(f):
     return property(retrieve_from_cache, overwrite_cache)
 
 ################################################################################
-def pickled_property(f):
+def property_pickled(f):
     """Same thing as above but the result will be stored on disk
     The path will be determined by questioning the `p` attribue
     of the class containing the method with the function name."""
