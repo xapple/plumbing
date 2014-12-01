@@ -42,7 +42,7 @@ class JobSLURM(object):
     }
 
     shebang_headers = {
-        'bash':   ["#!/bin/bash -l"],
+        'bash':   ["#!/bin/bash -le"],      # As a login shell and stop on error
         'python': ["#!/usr/bin/env python"]
     }
 
@@ -159,6 +159,12 @@ class JobSLURM(object):
         return self.script_path
 
     @property
+    def log_tail(self):
+        """If we have a log file, what is its tail"""
+        if not self.kwargs['out_file'].exists: return False
+        else: return tail(self.slurm_params['out_file'])
+
+    @property
     def status(self):
         """What is the status of the job ?"""
         # If there is no script it is either ready or a lost duplicate #
@@ -167,22 +173,21 @@ class JobSLURM(object):
             if self.name not in jobs.names: return "READY"
         # It is submitted already #
         if self.name in jobs.names:
-            if jobs[self.short_name]['type'] == 'queued':  return "QUEUED"
-            if jobs[self.short_name]['type'] == 'running': return "RUNNING"
+            if jobs[self.name]['type'] == 'queued':  return "QUEUED"
+            if jobs[self.name]['type'] == 'running': return "RUNNING"
         # So the script exists for sure but it is not in the queue #
         if not self.kwargs['out_file'].exists: return "ABORTED"
         # Let's look in log file #
-        log_tail = tail(self.slurm_params['out_file'])
-        if 'CANCELLED'     in log_tail: return "CANCELLED"
-        if 'SLURM: end at' in log_tail: return "ENDED"
+        if 'CANCELLED'     in self.log_tail: return "CANCELLED"
+        if 'SLURM: end at' in self.log_tail: return "ENDED"
         # Default #
         return "INTERUPTED"
 
     @property
     def info(self):
         """Get the existing job information dictionary"""
-        if self.short_name not in jobs: return {'status': self.status}
-        else:                           return jobs[self.short_name]
+        if self.name not in jobs: return {'status': self.status}
+        else:                     return jobs[self.name]
 
     def run(self):
         """Will call self.launch() after performing some checks"""
@@ -215,7 +220,7 @@ class JobSLURM(object):
     def interupt(self):
         if self.status != "QUEUED" and self.status != "RUNNING":
             raise Exception("Can't cancel job '%s'" % self.name)
-        sh.scancel(self.info['id'])
+        sh.scancel(self.info['jobid'])
 
     def wait(self):
         """Wait until the job is finished"""
