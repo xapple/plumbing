@@ -61,7 +61,7 @@ class JobSLURM(object):
         ('dependency', {'tag': '#SBATCH -d %s',            'needed': False, 'default': 'afterok:1'}),
         ('constraint', {'tag': '#SBATCH -C %s',            'needed': False, 'default': 'fat'}),
         ('cluster'   , {'tag': '#SBATCH -M %s',            'needed': False, 'default': 'milou'}),
-        ('alloc'     , {'tag': '#SBATCH --reservation=%s', 'needed': False, 'default': 'miiiiiine'}),
+        ('alloc'     , {'tag': '#SBATCH --reservation=%s', 'needed': False, 'default': 'workstation'}),
         ('jobid'     , {'tag': '#SBATCH --jobid=%i',       'needed': False, 'default': 2173455}),
     ))
 
@@ -179,7 +179,7 @@ class JobSLURM(object):
         if not self.kwargs['out_file'].exists: return "ABORTED"
         # Let's look in log file #
         if 'CANCELLED'     in self.log_tail: return "CANCELLED"
-        if 'SLURM: end at' in self.log_tail: return "ENDED"
+        if 'SLURM: end at' in self.log_tail: return "FINISHED"
         # Default #
         return "INTERUPTED"
 
@@ -197,7 +197,7 @@ class JobSLURM(object):
         if self.status == "DUPLICATE":  message = "Job with same name '%s' already in queue, but we lost the script."
         if self.status == "QUEUED":     message = "Job '%s' already in queue."
         if self.status == "RUNNING":    message = "Job '%s' already running."
-        if self.status == "ENDED":      message = "Job '%s' already ended successfully."
+        if self.status == "FINISHED":   message = "Job '%s' already ended successfully."
         if self.status == "ABORTED":    message = "Job '%s' was killed without any output file (?)."
         if self.status == "CANCELLED":  message = "Job '%s' was canceled while running."
         if self.status == "INTERUPTED": message = "Job '%s' is not running. Look at the log file."
