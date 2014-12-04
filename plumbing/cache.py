@@ -1,5 +1,6 @@
 # Built-in modules #
-import os, time, pickle, inspect
+import os, time, inspect
+import cPickle as pickle
 
 # Internal modules #
 

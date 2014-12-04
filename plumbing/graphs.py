@@ -7,6 +7,7 @@ from autopaths import FilePath
 
 # Third party modules #
 import matplotlib, brewer2mpl
+matplotlib.use('Agg', warn=False)
 from matplotlib import pyplot
 
 # Constants #
