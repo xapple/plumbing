@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 # Built-in modules #
-import sys, os, time, shutil, re, random, math
+import sys, os, time, re, random, math
 import getpass, hashlib, datetime, collections
+from itertools import compress, product
 
 # Third party modules #
 import sh, numpy, dateutil
@@ -11,14 +12,23 @@ import sh, numpy, dateutil
 flatter = lambda x: [item for sublist in x for item in sublist]
 
 ################################################################################
+def all_combinations(items):
+    """Generate all combinations of a given list of items"""
+    return (set(compress(items,mask)) for mask in product(*[[0,1]]*len(items)))
+
+################################################################################
 def pad_with_whitespace(string, pad=None):
+    """Given a multiline string, add whitespaces to every line
+    so that every line has the same length"""
     if pad is None: pad = max(map(len, string.split('\n'))) + 1
     return '\n'.join(('{0: <%i}' % pad).format(line) for line in string.split('\n'))
 
 def mirror_lines(string):
+    """Given a multilin string, return its reflection along a vertical axis"""
     return '\n'.join(line[::-1] for line in string.split('\n'))
 
 def concatenate_by_line(first, second):
+    """Zip two strings together, line wise"""
     return '\n'.join(x+y for x,y in zip(first.split('\n'), second.split('\n')))
 
 ################################################################################
@@ -40,16 +50,53 @@ def sort_string_by_pairs(strings):
 
 ################################################################################
 def count_string_diff(a,b):
-    """Return the number of characters in a string that don't exactly match"""
+    """Return the number of characters in two strings that don't exactly match"""
     shortest = min(len(a), len(b))
     return sum(a[i] != b[i] for i in range(shortest))
 
 ################################################################################
 def iflatten(L):
+    """Iterative flatten"""
     for sublist in L:
         if hasattr(sublist, '__iter__'):
             for item in iflatten(sublist): yield item
         else: yield sublist
+
+###############################################################################
+def find_file_by_name(name, root=os.curdir):
+    for dirpath, dirnames, filenames in os.walk(os.path.abspath(root)):
+        if name in filenames: return os.path.join(dirpath, name)
+    raise Exception("Could not find file '%s' in '%s'" % (name, root))
+
+
+################################################################################
+def get_next_item(iterable):
+    """Gets the next item of an iterable.
+    If the iterable is exhausted, returns None."""
+    try: x = iterable.next()
+    except StopIteration: x = None
+    except AttributeError: x = None
+    return x
+
+################################################################################
+def pretty_now():
+    """Prints some thing like '2014-07-24 11:12:45 CEST+0200'"""
+    now = datetime.datetime.now(dateutil.tz.tzlocal())
+    return now.strftime("%Y-%m-%d %H:%M:%S %Z%z")
+
+################################################################################
+def andify(list_of_strings):
+    """
+    Given a list of strings will join them with commas
+    and a final "and" word.
+
+    >>> andify(['Apples', 'Oranges', 'Mangos'])
+    'Apples, Oranges and Mangos'
+    """
+    result = ', '.join(list_of_strings)
+    comma_index = result.rfind(',')
+    if comma_index > -1: result = result[:comma_index] + ' and' + result[comma_index+1:]
+    return result
 
 ################################################################################
 class GenWithLength(object):
@@ -73,7 +120,7 @@ class Password(object):
 
 ################################################################################
 def md5sum(file_path, blocksize=65536):
-    """Compute the md5 of a file. Pretty fast"""
+    """Compute the md5 of a file. Pretty fast."""
     md5 = hashlib.md5()
     with open(file_path, "r+b") as f:
         for block in iter(lambda: f.read(blocksize), ""):
@@ -89,6 +136,24 @@ def average(iterator):
         count += 1
         total += num
     return float(total)/count
+
+################################################################################
+def isubsample(full_sample, k, full_sample_len=None):
+    """Down-sample an enumerable list of things"""
+    # Determine length #
+    if not full_sample_len: full_sample_len = len(full_sample)
+    # Check size coherence #
+    if not 0 <= k <= full_sample_len:
+        raise ValueError('Required that 0 <= k <= full_sample_length')
+    # Do it #
+    picked = 0
+    for i, element in enumerate(full_sample):
+        prob = (k-picked) / (full_sample_len-i)
+        if random.random() < prob:
+            yield element
+            picked += 1
+    # Did we pick the right amount #
+    assert picked == k
 
 ###############################################################################
 def moving_average(interval, windowsize, borders=None):
@@ -137,6 +202,7 @@ def moving_average(interval, windowsize, borders=None):
 
 ################################################################################
 def wait(predicate, interval=1, message=lambda: "Waiting..."):
+    """Wait until the predicate turns true and display a turning ball"""
     ball, next_ball = u"|/-\\", "|"
     sys.stdout.write("    \033[K")
     sys.stdout.flush()
@@ -147,34 +213,6 @@ def wait(predicate, interval=1, message=lambda: "Waiting..."):
         sys.stdout.flush()
     print "\r Done. \033[K"
     sys.stdout.flush()
-
-################################################################################
-def isubsample(full_sample, k, full_sample_len=None):
-    """Downsample an enumerable list of things"""
-    # Determine length #
-    if not full_sample_len: full_sample_len = len(full_sample)
-    # Check size coherence #
-    if not 0 <= k <= full_sample_len:
-        raise ValueError('Required that 0 <= k <= full_sample_length')
-    # Do it #
-    picked = 0
-    for i, element in enumerate(full_sample):
-        prob = (k-picked) / (full_sample_len-i)
-        if random.random() < prob:
-            yield element
-            picked += 1
-    # Did we pick the right amount #
-    assert picked == k
-
-################################################################################
-def imean(numbers):
-    """Iterative mean"""
-    count = 0
-    total = 0
-    for num in numbers:
-        count += 1
-        total += num
-    return float(total)/count
 
 ################################################################################
 def get_git_tag(directory):
@@ -205,12 +243,6 @@ def reversed_blocks(handle, blocksize=4096):
         here -= delta
         handle.seek(here, os.SEEK_SET)
         yield handle.read(delta)
-
-###############################################################################
-def find_file_by_name(name, root=os.curdir):
-    for dirpath, dirnames, filenames in os.walk(os.path.abspath(root)):
-        if name in filenames: return os.path.join(dirpath, name)
-    raise Exception("Could not find file '%s' in '%s'" % (name, root))
 
 ###############################################################################
 def natural_sort(item):
@@ -353,26 +385,6 @@ def append_to_file(path, data):
         handle.write(data)
 
 ################################################################################
-def pretty_now():
-    """Prints some thing like '2014-07-24 11:12:45 CEST+0200'"""
-    now = datetime.datetime.now(dateutil.tz.tzlocal())
-    return now.strftime("%Y-%m-%d %H:%M:%S %Z%z")
-
-################################################################################
-def andify(list_of_strings):
-    """
-    Given a list of strings will join them with commas
-    and a final "and" word.
-
-    >>> andify(['Apples', 'Oranges', 'Mangos'])
-    'Apples, Oranges and Mangos'
-    """
-    result = ', '.join(list_of_strings)
-    comma_index = result.rfind(',')
-    if comma_index > -1: result = result[:comma_index] + ' and' + result[comma_index+1:]
-    return result
-
-################################################################################
 class OrderedSet(collections.OrderedDict, collections.MutableSet):
     """A recipe for an ordered set.
     http://stackoverflow.com/a/1653978/287297"""
@@ -418,12 +430,3 @@ class OrderedSet(collections.OrderedDict, collections.MutableSet):
     symmetric_difference = property(lambda self: self.__xor__)
     symmetric_difference_update = property(lambda self: self.__ixor__)
     union = property(lambda self: self.__or__)
-
-################################################################################
-def get_next_item(iterable):
-    """Gets the next item of an iterable.
-    If the iterable is exhausted, returns None."""
-    try: x = iterable.next()
-    except StopIteration: x = None
-    except AttributeError: x = None
-    return x
