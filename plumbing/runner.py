@@ -15,14 +15,20 @@ import threadpool
 class Runner(object):
     """General purpose runner. Can execute functions on objects, via SLURM
     or locally. You should inherit from this class."""
-    modules = []
+    modules       = []
+    job_name      = "unnamed"
+    default_time  = '7-00:00:00'
+    default_steps = [{'run': {}}]
+
+    @property
+    def extra_slurm_params(self): return {}
 
     def __init__(self, parent):
         self.parent = parent
 
     @property
     def color(self):
-        """Should we use color or not ? If we are not in a shell, then not"""
+        """Should we use color or not ? If we are not in a shell, then not."""
         import __main__ as main
         if not hasattr(main, '__file__'): return True
         return False
@@ -119,15 +125,18 @@ class Runner(object):
     #-------------------------------------------------------------------------#
     def run_slurm(self, steps=None, **kwargs):
         """Run the steps via the SLURM queue."""
-        # Extra params #
-        if 'time' not in kwargs: kwargs['time'] = self.default_time
-        if 'email' not in kwargs: kwargs['email'] = None
-        if 'dependency' not in kwargs: kwargs['dependency'] = 'singleton'
+        # Optional extra SLURM parameters #
+        params = self.extra_slurm_params
+        params.update(kwargs)
+        # Mandatory extra SLURM parameters #
+        if 'time'       not in params: params['time']       = self.default_time
+        if 'job_name'   not in params: params['job_name']   = self.job_name
+        if 'email'      not in params: params['email']      = None
+        if 'dependency' not in params: params['dependency'] = 'singleton'
         # Send it #
-        if 'job_name' not in kwargs: kwargs['job_name'] = self.job_name
         self.slurm_job = LoggedJobSLURM(self.command(steps),
                                         base_dir = self.parent.p.logs_dir,
                                         modules  = self.modules,
-                                        **kwargs)
+                                        **params)
         # Return the Job ID #
         return self.slurm_job.run()
