@@ -4,7 +4,7 @@ import os, sys, time, datetime
 # Internal modules #
 from plumbing.common import iflatten
 from plumbing.color import Color
-from plumbing.slurm import SLURMJob
+from plumbing.slurm.logged import LoggedJobSLURM
 
 # Third party modules #
 import threadpool
@@ -100,7 +100,7 @@ class Runner(object):
         if 'dependency' not in kwargs: kwargs['dependency'] = 'singleton'
         # Send it #
         if 'job_name' not in kwargs: kwargs['job_name'] = self.job_name
-        self.slurm_job = SLURMJob(self.command(steps), self.parent.p.logs_dir, **kwargs)
+        self.slurm_job = LoggedJobSLURM(self.command(steps), self.parent.p.logs_dir, **kwargs)
         return self.slurm_job.run()
 
     @property
