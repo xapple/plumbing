@@ -49,7 +49,7 @@ class JobSLURM(object):
         ('job_name'  , {'tag': '#SBATCH -J %s',            'needed': True}),
         ('change_dir', {'tag': '#SBATCH -D %s',            'needed': True,  'default': os.path.abspath(os.getcwd())}),
         ('out_file'  , {'tag': '#SBATCH -o %s',            'needed': True,  'default': '/dev/null'}),
-        ('project'   , {'tag': '#SBATCH -A %s',            'needed': False, 'default': "b2011035"}),
+        ('project'   , {'tag': '#SBATCH -A %s',            'needed': False, 'default': 'b2011035'}),
         ('time'      , {'tag': '#SBATCH -t %s',            'needed': True,  'default': '7-00:00:00'}),
         ('machines'  , {'tag': '#SBATCH -N %s',            'needed': True,  'default': '1'}),
         ('cores'     , {'tag': '#SBATCH -n %s',            'needed': True,  'default': num_processors}),
@@ -84,7 +84,7 @@ class JobSLURM(object):
     def name(self): return self.kwargs['job_name']
 
     def __init__(self,
-                 command     = ["import sys", "print 'Hello world'", "sys.exit()"],
+                 command     = ["print 'Hello world'"],
                  language    = 'python',
                  base_dir    = None,
                  script_path = None,

@@ -165,10 +165,10 @@ class DirectoryPath(str):
         """Given a path, return a cleaned up version for initialization"""
         # Conserve None object style #
         if path is None: return None
+        # Don't nest DirectoryPaths #
+        if isinstance(path, DirectoryPath): path = path.path
         # Expand tilda #
         if "~" in path: path = os.path.expanduser(path)
-        # Don't nest FilePaths #
-        if isinstance(path, FilePath): path = path.path
         # Our standard is to end with a slash #
         if not path.endswith('/'): path += '/'
         # Return the result #
@@ -254,10 +254,10 @@ class FilePath(str):
         """Given a path, return a cleaned up version for initialization"""
         # Conserve None object style #
         if path is None: return None
-        # Expand tilda #
-        if "~" in path: path = os.path.expanduser(path)
         # Don't nest FilePaths #
         if isinstance(path, FilePath): path = path.path
+        # Expand tilda #
+        if "~" in path: path = os.path.expanduser(path)
         # Return the result #
         return path
 
