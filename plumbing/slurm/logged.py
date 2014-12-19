@@ -14,8 +14,6 @@ class LoggedJobSLURM(JobSLURM):
     Will run it remotely in a new interpreter with a static copy of all
     required modules."""
 
-    def __repr__(self): return '<%s object in "%s">' % (self.__class__.__name__, self.log_dir)
-
     def __init__(self, command,
                  language = 'python',
                  base_dir = os.path.abspath(os.getcwd()),
@@ -29,7 +27,7 @@ class LoggedJobSLURM(JobSLURM):
         if not isinstance(command, list): command = [command]
         # Log directory #
         now = datetime.datetime.now(dateutil.tz.tzlocal())
-        log_name = now.strftime("%Y-%m-%d#%Hh%Mm%Ss%Z%z")
+        log_name = now.strftime("%Y-%m-%da%Hh%Mm%Ss%Z%z")
         base_dir = base_dir + log_name + '/'
         os.makedirs(base_dir)
         # The script to be sent #
