@@ -13,7 +13,9 @@ import threadpool
 
 ###############################################################################
 class Runner(object):
-    """General purpose runner"""
+    """General purpose runner. Can execute functions on objects, via SLURM
+    or locally. You should inherit from this class."""
+    modules = []
 
     def __init__(self, parent):
         self.parent = parent
@@ -93,18 +95,9 @@ class Runner(object):
         else: print "Run time: '%s'" % (run_time)
         sys.stdout.flush()
 
-    def run_slurm(self, steps=None, **kwargs):
-        # Extra params #
-        if 'time' not in kwargs: kwargs['time'] = self.default_time
-        if 'email' not in kwargs: kwargs['email'] = None
-        if 'dependency' not in kwargs: kwargs['dependency'] = 'singleton'
-        # Send it #
-        if 'job_name' not in kwargs: kwargs['job_name'] = self.job_name
-        self.slurm_job = LoggedJobSLURM(self.command(steps), self.parent.p.logs_dir, **kwargs)
-        return self.slurm_job.run()
-
     @property
     def latest_log(self):
+        """Find the latest log directory in all the logs."""
         if not self.parent.loaded: self.parent.load()
         def logs():
             for dir_name in os.listdir(self.parent.p.logs_dir):
@@ -112,3 +105,29 @@ class Runner(object):
                 if not os.path.isdir(dir_path): continue
                 yield dir_path + '/'
         return max(logs(), key=lambda x: os.stat(x).st_mtime)
+
+    #-------------------------------------------------------------------------#
+    def run_locally(self, steps=None, **kwargs):
+        """A convenience method to run the same result as a SLURM job
+        but locally in a non-blocking way."""
+        self.slurm_job = LoggedJobSLURM(self.command(steps),
+                                        base_dir = self.parent.p.logs_dir,
+                                        modules  = self.modules,
+                                        **kwargs)
+        self.slurm_job.run_locally()
+
+    #-------------------------------------------------------------------------#
+    def run_slurm(self, steps=None, **kwargs):
+        """Run the steps via the SLURM queue."""
+        # Extra params #
+        if 'time' not in kwargs: kwargs['time'] = self.default_time
+        if 'email' not in kwargs: kwargs['email'] = None
+        if 'dependency' not in kwargs: kwargs['dependency'] = 'singleton'
+        # Send it #
+        if 'job_name' not in kwargs: kwargs['job_name'] = self.job_name
+        self.slurm_job = LoggedJobSLURM(self.command(steps),
+                                        base_dir = self.parent.p.logs_dir,
+                                        modules  = self.modules,
+                                        **kwargs)
+        # Return the Job ID #
+        return self.slurm_job.run()

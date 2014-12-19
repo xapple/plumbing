@@ -1,6 +1,5 @@
 # Built-in modules #
-import os, re, platform
-import base64, hashlib
+import os, sys, re, platform, threading, base64, hashlib
 from collections import OrderedDict
 
 # Internal modules #
@@ -75,8 +74,8 @@ class JobSLURM(object):
 
     script_footers = {
         'bash':   ['echo "SLURM: end at $(date)"'],
-        'python': ['now = datetime.datetime.now(dateutil.tz.tzlocal())'
-                  r'now = now.strftime("%Y-%m-%d %Hh%Mm%Ss %Z%z")'
+        'python': ['now = datetime.datetime.now(dateutil.tz.tzlocal())',
+                  r'now = now.strftime("%Y-%m-%d %Hh%Mm%Ss %Z%z")',
                    'print "SLURM: end at {0}".format(now)']}
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
@@ -189,6 +188,7 @@ class JobSLURM(object):
         if self.name not in jobs: return {'status': self.status}
         else:                     return jobs[self.name]
 
+    #-------------------------------------------------------------------------#
     def run(self):
         """Will call self.launch() after performing some checks"""
         # Check already exists #
@@ -225,3 +225,25 @@ class JobSLURM(object):
     def wait(self):
         """Wait until the job is finished"""
         pass
+
+    #-------------------------------------------------------------------------#
+    def run_locally(self):
+        """A convenience method to run the same result as a SLURM job
+        but locally in a non-blocking way. Useful for testing."""
+        self.thread = threading.Thread(target=self.execute_locally)
+        self.thread.daemon = True # So that they die when we die
+        self.thread.start()
+
+    def execute_locally(self):
+        """Runs the equivalent command locally in a blocking way."""
+        # Make script file #
+        self.make_script()
+        # Do it #
+        with open(self.kwargs['out_file'], 'w') as handle:
+            sh.python(self.script_path, _out=handle, _err=handle)
+
+    def wait_locally(self):
+        """If you have run the query in a non-blocking way, call this method to pause
+        until the query is finished."""
+        try: self.thread.join(sys.maxint) # maxint timeout so that we can Ctrl-C them
+        except KeyboardInterrupt: print "Stopped waiting on job '%s'" % self.kwargs['job_name']
