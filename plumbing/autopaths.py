@@ -161,9 +161,15 @@ class DirectoryPath(str):
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
 
     def __new__(cls, path, *args, **kwargs):
+        # Conserve None object style #
         if path is None: return None
-        if isinstance(path, cls): path = path.path
+        # Expand tilda #
+        if "~" in path: path = os.path.expanduser(path)
+        # Don't nest DirectoryPaths #
+        if isinstance(path, FilePath): path = path.path
+        # Our standard is to end with a slash #
         if not path.endswith('/'): path += '/'
+        # A DirectoryPath is in fact a string #
         return str.__new__(cls, path)
 
     def __init__(self, path):
@@ -239,8 +245,13 @@ class FilePath(str):
     def __len__(self): return self.count
 
     def __new__(cls, path, *args, **kwargs):
+        # Conserve None object style #
         if path is None: return None
+        # Expand tilda #
+        if "~" in path: path = os.path.expanduser(path)
+        # Don't nest FilePaths #
         if isinstance(path, FilePath): path = path.path
+        # A FilePath is in fact a string #
         return str.__new__(cls, path)
 
     def __init__(self, path):
