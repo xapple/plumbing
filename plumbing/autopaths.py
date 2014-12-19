@@ -160,21 +160,26 @@ class DirectoryPath(str):
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
 
-    def __new__(cls, path, *args, **kwargs):
+    @classmethod
+    def clean_path(cls, path):
+        """Given a path, return a cleaned up version for initialization"""
         # Conserve None object style #
         if path is None: return None
         # Expand tilda #
         if "~" in path: path = os.path.expanduser(path)
-        # Don't nest DirectoryPaths #
+        # Don't nest FilePaths #
         if isinstance(path, FilePath): path = path.path
         # Our standard is to end with a slash #
         if not path.endswith('/'): path += '/'
-        # A DirectoryPath is in fact a string #
-        return str.__new__(cls, path)
+        # Return the result #
+        return path
+
+    def __new__(cls, path, *args, **kwargs):
+        """A DirectoryPath is in fact a string"""
+        return str.__new__(cls, cls.clean_path(path))
 
     def __init__(self, path):
-        if not path.endswith('/'): path += '/'
-        self.path = path
+        self.path = self.clean_path(path)
 
     def __add__(self, other):
         return self.path + other
@@ -244,24 +249,29 @@ class FilePath(str):
     def __nonzero__(self): return self.path != None and self.count_bytes != 0
     def __len__(self): return self.count
 
-    def __new__(cls, path, *args, **kwargs):
+    @classmethod
+    def clean_path(cls, path):
+        """Given a path, return a cleaned up version for initialization"""
         # Conserve None object style #
         if path is None: return None
         # Expand tilda #
         if "~" in path: path = os.path.expanduser(path)
         # Don't nest FilePaths #
         if isinstance(path, FilePath): path = path.path
-        # A FilePath is in fact a string #
-        return str.__new__(cls, path)
+        # Return the result #
+        return path
+
+    def __new__(cls, path, *args, **kwargs):
+        """A FilePath is in fact a string"""
+        return str.__new__(cls, cls.clean_path(path))
 
     def __init__(self, path):
-        if isinstance(path, FilePath): path = path.path
-        self.path = path
+        self.path = self.clean_path(path)
 
     @property
     def exists(self):
         """Does it exist in the file system"""
-        return os.path.lexists(self.path)
+        return os.path.lexists(self.path) # Returns True even for broken symbolic links
 
     @property
     def prefix_path(self):
