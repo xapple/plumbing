@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Built-in modules #
-import sys, os, time, re, random, math
+import sys, os, time, re, random, math, json
 import getpass, hashlib, datetime, collections
 from itertools import compress, product
 
@@ -10,6 +10,18 @@ import sh, numpy, dateutil
 
 # One liners #
 flatter = lambda x: [item for sublist in x for item in sublist]
+
+################################################################################
+def load_json_path(path):
+    """Load a file with the json module, but report better errors if it
+    fails."""
+    with open(path) as handle:
+        try: return json.load(handle)
+        except ValueError as error:
+            message = "Could not decode JSON file '%s'." % path
+            message = "-"*20 + "\n" + message + "\n" + str(error) + "\n" + "-"*20 + "\n"
+            sys.stderr.write(message)
+            raise error
 
 ################################################################################
 def all_combinations(items):
