@@ -1,17 +1,22 @@
 # Built-in modules #
 import os
 
+# Internal modules #
+from plumbing.autopaths import DirectoryPath
+
 # Third party modules #
 import sh
 
 ###############################################################################
-class GitRepo(object):
-    """A git repository with some convenience methods"""
+class GitRepo(DirectoryPath):
+    """A git repository with some convenience methods."""
 
-    def __init__(self, directory):
-        if not directory.endswith('/'): directory += '/'
-        self.directory = directory
-        self.git_dir = directory + '.git'
+    def __init__(self, path):
+        # Super #
+        DirectoryPath.__init__(self, path)
+        # The git directory #
+        self.git_dir = self.path + '.git'
+        # Check exists #
         if not os.path.exists(self.git_dir):
             raise Exception("No git repository at '%s'" % (self.git_dir))
 
