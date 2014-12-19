@@ -167,7 +167,7 @@ class DirectoryPath(str):
         if "~" in path: path = os.path.expanduser(path)
         # Don't nest DirectoryPaths #
         if isinstance(path, FilePath): path = path.path
-        # Our standard is to end with a slash #
+        # Our standard is to end with a slash #
         if not path.endswith('/'): path += '/'
         # A DirectoryPath is in fact a string #
         return str.__new__(cls, path)
