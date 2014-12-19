@@ -28,7 +28,7 @@ class ExistingJobs(object):
     def __getitem__(self, key):
         if isinstance(key, slice): return self.status[key]
         elif isinstance(key, int): return self.status[key]
-        elif isinstance(key, str): return [s for s in self if s['name'] == key][0]
+        elif isinstance(key, basestring): return [s for s in self if s['name'] == key][0]
         else: raise TypeError("Invalid argument type.")
     def __contains__(self, key): return key in [s['name'] for s in self]
 
