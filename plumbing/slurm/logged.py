@@ -33,12 +33,12 @@ class LoggedJobSLURM(JobSLURM):
         # The script to be sent #
         script =  []
         # Copy modules to the log directory #
-        print "Making static copy of modules for SLURM job..."
         for module in self.modules:
             module_dir   = os.path.dirname(module.__file__)
             module_name  = module.__name__
             repos_dir    = os.path.abspath(module_dir + '/../')
             project_name = os.path.basename(repos_dir)
+            print "Making static copy of module '%s' for SLURM job..." % module_name
             shutil.copytree(repos_dir, base_dir + project_name)
             static_module_dir = base_dir + project_name + '/'
             module_version    = module.__version__ + ' ' + get_git_tag(repos_dir)
