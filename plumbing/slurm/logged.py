@@ -1,5 +1,5 @@
 # Built-in modules #
-import os, shutil
+import os
 import dateutil.tz, datetime
 
 # Internal modules #
@@ -7,6 +7,7 @@ from plumbing.common import get_git_tag
 from plumbing.slurm.job import JobSLURM
 
 # Third party modules #
+import sh
 
 ################################################################################
 class LoggedJobSLURM(JobSLURM):
@@ -30,18 +31,22 @@ class LoggedJobSLURM(JobSLURM):
         log_name = now.strftime("%Y-%m-%da%Hh%Mm%Ss%Z%z")
         base_dir = base_dir + log_name + '/'
         os.makedirs(base_dir)
+        # Modules directory #
+        modules_dir = base_dir + "modules/"
+        os.makedirs(modules_dir)
         # The script to be sent #
         script =  []
         # Copy modules to the log directory #
         for module in self.modules:
-            module_dir   = os.path.dirname(module.__file__)
-            module_name  = module.__name__
-            repos_dir    = os.path.abspath(module_dir + '/../')
-            project_name = os.path.basename(repos_dir)
-            print "Making static copy of module '%s' for SLURM job..." % module_name
-            shutil.copytree(repos_dir, base_dir + project_name)
-            static_module_dir = base_dir + project_name + '/'
+            module_dir        = os.path.dirname(module.__file__)
+            module_name       = module.__name__
+            repos_dir         = os.path.abspath(module_dir + '/../')
+            project_name      = os.path.basename(repos_dir)
+            static_module_dir = modules_dir + project_name + '/'
             module_version    = module.__version__ + ' ' + get_git_tag(repos_dir)
+            # Copy #
+            print "Making static copy of module '%s' for SLURM job..." % module_name
+            sh.cp('-R', repos_dir, static_module_dir)
             # Make script #
             script.insert(0, "sys.path.insert(0, '%s')" % static_module_dir)
             script += ["import %s" % module_name]
