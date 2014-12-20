@@ -33,6 +33,7 @@ class LoggedJobSLURM(JobSLURM):
         # The script to be sent #
         script =  []
         # Copy modules to the log directory #
+        print "Making static copy of modules for SLURM job..."
         for module in self.modules:
             module_dir   = os.path.dirname(module.__file__)
             module_name  = module.__name__
