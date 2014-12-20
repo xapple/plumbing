@@ -31,7 +31,7 @@ class LoggedJobSLURM(JobSLURM):
         log_name = now.strftime("%Y-%m-%da%Hh%Mm%Ss%Z%z")
         base_dir = base_dir + log_name + '/'
         os.makedirs(base_dir)
-        # Modules directory #
+        # Modules directory #
         modules_dir = base_dir + "modules/"
         os.makedirs(modules_dir)
         # The script to be sent #
