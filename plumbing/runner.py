@@ -37,11 +37,13 @@ class Runner(object):
         # Message #
         if self.color: print Color.f_cyn + "Running %s" % (self.parent) + Color.end
         else: print "Running %s" % self.parent
-        # Do steps #
-        if not steps: steps = self.default_steps
+        # Check input #
+        if not steps:                     steps = self.default_steps
+        if isinstance(steps, basestring): steps = [steps]
+        # Do all the steps #
         for step in steps:
-            if isinstance(step, str):  name, params = step, {}
-            if isinstance(step, dict): name, params = step.items()[0]
+            if isinstance(step, basestring):  name, params = step, {}
+            if isinstance(step, dict):        name, params = step.items()[0]
             params.update(kwargs)
             fns = self.find_fns(name)
             self.run_step(name, fns, **params)
