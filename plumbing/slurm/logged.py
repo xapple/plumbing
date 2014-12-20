@@ -50,8 +50,7 @@ class LoggedJobSLURM(JobSLURM):
             # Make script #
             script.insert(0, "sys.path.insert(0, '%s')" % static_module_dir)
             script += ["import %s" % module_name]
-            script += ["print 'Using module {0}'.format(os.path.abspath(%s.__file__))" % module_name]
-            script += ["print 'Using version %s'" % module_version]
+            script += ["print 'Using static copy of module %s version %s'" % (module_name, module_version)]
         # Prepend to the script to be sent #
         script.insert(0, "import os, sys")
         # Add the user's command to the script #
