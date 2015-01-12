@@ -17,7 +17,7 @@ cool_colors += brewer2mpl.get_map('Set2',    'qualitative', 8).mpl_colors
 cool_colors += brewer2mpl.get_map('Set3',    'qualitative', 8).mpl_colors
 cool_colors += brewer2mpl.get_map('Pastel1', 'qualitative', 8).mpl_colors
 cool_colors += brewer2mpl.get_map('Pastel2', 'qualitative', 8).mpl_colors
-cool_colors += brewer2mpl.get_map('Greys',   'sequential', 8).mpl_colors
+cool_colors += brewer2mpl.get_map('Greys',   'sequential',  8).mpl_colors
 
 ################################################################################
 class Graph(object):
@@ -28,6 +28,8 @@ class Graph(object):
     left   = 0.06
     right  = 0.98
     formats = ('pdf',)
+
+    def __nonzero__(self): return self.path.__nonzero__
 
     def __init__(self, parent=None, base_dir=None, short_name=None):
         # Save parent #
