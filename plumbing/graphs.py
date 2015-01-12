@@ -29,7 +29,7 @@ class Graph(object):
     right  = 0.98
     formats = ('pdf',)
 
-    def __nonzero__(self): return self.path.__nonzero__
+    def __nonzero__(self): return self.path.__nonzero__()
 
     def __init__(self, parent=None, base_dir=None, short_name=None):
         # Save parent #
