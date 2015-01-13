@@ -1,5 +1,6 @@
 # Built-in modules #
 import os, stat, tempfile, re, subprocess, shutil, codecs, gzip
+import glob
 
 # Internal modules #
 from plumbing.common import append_to_file, prepend_to_file
@@ -74,11 +75,9 @@ class AutoPaths(object):
             raise Exception("Found several paths matching '%s'" % key)
         # Make the directory #
         result = result.pop()
-        try:
-            if not os.path.exists(result.complete_dir): os.makedirs(result.complete_dir)
-        except OSError:
-            pass
-        # End #
+        directory = DirectoryPath(result.complete_dir)
+        if not directory.exists: directory.create(safe=True)
+        # Return #
         return FilePath(result.complete_path)
 
     def search_for_dir(self, key, items):
@@ -104,12 +103,10 @@ class AutoPaths(object):
             raise Exception("Found several paths matching '%s'" % key)
         # Make the directory #
         result = result.pop()
-        try:
-            if not os.path.exists(result.complete_dir): os.makedirs(result.complete_dir)
-        except OSError:
-            pass
-        # End #
-        return DirectoryPath(result.complete_dir)
+        directory = DirectoryPath(result.complete_dir)
+        if not directory.exists: directory.create(safe=True)
+        # Return #
+        return directory
 
     @property
     def tmp_dir(self):
@@ -165,8 +162,8 @@ class DirectoryPath(str):
         """Given a path, return a cleaned up version for initialization"""
         # Conserve None object style #
         if path is None: return None
-        # Don't nest DirectoryPaths #
-        if isinstance(path, DirectoryPath): path = path.path
+        # Don't nest DirectoryPaths or the like #
+        if hasattr(path, 'path'): path = path.path
         # Expand tilda #
         if "~" in path: path = os.path.expanduser(path)
         # Our standard is to end with a slash #
@@ -254,10 +251,15 @@ class FilePath(str):
         """Given a path, return a cleaned up version for initialization"""
         # Conserve None object style #
         if path is None: return None
-        # Don't nest FilePaths #
-        if isinstance(path, FilePath): path = path.path
+        # Don't nest FilePaths or the like #
+        if hasattr(path, 'path'): path = path.path
         # Expand tilda #
         if "~" in path: path = os.path.expanduser(path)
+        # Expand star #
+        if "*" in path:
+            matches = glob.glob(path)
+            if len(matches) != 1: raise Exception("Found several files matching '%s'" % path)
+            path = matches[0]
         # Return the result #
         return path
 
@@ -335,7 +337,7 @@ class FilePath(str):
 
     @property
     def physical_path(self):
-        """The physical path like in pwd -P"""
+        """The physical path like in `pwd -P`"""
         return os.path.realpath(self.path)
 
     @property
@@ -365,6 +367,7 @@ class FilePath(str):
         with codecs.open(self.path, 'w', encoding) as handle: handle.writelines(content)
 
     def link_from(self, path, safe=False):
+        """Make a link here pointing to another file somewhere else."""
         if not safe:
             self.remove()
             return os.symlink(path, self.path)
@@ -375,6 +378,7 @@ class FilePath(str):
             except OSError: pass
 
     def link_to(self, path, safe=False):
+        """Create a link somewhere else pointing to this file."""
         if not safe:
             if os.path.exists(path): os.remove(path)
             os.symlink(self.path, path)
@@ -431,6 +435,12 @@ class FilePath(str):
     def must_exist(self):
         """Raise an exception if the path doesn't exist."""
         if not self.exists: raise Exception("The file path '%s' does not exist." % self.path)
+
+    def head(self, lines=10):
+        """Return the first few lines."""
+        content = iter(self)
+        for x in xrange(lines):
+            yield content.next()
 
 ################################################################################
 class Filesize(object):

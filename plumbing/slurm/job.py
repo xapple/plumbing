@@ -177,9 +177,11 @@ class JobSLURM(object):
         # So the script exists for sure but it is not in the queue #
         if not self.kwargs['out_file'].exists: return "ABORTED"
         # Let's look in log file #
-        if 'CANCELLED'     in self.log_tail: return "CANCELLED"
-        if 'SLURM: end at' in self.log_tail: return "FINISHED"
-        # Default #
+        if 'CANCELED'          in self.log_tail: return "CANCELLED"
+        if 'slurmstepd: error' in self.log_tail: return "CANCELLED"
+        # It all looks good #
+        if 'SLURM: end at'     in self.log_tail: return "FINISHED"
+        # At this point we have no idea #
         return "INTERUPTED"
 
     @property
@@ -199,8 +201,8 @@ class JobSLURM(object):
         if self.status == "RUNNING":    message = "Job '%s' already running."
         if self.status == "FINISHED":   message = "Job '%s' already ended successfully."
         if self.status == "ABORTED":    message = "Job '%s' was killed without any output file (?)."
-        if self.status == "CANCELLED":  message = "Job '%s' was canceled while running."
-        if self.status == "INTERUPTED": message = "Job '%s' is not running. Look at the log file."
+        if self.status == "CANCELED":   message = "Job '%s' was canceled or killed while running."
+        if self.status == "INTERUPTED": message = "Job '%s' is not running. We don't know why. Look at the log file."
         print Color.i_red + message % (self.name,) + Color.end
         print "Job might have run already (?). Not starting."
 

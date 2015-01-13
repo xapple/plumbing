@@ -313,9 +313,9 @@ def tail(path, window=20):
         return '\n'.join(''.join(data).splitlines()[-window:])
 
 ################################################################################
-def head(path, window=20):
+def head(path, lines=20):
     with open(path, 'r') as handle:
-        return ''.join(handle.next() for line in xrange(window))
+        return ''.join(handle.next() for line in xrange(lines))
 
 ###############################################################################
 def split_thousands(s, tSep='\'', dSep='.'):
