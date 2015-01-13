@@ -69,7 +69,7 @@ class Graph(object):
             seperate = lambda y,pos: split_thousands(y)
             axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(seperate))
         # Save it as different formats #
-        for ext in self.formats: fig.savefig(self.replace_extension(ext))
+        for ext in self.formats: fig.savefig(self.path.replace_extension(ext))
 
     def plot(self):
         """An example plot function. You have to subclass this method."""
@@ -86,7 +86,7 @@ class Graph(object):
         pyplot.close(fig)
 
     def save_anim(self, fig, animate, init, bitrate=10000, fps=30):
-        """Not functional TODO"""
+        """Not functional -- TODO"""
         from matplotlib import animation
         anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20)
         FFMpegWriter = animation.writers['ffmpeg']
