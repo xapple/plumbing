@@ -4,7 +4,6 @@ import glob
 
 # Internal modules #
 from plumbing.common import append_to_file, prepend_to_file
-from plumbing.cache import property_cached
 
 # Third party modules #
 import sh
@@ -181,7 +180,6 @@ class DirectoryPath(str):
     def __add__(self, other):
         return self.path + other
 
-    @property_cached
     def p(self):
         if not hasattr(self, 'all_paths'):
             raise Exception("You need to define 'all_paths' to use this function")
