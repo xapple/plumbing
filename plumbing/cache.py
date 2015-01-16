@@ -3,6 +3,7 @@ import os, time, inspect
 import cPickle as pickle
 
 # Internal modules #
+from plumbing.autopaths import FilePath
 
 # Third party modules #
 from decorator import decorator
@@ -41,15 +42,21 @@ def property_cached(f):
 ################################################################################
 def property_pickled(f):
     """Same thing as above but the result will be stored on disk
-    The path will be determined by questioning the `p` attribue
-    of the class containing the method with the function name."""
+    The path of the pickle file will be determined by looking for the
+    `cache_dir` attribute of the instance containing the cached property.
+    If no `cache_dir` attribute exists the `p` attribute  will be accessed with
+    the name of the property being cached."""
     # Called when you access the property #
     def retrieve_from_cache(self):
         # Is it in the cache ? #
         if '__cache__' not in self.__dict__: self.__cache__ = {}
         if f.__name__ in self.__cache__: return self.__cache__[f.__name__]
+        # Where should we look in the file system ? #
+        if 'cache_dir' in self.__dict__:
+            path = FilePath(self.__dict__['cache_dir'] + f.func_name + '.pickle')
+        else:
+            path = getattr(self.p, f.func_name)
         # Is it on disk ? #
-        path = getattr(self.p, f.func_name)
         if path.exists:
             with open(path) as handle: result = pickle.load(handle)
             self.__cache__[f.__name__] = result
