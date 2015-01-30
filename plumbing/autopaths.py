@@ -201,13 +201,50 @@ class DirectoryPath(str):
         """The full path of directory containing this one"""
         return DirectoryPath(os.path.dirname(os.path.dirname(self.path)))
 
+    #-------------------------- Recursive contents ---------------------------#
     @property
     def contents(self):
-        """The files and directories in this directory"""
+        """The files and directories in this directory recursively"""
         for root, dirs, files in os.walk(self.path, topdown=False):
             for d in dirs:  yield DirectoryPath(os.path.join(root, d))
             for f in files: yield FilePath(os.path.join(root, f))
 
+    @property
+    def files(self):
+        """The files in this directory recursively"""
+        for root, dirs, files in os.walk(self.path, topdown=False):
+            for f in files: yield FilePath(os.path.join(root, f))
+
+    @property
+    def directories(self):
+        """The directories in this directory recursively"""
+        for root, dirs, files in os.walk(self.path, topdown=False):
+            for d in dirs: yield DirectoryPath(os.path.join(root, d))
+
+    #----------------------------- Flat contents -----------------------------#
+    @property
+    def flat_contents(self):
+        """The files and directories in this directory non-recursively"""
+        for root, dirs, files in os.walk(self.path):
+            for d in dirs:  yield DirectoryPath(os.path.join(root, d))
+            for f in files: yield FilePath(os.path.join(root, f))
+            break
+
+    @property
+    def flat_files(self):
+        """The files in this directory non-recursively"""
+        for root, dirs, files in os.walk(self.path):
+            for f in files: yield FilePath(os.path.join(root, f))
+            break
+
+    @property
+    def flat_directories(self):
+        """The directories in this directory non-recursively"""
+        for root, dirs, files in os.walk(self.path):
+            for d in dirs: yield DirectoryPath(os.path.join(root, d))
+            break
+
+    #-------------------------------- Other ----------------------------------#
     @property
     def exists(self):
         """Does it exist in the file system"""
