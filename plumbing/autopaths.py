@@ -3,7 +3,7 @@ import os, stat, tempfile, re, subprocess, shutil, codecs, gzip
 import glob
 
 # Internal modules #
-from plumbing.common import append_to_file, prepend_to_file
+from plumbing.common import append_to_file, prepend_to_file, md5sum
 
 # Third party modules #
 import sh
@@ -477,6 +477,10 @@ class FilePath(str):
         content = iter(self)
         for x in xrange(lines):
             yield content.next()
+
+    def md5(self):
+        """Return the md5 checksum."""
+        return md5sum(self.path)
 
 ################################################################################
 class Filesize(object):
