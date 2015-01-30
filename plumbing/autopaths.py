@@ -478,6 +478,7 @@ class FilePath(str):
         for x in xrange(lines):
             yield content.next()
 
+    @property
     def md5(self):
         """Return the md5 checksum."""
         return md5sum(self.path)
