@@ -89,7 +89,7 @@ class Runner(object):
         else: print "Running step: " + name
         sys.stdout.flush()
         # Threads #
-        if threads and len(fns) > 1:
+        if threads and len(list(fns)) > 1:
             self.thpool = threadpool.ThreadPool(8)
             for fn in fns: self.thpool.putRequest(threadpool.WorkRequest(fn))
             self.thpool.wait()
