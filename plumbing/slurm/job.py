@@ -62,6 +62,7 @@ class JobSLURM(object):
         ('cluster'   , {'tag': '#SBATCH -M %s',            'needed': False, 'default': 'milou'}),
         ('alloc'     , {'tag': '#SBATCH --reservation=%s', 'needed': False, 'default': 'workstation'}),
         ('jobid'     , {'tag': '#SBATCH --jobid=%i',       'needed': False, 'default': 2173455}),
+        ('memory'    , {'tag': '#SBATCH --mem-per-cpu=%i', 'needed': False, 'default': 5120}),
     ))
 
     script_headers = {
