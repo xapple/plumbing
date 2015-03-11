@@ -46,23 +46,24 @@ class JobSLURM(object):
     }
 
     slurm_headers = OrderedDict((
-        ('job_name'  , {'tag': '#SBATCH -J %s',            'needed': True}),
-        ('change_dir', {'tag': '#SBATCH -D %s',            'needed': True,  'default': os.path.abspath(os.getcwd())}),
-        ('out_file'  , {'tag': '#SBATCH -o %s',            'needed': True,  'default': '/dev/null'}),
-        ('project'   , {'tag': '#SBATCH -A %s',            'needed': False, 'default': 'b2011035'}),
-        ('time'      , {'tag': '#SBATCH -t %s',            'needed': True,  'default': '7-00:00:00'}),
-        ('machines'  , {'tag': '#SBATCH -N %s',            'needed': True,  'default': '1'}),
-        ('cores'     , {'tag': '#SBATCH -n %s',            'needed': True,  'default': num_processors}),
-        ('partition' , {'tag': '#SBATCH -p %s',            'needed': True,  'default': 'node'}),
-        ('email'     , {'tag': '#SBATCH --mail-user %s',   'needed': False, 'default': os.environ.get('EMAIL')}),
-        ('email-when', {'tag': '#SBATCH --mail-type=%s',   'needed': True,  'default': 'END'}),
-        ('qos'       , {'tag': '#SBATCH --qos=%s',         'needed': False, 'default': 'short'}),
-        ('dependency', {'tag': '#SBATCH -d %s',            'needed': False, 'default': 'afterok:1'}),
-        ('constraint', {'tag': '#SBATCH -C %s',            'needed': False, 'default': 'fat'}),
-        ('cluster'   , {'tag': '#SBATCH -M %s',            'needed': False, 'default': 'milou'}),
-        ('alloc'     , {'tag': '#SBATCH --reservation=%s', 'needed': False, 'default': 'workstation'}),
-        ('jobid'     , {'tag': '#SBATCH --jobid=%i',       'needed': False, 'default': 2173455}),
-        ('memory'    , {'tag': '#SBATCH --mem-per-cpu=%i', 'needed': False, 'default': 5120}),
+        ('job_name'   , {'tag': '#SBATCH -J %s',            'needed': True}),
+        ('change_dir' , {'tag': '#SBATCH -D %s',            'needed': True,  'default': os.path.abspath(os.getcwd())}),
+        ('out_file'   , {'tag': '#SBATCH -o %s',            'needed': True,  'default': '/dev/null'}),
+        ('project'    , {'tag': '#SBATCH -A %s',            'needed': False, 'default': 'b2011035'}),
+        ('time'       , {'tag': '#SBATCH -t %s',            'needed': True,  'default': '7-00:00:00'}),
+        ('machines'   , {'tag': '#SBATCH -N %s',            'needed': True,  'default': '1'}),
+        ('cores'      , {'tag': '#SBATCH -n %s',            'needed': True,  'default': num_processors}),
+        ('partition'  , {'tag': '#SBATCH -p %s',            'needed': True,  'default': 'node'}),
+        ('email'      , {'tag': '#SBATCH --mail-user %s',   'needed': False, 'default': os.environ.get('EMAIL')}),
+        ('email-when' , {'tag': '#SBATCH --mail-type=%s',   'needed': True,  'default': 'END'}),
+        ('qos'        , {'tag': '#SBATCH --qos=%s',         'needed': False, 'default': 'short'}),
+        ('dependency' , {'tag': '#SBATCH -d %s',            'needed': False, 'default': 'afterok:1'}),
+        ('constraint' , {'tag': '#SBATCH -C %s',            'needed': False, 'default': 'fat'}),
+        ('cluster'    , {'tag': '#SBATCH -M %s',            'needed': False, 'default': 'milou'}),
+        ('alloc'      , {'tag': '#SBATCH --reservation=%s', 'needed': False, 'default': 'workstation'}),
+        ('jobid'      , {'tag': '#SBATCH --jobid=%i',       'needed': False, 'default': 2173455}),
+        ('memory'     , {'tag': '#SBATCH --mem=%i',         'needed': False, 'default': 120000}),
+        ('mem_per_cpu', {'tag': '#SBATCH --mem-per-cpu=%i', 'needed': False, 'default': 512}),
     ))
 
     script_headers = {
@@ -157,6 +158,11 @@ class JobSLURM(object):
         self.script_path.write(self.script)
         self.script_path.permissions.make_executable()
         return self.script_path
+
+    @property
+    def log(self):
+        """The log as a FilePath object"""
+        return self.slurm_params['out_file']
 
     @property
     def log_tail(self):
