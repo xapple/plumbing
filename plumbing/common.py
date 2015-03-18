@@ -80,7 +80,6 @@ def find_file_by_name(name, root=os.curdir):
         if name in filenames: return os.path.join(dirpath, name)
     raise Exception("Could not find file '%s' in '%s'" % (name, root))
 
-
 ################################################################################
 def get_next_item(iterable):
     """Gets the next item of an iterable.
@@ -92,7 +91,7 @@ def get_next_item(iterable):
 
 ################################################################################
 def pretty_now():
-    """Prints some thing like '2014-07-24 11:12:45 CEST+0200'"""
+    """Returns some thing like '2014-07-24 11:12:45 CEST+0200'"""
     now = datetime.datetime.now(dateutil.tz.tzlocal())
     return now.strftime("%Y-%m-%d %H:%M:%S %Z%z")
 

@@ -22,7 +22,7 @@ class JobSLURM(object):
     """Makes launching SLURM jobs easy to write and easy to use. Here are some
     examples on how to use this class:
 
-        for command in enumerate(['print "hi"', 'print "hello"']):
+        for command in ['print "hi"', 'print "hello"']:
             job = JobSLURM(command, time='00:01:00', qos='short')
             job.run()
 
@@ -33,6 +33,14 @@ class JobSLURM(object):
             job = JobSLURM(command, time='00:01:00', qos='short', job_name=path[-25:])
             job.run()
             print "Job %i is running !" % job.id
+
+    Then you can easily check the status of your job and the standard out that is associated:
+
+        print job.status
+        print job.log_tail
+        print job.info['time_left']
+
+    etc.
     """
 
     extensions = {
@@ -46,24 +54,25 @@ class JobSLURM(object):
     }
 
     slurm_headers = OrderedDict((
-        ('job_name'   , {'tag': '#SBATCH -J %s',            'needed': True}),
-        ('change_dir' , {'tag': '#SBATCH -D %s',            'needed': True,  'default': os.path.abspath(os.getcwd())}),
-        ('out_file'   , {'tag': '#SBATCH -o %s',            'needed': True,  'default': '/dev/null'}),
-        ('project'    , {'tag': '#SBATCH -A %s',            'needed': False, 'default': 'b2011035'}),
-        ('time'       , {'tag': '#SBATCH -t %s',            'needed': True,  'default': '7-00:00:00'}),
-        ('machines'   , {'tag': '#SBATCH -N %s',            'needed': True,  'default': '1'}),
-        ('cores'      , {'tag': '#SBATCH -n %s',            'needed': True,  'default': num_processors}),
-        ('partition'  , {'tag': '#SBATCH -p %s',            'needed': True,  'default': 'node'}),
-        ('email'      , {'tag': '#SBATCH --mail-user %s',   'needed': False, 'default': os.environ.get('EMAIL')}),
-        ('email-when' , {'tag': '#SBATCH --mail-type=%s',   'needed': True,  'default': 'END'}),
-        ('qos'        , {'tag': '#SBATCH --qos=%s',         'needed': False, 'default': 'short'}),
-        ('dependency' , {'tag': '#SBATCH -d %s',            'needed': False, 'default': 'afterok:1'}),
-        ('constraint' , {'tag': '#SBATCH -C %s',            'needed': False, 'default': 'fat'}),
-        ('cluster'    , {'tag': '#SBATCH -M %s',            'needed': False, 'default': 'milou'}),
-        ('alloc'      , {'tag': '#SBATCH --reservation=%s', 'needed': False, 'default': 'workstation'}),
-        ('jobid'      , {'tag': '#SBATCH --jobid=%i',       'needed': False, 'default': 2173455}),
-        ('memory'     , {'tag': '#SBATCH --mem=%i',         'needed': False, 'default': 120000}),
-        ('mem_per_cpu', {'tag': '#SBATCH --mem-per-cpu=%i', 'needed': False, 'default': 512}),
+        ('job_name'   , {'tag': '#SBATCH -J %s',              'needed': True}),
+        ('change_dir' , {'tag': '#SBATCH -D %s',              'needed': True,  'default': os.path.abspath(os.getcwd())}),
+        ('out_file'   , {'tag': '#SBATCH -o %s',              'needed': True,  'default': '/dev/null'}),
+        ('project'    , {'tag': '#SBATCH -A %s',              'needed': False, 'default': 'b2011035'}),
+        ('time'       , {'tag': '#SBATCH -t %s',              'needed': True,  'default': '7-00:00:00'}),
+        ('machines'   , {'tag': '#SBATCH -N %s',              'needed': True,  'default': '1'}),
+        ('cores'      , {'tag': '#SBATCH -n %s',              'needed': True,  'default': num_processors}),
+        ('partition'  , {'tag': '#SBATCH -p %s',              'needed': True,  'default': 'node'}),
+        ('email'      , {'tag': '#SBATCH --mail-user %s',     'needed': False, 'default': os.environ.get('EMAIL')}),
+        ('email-when' , {'tag': '#SBATCH --mail-type=%s',     'needed': True,  'default': 'END'}),
+        ('qos'        , {'tag': '#SBATCH --qos=%s',           'needed': False, 'default': 'short'}),
+        ('dependency' , {'tag': '#SBATCH -d %s',              'needed': False, 'default': 'afterok:1'}),
+        ('constraint' , {'tag': '#SBATCH -C %s',              'needed': False, 'default': 'fat'}),
+        ('cluster'    , {'tag': '#SBATCH -M %s',              'needed': False, 'default': 'milou'}),
+        ('alloc'      , {'tag': '#SBATCH --reservation=%s',   'needed': False, 'default': 'workstation'}),
+        ('jobid'      , {'tag': '#SBATCH --jobid=%i',         'needed': False, 'default': 2173455}),
+        ('memory'     , {'tag': '#SBATCH --mem=%i',           'needed': False, 'default': 120000}),
+        ('mem_per_cpu', {'tag': '#SBATCH --mem-per-cpu=%i',   'needed': False, 'default': 512}),
+        ('threads'    , {'tag': '#SBATCH --cpus-per-task=%i', 'needed': False, 'default': num_processors}),
     ))
 
     script_headers = {
@@ -226,7 +235,7 @@ class JobSLURM(object):
         self.id = int(re.findall("Submitted batch job ([0-9]+)", str(sbatch_out))[0])
         return self.id
 
-    def interupt(self):
+    def cancel(self):
         if self.status != "QUEUED" and self.status != "RUNNING":
             raise Exception("Can't cancel job '%s'" % self.name)
         sh.scancel(self.info['jobid'])
