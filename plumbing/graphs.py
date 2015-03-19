@@ -35,13 +35,18 @@ class Graph(object):
         # Save parent #
         self.parent = parent
         # Base dir #
-        if not base_dir: self.base_dir = self.parent.p.graphs_dir
+        if base_dir is None: self.base_dir = self.parent.p.graphs_dir
         else: self.base_dir = base_dir
         # Short name #
         if short_name: self.short_name = short_name
         if not hasattr(self, 'short_name'): self.short_name = 'graph'
         # Paths #
         self.path = FilePath(self.base_dir + self.short_name + '.pdf')
+
+    def __call__(self, *args, **kwatgs):
+        """Plot the graph if it doesn't exist. Then return the path to it."""
+        if not self: self.plot(*args, **kwatgs)
+        return self.path
 
     def save_plot(self, fig, axes, width=None, height=None, bottom=None, top=None, left=None, right=None, sep=()):
         # Attributes or parameters #
