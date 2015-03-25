@@ -543,7 +543,7 @@ class FilePermissions(object):
     @property
     def number(self):
         """The permission bits as an octal integer"""
-        return oct(os.stat(self.path).st_mode & 0777)
+        return os.stat(self.path).st_mode & 0777
 
     def make_executable(self):
         return os.chmod(self.path, os.stat(self.path).st_mode | stat.S_IEXEC)
