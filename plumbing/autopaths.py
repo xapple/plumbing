@@ -38,16 +38,16 @@ class AutoPaths(object):
         self._paths = [PathItems(p.lstrip(' '),base_dir) for p in all_paths.split('\n')]
 
     def __getattr__(self, key):
-        # Let magic pass through #
+        # Let built-ins pass through to object #
         if key.startswith('__') and key.endswith('__'): return object.__getattr__(key)
-        # Special cases #
+        # Special cases that should do to the actual dictionary #
         if key.startswith('_'): return self.__dict__[key]
         # Temporary items #
         if key == 'tmp_dir': return self.__dict__['_tmp_dir']
         if key == 'tmp': return self.__dict__['tmp']
         # Search #
         items = key.split('_')
-        # Directory case #
+        # Is it a directory ? #
         if items[-1] == 'dir':
             items.pop(-1)
             return self.search_for_dir(key, items)
@@ -159,13 +159,13 @@ class DirectoryPath(str):
     @classmethod
     def clean_path(cls, path):
         """Given a path, return a cleaned up version for initialization"""
-        # Conserve None object style #
+        # Conserve 'None' object style #
         if path is None: return None
         # Don't nest DirectoryPaths or the like #
         if hasattr(path, 'path'): path = path.path
-        # Expand tilda #
+        # Expand the tilda #
         if "~" in path: path = os.path.expanduser(path)
-        # Our standard is to end with a slash #
+        # Our standard is to end with a slash for directories #
         if not path.endswith('/'): path += '/'
         # Return the result #
         return path
@@ -204,20 +204,20 @@ class DirectoryPath(str):
     #-------------------------- Recursive contents ---------------------------#
     @property
     def contents(self):
-        """The files and directories in this directory recursively"""
+        """The files and directories in this directory, recursively"""
         for root, dirs, files in os.walk(self.path, topdown=False):
             for d in dirs:  yield DirectoryPath(os.path.join(root, d))
             for f in files: yield FilePath(os.path.join(root, f))
 
     @property
     def files(self):
-        """The files in this directory recursively"""
+        """The files in this directory, recursively"""
         for root, dirs, files in os.walk(self.path, topdown=False):
             for f in files: yield FilePath(os.path.join(root, f))
 
     @property
     def directories(self):
-        """The directories in this directory recursively"""
+        """The directories in this directory, recursively"""
         for root, dirs, files in os.walk(self.path, topdown=False):
             for d in dirs: yield DirectoryPath(os.path.join(root, d))
 
@@ -248,17 +248,27 @@ class DirectoryPath(str):
     @property
     def exists(self):
         """Does it exist in the file system"""
-        return os.path.lexists(self.path)
+        return os.path.lexists(self.path) # Include broken symlinks
+
+    @property
+    def permissions(self):
+        """Convenience object for dealing with permissions"""
+        return FilePermissions(self.path)
 
     def remove(self):
         if not self.exists: return False
         shutil.rmtree(self.path, ignore_errors=True)
         return True
 
-    def create(self, safe=False):
-        if not safe: os.makedirs(self.path)
+    def create(self, safe=False, inherit=True):
+        # Create it #
+        if not safe:
+            os.makedirs(self.path)
+            if inherit: os.chmod(self.path, self.directory.permissions.number)
         if safe:
-            try: os.makedirs(self.path)
+            try:
+                os.makedirs(self.path)
+                if inherit: os.chmod(self.path, self.directory.permissions.number)
             except OSError: pass
 
     def zip(self, keep_orig=False):
@@ -333,6 +343,7 @@ class FilePath(str):
 
     @property
     def directory(self):
+        """The directory containing this file"""
         return DirectoryPath(os.path.dirname(self.path) + '/')
 
     @property
@@ -353,7 +364,7 @@ class FilePath(str):
 
     @property
     def size(self):
-        """Human readable size"""
+        """Human readable file size"""
         return Filesize(self.count_bytes)
 
     @property
@@ -528,6 +539,11 @@ class FilePermissions(object):
 
     def __init__(self, path):
         self.path = path
+
+    @property
+    def number(self):
+        """The permission bits as an octal integer"""
+        return oct(os.stat(self.path).st_mode & 0777)
 
     def make_executable(self):
         return os.chmod(self.path, os.stat(self.path).st_mode | stat.S_IEXEC)

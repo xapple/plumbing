@@ -5,6 +5,7 @@ import dateutil.tz, datetime
 # Internal modules #
 from plumbing.common import get_git_tag
 from plumbing.slurm.job import JobSLURM
+from plumbing.autopaths import DirectoryPath
 
 # Third party modules #
 import sh
@@ -29,11 +30,11 @@ class LoggedJobSLURM(JobSLURM):
         # Log directory #
         now = datetime.datetime.now(dateutil.tz.tzlocal())
         log_name = now.strftime("%Y-%m-%da%Hh%Mm%Ss%Z%z")
-        base_dir = base_dir + log_name + '/'
-        os.makedirs(base_dir)
+        base_dir = DirectoryPath(base_dir + log_name + '/')
+        base_dir.create()
         # Modules directory #
-        modules_dir = base_dir + "modules/"
-        os.makedirs(modules_dir)
+        modules_dir = DirectoryPath(base_dir + "modules/")
+        modules_dir.create()
         # The script to be sent #
         script =  []
         # Copy modules to the log directory #
