@@ -237,6 +237,7 @@ class DirectoryPath(str):
             result = [FilePath(os.path.join(root, f)) for f in files]
             break
         result.sort(key=natural_sort)
+        return result
 
     @property
     def flat_directories(self):
