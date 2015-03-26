@@ -3,7 +3,7 @@ import os, stat, tempfile, re, subprocess, shutil, codecs, gzip
 import glob
 
 # Internal modules #
-from plumbing.common import append_to_file, prepend_to_file, md5sum
+from plumbing.common import append_to_file, prepend_to_file, md5sum, natural_sort
 
 # Third party modules #
 import sh
@@ -232,17 +232,20 @@ class DirectoryPath(str):
 
     @property
     def flat_files(self):
-        """The files in this directory non-recursively"""
+        """The files in this directory non-recursively, and sorted"""
         for root, dirs, files in os.walk(self.path):
-            for f in files: yield FilePath(os.path.join(root, f))
+            result = [FilePath(os.path.join(root, f)) for f in files]
             break
+        result.sort(key=natural_sort)
 
     @property
     def flat_directories(self):
-        """The directories in this directory non-recursively"""
+        """The directories in this directory non-recursively, and sorted"""
         for root, dirs, files in os.walk(self.path):
-            for d in dirs: yield DirectoryPath(os.path.join(root, d))
+            result = [DirectoryPath(os.path.join(root, d)) for d in dirs]
             break
+        result.sort(key=natural_sort)
+        return result
 
     #-------------------------------- Other ----------------------------------#
     @property
