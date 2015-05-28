@@ -396,6 +396,11 @@ class FilePath(str):
         """The relative path when compared with current directory"""
         return os.path.relpath(self.physical_path)
 
+    def __sub__(self, directory):
+        """Subtract a directory from the current path to get the relative path
+        of the current file from that directory."""
+        return os.path.relpath(self.path, directory)
+
     def remove(self):
         if not self.exists: return False
         os.remove(self.path)

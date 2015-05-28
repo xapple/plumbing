@@ -3,16 +3,17 @@ import subprocess, sys
 
 # Constants #
 module_names = {
-    "biopython": "Bio",
-    "ipython": "IPython",
+    "biopython":    "Bio",
+    "ipython":      "IPython",
     "scikit-learn": "sklearn",
-    "scikit-bio": "skbio",
+    "scikit-bio":   "skbio",
+    "biom-formt":   "biom",
 }
 
 ################################################################################
-def check_setup(mod_name):
-    """Parses the required modules from a setup.py file and check they are
-    available in the PYTHONPATH"""
+def check_setup_py(mod_name):
+    """Parses the required modules from a setup.py file and checks they are
+    importable (e.g. available in the PYTHONPATH)"""
     pass
 
 ################################################################################
@@ -27,10 +28,8 @@ def check_executable(tool_name):
 def check_module(mod_name):
     """Calls sys.exit() if the module *mod_name* is not found."""
     # Special cases #
-    if mod_name == "biopython": mod_name = "Bio"
-    if mod_name == "ipython": mod_name = "IPython"
-    if mod_name == "scikit-learn": mod_name = "sklearn"
-    # Use a try except block
+    if mod_name in module_name: mod_name = module_name[mod_name]
+    # Use a try except block #
     try:
         __import__(mod_name)
     except ImportError as e:
