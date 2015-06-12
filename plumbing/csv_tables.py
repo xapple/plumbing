@@ -7,7 +7,7 @@ from autopaths import FilePath
 from tmpstuff import TmpFile
 
 # Third party modules #
-import sh
+import sh, pandas
 
 ################################################################################
 class CSVTable(FilePath):
@@ -19,6 +19,9 @@ class CSVTable(FilePath):
         if d is not None: self.d = d
 
     def remove_first_line(self):
+        sh.sed('-i', '1d', self.path)
+
+    def remove_last_line(self):
         sh.sed('-i', '1d', self.path)
 
     def replace_title(self, before, after):

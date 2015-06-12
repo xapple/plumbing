@@ -133,7 +133,7 @@ class Password(object):
 def md5sum(file_path, blocksize=65536):
     """Compute the md5 of a file. Pretty fast."""
     md5 = hashlib.md5()
-    with open(file_path, "r+b") as f:
+    with open(file_path, "rb") as f:
         for block in iter(lambda: f.read(blocksize), ""):
             md5.update(block)
     return md5.hexdigest()
