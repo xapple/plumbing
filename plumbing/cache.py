@@ -20,6 +20,7 @@ def property_cached(f):
                 return time.time()
         bob = Employee()
         print bob.salary
+        print bob.salary
         bob.salary = "10000$"
         print bob.salary
     """

@@ -280,16 +280,29 @@ class DirectoryPath(str):
         shutil.make_archive(self.prefix_path , "zip", self.directory, self.name)
         if not keep_orig: self.remove()
 
+    def link_from(self, path, safe=False):
+        """Make a link here pointing to another directory somewhere else.
+        The destination is hence self.path and the source is *path*"""
+        if not safe:
+            return os.symlink(path, self.path)
+        if safe:
+            try: os.remove(self.path)
+            except OSError: pass
+            try: os.symlink(path, self.path)
+            except OSError: pass
+
 ################################################################################
 class FilePath(str):
-    """I can never remember all those darn `os.path` commands, so I made a class that wraps them with an easier and more pythonic syntax.
+    """I can never remember all those darn `os.path` commands, so I made a class
+    that wraps them with an easier and more pythonic syntax.
 
         path = FilePath('/home/root/text.txt')
         print path.extension
         print path.directory
         print path.filename
 
-    You can find lots of the common things you would need to do with file paths. Such as: path.make_executable()"""
+    You can find lots of the common things you would need to do with file paths.
+    Such as: path.make_executable() etc etc."""
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
     def __iter__(self): return open(self.path)
@@ -423,7 +436,8 @@ class FilePath(str):
         with codecs.open(self.path, 'w', encoding) as handle: handle.writelines(content)
 
     def link_from(self, path, safe=False):
-        """Make a link here pointing to another file somewhere else."""
+        """Make a link here pointing to another file somewhere else.
+        The destination is hence self.path and the source is *path*"""
         if not safe:
             self.remove()
             return os.symlink(path, self.path)
