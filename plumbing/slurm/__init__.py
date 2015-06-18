@@ -9,6 +9,7 @@ from plumbing.common import is_integer
 ################################################################################
 def count_processors():
     """How many cores does the current computer have ?"""
+    if 'OMP_NUM_THREADS' in os.environ: return int(os.environ['OMP_NUM_THREADS'])
     if 'SLURM_NTASKS' in os.environ: return int(os.environ['SLURM_NTASKS'])
     elif 'SLURM_JOB_CPUS_PER_NODE' in os.environ:
          text = os.environ['SLURM_JOB_CPUS_PER_NODE']
