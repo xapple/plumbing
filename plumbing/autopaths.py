@@ -1,6 +1,6 @@
 # Built-in modules #
 import os, stat, tempfile, re, subprocess, shutil, codecs, gzip
-import glob
+import glob, warnings
 
 # Internal modules #
 from plumbing.common import append_to_file, prepend_to_file, md5sum, natural_sort
@@ -273,7 +273,7 @@ class DirectoryPath(str):
             try:
                 os.makedirs(self.path)
                 if inherit: os.chmod(self.path, self.directory.permissions.number)
-            except OSError: pass
+            except OSError: warnings.warn("Creation of %s did not work" % self)
 
     def zip(self, keep_orig=False):
         """Make a zip archive of the directory"""
@@ -288,8 +288,8 @@ class DirectoryPath(str):
         if safe:
             try: shutil.rmtree(self.path)
             except OSError: pass
-            try: os.symlink(path, self.path)
-            except OSError: pass
+            try: os.symlink(path, self.path.rstrip('/'))
+            except OSError: warnings.warn("Symlink of %s did not work" % self)
 
 ################################################################################
 class FilePath(str):
