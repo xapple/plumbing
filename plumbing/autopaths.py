@@ -264,6 +264,11 @@ class DirectoryPath(str):
         shutil.rmtree(self.path, ignore_errors=True)
         return True
 
+    def remove_when_symlink(self):
+        if not self.exists: return False
+        os.remove(self.path)
+        return True
+
     def create(self, safe=False, inherit=True):
         # Create it #
         if not safe:
