@@ -266,7 +266,7 @@ class DirectoryPath(str):
 
     def remove_when_symlink(self):
         if not self.exists: return False
-        os.remove(self.path)
+        os.remove(self.path.rstrip('/'))
         return True
 
     def create(self, safe=False, inherit=True):
