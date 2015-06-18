@@ -273,7 +273,7 @@ class DirectoryPath(str):
             try:
                 os.makedirs(self.path)
                 if inherit: os.chmod(self.path, self.directory.permissions.number)
-            except OSError: warnings.warn("Creation of %s did not work" % self)
+            except OSError: pass
 
     def zip(self, keep_orig=False):
         """Make a zip archive of the directory"""
