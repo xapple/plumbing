@@ -286,7 +286,7 @@ class DirectoryPath(str):
         if not safe:
             return os.symlink(path, self.path)
         if safe:
-            try: os.remove(self.path)
+            try: shutil.rmtree(self.path)
             except OSError: pass
             try: os.symlink(path, self.path)
             except OSError: pass
