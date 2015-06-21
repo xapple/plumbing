@@ -104,15 +104,17 @@ class Runner(object):
         sys.stdout.flush()
 
     @property
+    def logs(self):
+        """Find the log directory and return all the logs sorted."""
+        if not self.parent.loaded: self.parent.load()
+        logs = self.parent.p.logs_dir.flat_directories
+        logs.sort(key=lambda x: x.mod_time)
+        return logs
+
+    @property
     def latest_log(self):
         """Find the latest log directory in all the logs."""
-        if not self.parent.loaded: self.parent.load()
-        def logs():
-            for dir_name in os.listdir(self.parent.p.logs_dir):
-                dir_path = os.path.join(self.parent.p.logs_dir, dir_name)
-                if not os.path.isdir(dir_path): continue
-                yield dir_path + '/'
-        return max(logs(), key=lambda x: os.stat(x).st_mtime)
+        return self.logs[0]
 
     #-------------------------------------------------------------------------#
     def run_locally(self, steps=None, **kwargs):

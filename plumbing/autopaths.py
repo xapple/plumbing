@@ -259,6 +259,11 @@ class DirectoryPath(str):
         """Convenience object for dealing with permissions"""
         return FilePermissions(self.path)
 
+    @property
+    def mod_time(self):
+        """The modification time"""
+        return os.stat(self.path).st_mtime
+
     def remove(self):
         if not self.exists: return False
         shutil.rmtree(self.path, ignore_errors=True)
