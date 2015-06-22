@@ -236,7 +236,7 @@ class DirectoryPath(str):
         for root, dirs, files in os.walk(self.path):
             result = [FilePath(os.path.join(root, f)) for f in files]
             break
-        result.sort(key=natural_sort)
+        result.sort(key=lambda x: natural_sort(x.path))
         return result
 
     @property
