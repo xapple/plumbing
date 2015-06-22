@@ -113,8 +113,8 @@ class Runner(object):
 
     @property
     def latest_log(self):
-        """Find the latest log directory in all the logs."""
-        return self.logs[0]
+        """Find the latest log in all the logs."""
+        return self.logs[-1]
 
     #-------------------------------------------------------------------------#
     def run_locally(self, steps=None, **kwargs):
