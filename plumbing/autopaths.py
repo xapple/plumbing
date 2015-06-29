@@ -257,6 +257,11 @@ class DirectoryPath(str):
         return os.path.lexists(self.path) # Include broken symlinks
 
     @property
+    def empty(self):
+        """Does the directory contain no files ?"""
+        return len(self.flat_contents) == 0
+
+    @property
     def permissions(self):
         """Convenience object for dealing with permissions"""
         return FilePermissions(self.path)
