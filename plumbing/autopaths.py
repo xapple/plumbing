@@ -259,7 +259,7 @@ class DirectoryPath(str):
     @property
     def empty(self):
         """Does the directory contain no files ?"""
-        return len(self.flat_contents) == 0
+        return len(list(self.flat_contents)) == 0
 
     @property
     def permissions(self):
