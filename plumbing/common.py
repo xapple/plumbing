@@ -14,9 +14,9 @@ flatter = lambda x: [item for sublist in x for item in sublist]
 ################################################################################
 def load_json_path(path):
     """Load a file with the json module, but report better errors if it
-    fails."""
+    fails. And have it ordered too !"""
     with open(path) as handle:
-        try: return json.load(handle)
+        try: return json.load(handle, object_pairs_hook=collections.OrderedDict)
         except ValueError as error:
             message = "Could not decode JSON file '%s'." % path
             message = "-"*20 + "\n" + message + "\n" + str(error) + "\n" + "-"*20 + "\n"
