@@ -333,7 +333,8 @@ class FilePath(str):
         # Expand star #
         if "*" in path:
             matches = glob.glob(path)
-            if len(matches) != 1: raise Exception("Found several files matching '%s'" % path)
+            if len(matches) < 1: raise Exception("Found exactly no files matching '%s'" % path)
+            if len(matches) > 1: raise Exception("Found several files matching '%s'" % path)
             path = matches[0]
         # Return the result #
         return path
