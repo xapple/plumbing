@@ -22,18 +22,28 @@ class GitRepo(DirectoryPath):
 
     @property
     def tag(self):
-        tag = sh.git("--git-dir=" + self.git_dir, "describe", "--tags", "--dirty", "--always")
+        tag = sh.git("--git-dir=" + self.git_dir,
+                     "--work-tree=" + self.path,
+                     "describe", "--tags", "--dirty", "--always")
         return tag.strip('\n')
 
     @property
     def hash(self):
-        sha1 = sh.git("--git-dir=" + self.git_dir, "rev-parse", "HEAD")
+        sha1 = sh.git("--git-dir=" + self.git_dir,
+                      "--work-tree=" + self.path,
+                      "rev-parse", "HEAD")
         return sha1.strip('\n')
 
     @property
     def branch(self):
-        return sh.git("--git-dir=" + self.git_dir, 'symbolic-ref', '--short', 'HEAD').strip('\n')
+        result = sh.git("--git-dir=" + self.git_dir,
+                        "--work-tree=" + self.path,
+                        'symbolic-ref', '--short', 'HEAD').strip('\n')
+        return result.strip('\n')
 
     @property
     def remote_branch(self):
-        return sh.git("--git-dir=" + self.git_dir, 'rev-parse', '--symbolic-full-name', '--abbrev-ref', '@{u}').strip('\n')
+        result = sh.git("--git-dir=" + self.git_dir,
+                        "--work-tree=" + self.path,
+                        'rev-parse', '--symbolic-full-name', '--abbrev-ref', '@{u}').strip('\n')
+        return result.strip('\n')
