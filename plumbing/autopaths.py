@@ -543,11 +543,11 @@ class Filesize(object):
 
         >>> size = Filesize(123123123)
         >>> print size
-        '117.4 MB'
+        '117.4 MiB'
     """
 
-    chunk = 1000
-    units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
+    chunk      = 1000 # Could be 1024 if you like old-style sizes
+    units      = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
     precisions = [0, 0, 1, 2, 2, 2]
 
     def __init__(self, size):
@@ -566,12 +566,16 @@ class Filesize(object):
         return self.format(unit)
 
     def format(self, unit):
+        # Input checking #
         if unit not in self.units: raise Exception("Not a valid file size unit: %s" % unit)
+        # Special no plural case #
         if self.size == 1 and unit == 'bytes': return '1 byte'
-        exponent = self.units.index(unit)
-        quotient = float(self.size) / self.chunk**exponent
-        precision = self.precisions[exponent]
+        # Compute #
+        exponent      = self.units.index(unit)
+        quotient      = float(self.size) / self.chunk**exponent
+        precision     = self.precisions[exponent]
         format_string = '{:.%sf} {}' % (precision)
+        # Return a string #
         return format_string.format(quotient, unit)
 
 ################################################################################
