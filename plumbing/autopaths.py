@@ -546,7 +546,7 @@ class Filesize(object):
         '117.4 MiB'
     """
 
-    chunk      = 1000 # Could be 1024 if you like old-style sizes
+    chunk      = 1000 # Could be 1024 if you like old-style sizes
     units      = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
     precisions = [0, 0, 1, 2, 2, 2]
 
