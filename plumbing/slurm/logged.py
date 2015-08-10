@@ -1,5 +1,5 @@
 # Built-in modules #
-import os
+import os, time
 import dateutil.tz, datetime
 
 # Internal modules #
@@ -28,10 +28,17 @@ class LoggedJobSLURM(JobSLURM):
         # Check command type #
         if not isinstance(command, list): command = [command]
         # Log directory #
-        now = datetime.datetime.now(dateutil.tz.tzlocal())
-        log_name = now.strftime("%Y-%m-%da%Hh%Mm%Ss%Z%z")
-        base_dir = DirectoryPath(base_dir + log_name + '/')
-        base_dir.create()
+        for i in range(30):
+            now = datetime.datetime.now(dateutil.tz.tzlocal())
+            log_name = now.strftime("%Y-%m-%da%Hh%Mm%Ss%Z%z")
+            base_dir = DirectoryPath(base_dir + log_name + '/')
+            if not base_dir.exists:
+                base_dir.create()
+                break
+            else:
+                time.sleep(2)
+                continue
+        else: base_dir.create()
         # Modules directory #
         modules_dir = DirectoryPath(base_dir + "modules/")
         modules_dir.create()
