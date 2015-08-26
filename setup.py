@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
         name             = 'plumbing',
-        version          = '2.0.1',
+        version          = '2.0.2',
         description      = 'Helps with plumbing-type programing in python',
         long_description = open('README.md').read(),
         license          = 'MIT',
