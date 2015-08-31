@@ -52,7 +52,7 @@ class Database(FilePath):
     def __init__(self, path, factory=None, isolation=None):
         self.path      = path
         self.factory   = factory
-        self.isolation = None
+        self.isolation = isolation
 
     def __repr__(self):
         """Called when evaluating ``print seqs``."""
@@ -200,7 +200,7 @@ class Database(FilePath):
 
     def add(self, entries):
         """Add entries to the main table.
-        The *entries* variable should be an iterable"""
+        The *entries* variable should be an iterable."""
         question_marks = '(' + ','.join(['?' for x in self.fields]) + ')'
         sql_command = "INSERT into 'data' values " + question_marks
         try:
@@ -213,7 +213,8 @@ class Database(FilePath):
             message2 = message2 % (Color.b_ylw, len(self.fields), Color.end, self.fields, Color.b_ylw, Color.end, entries)
             message3 = "\n * %sFirst element (%i)%s: %s \n"
             message3 = message3 % (Color.b_ylw, len(first_elem) if first_elem else 0, Color.end, first_elem)
-            raise Exception(message1 + message2 + message3)
+            message4 = "\n The original error was: '%s'" % err
+            raise Exception(message1 + message2 + message3 + message4)
         except KeyboardInterrupt as err:
             print "You interrupted the data insertion. Committing everything done up to this point."
             self.own_connection.commit()
