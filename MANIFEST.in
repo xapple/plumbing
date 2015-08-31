@@ -1,0 +1,5 @@
+graft plumbing
+include LICENSE.txt
+include README.md
+
+global-exclude *.py[co] __pycache__ *.so *.pyd
