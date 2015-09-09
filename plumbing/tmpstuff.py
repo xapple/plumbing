@@ -2,7 +2,7 @@
 import tempfile
 
 # Internal modules #
-from autopaths import FilePath, DirectoryPath
+from plumbing.autopaths import FilePath, DirectoryPath
 
 ################################################################################
 def new_temp_path(**kwargs):
@@ -11,6 +11,11 @@ def new_temp_path(**kwargs):
     path = handle.name
     handle.close()
     return path
+
+################################################################################
+def new_temp_file(**kwargs):
+    """A new temporary file"""
+    return TmpFile.empty(**kwargs)
 
 ################################################################################
 def new_temp_dir(**kwargs):
