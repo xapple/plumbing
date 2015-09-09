@@ -3,9 +3,9 @@ import os, time
 import dateutil.tz, datetime
 
 # Internal modules #
-from plumbing.common import get_git_tag
 from plumbing.slurm.job import JobSLURM
 from plumbing.autopaths import DirectoryPath
+from plumbing.git       import GitRepo
 
 # Third party modules #
 import sh
@@ -48,10 +48,10 @@ class LoggedJobSLURM(JobSLURM):
         for module in self.modules:
             module_dir        = os.path.dirname(module.__file__)
             module_name       = module.__name__
-            repos_dir         = os.path.abspath(module_dir + '/../')
+            repos_dir         = GitRepo(os.path.abspath(module_dir + '/../'))
             project_name      = os.path.basename(repos_dir)
             static_module_dir = modules_dir + project_name + '/'
-            module_version    = module.__version__ + ' ' + get_git_tag(repos_dir)
+            module_version    = module.__version__ + ' ' + repos_dir.tag
             # Copy #
             print "Making static copy of module '%s' for SLURM job..." % module_name
             sh.cp('-R', repos_dir, static_module_dir)
