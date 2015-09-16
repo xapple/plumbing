@@ -68,7 +68,7 @@ class Graph(object):
         fig.set_figheight(self.params['height'])
         fig.subplots_adjust(hspace=0.0, bottom = self.params['bottom'], top   = self.params['top'],
                                         left   = self.params['left'],   right = self.params['right'])
-        # Grid #
+        # Grid #
         axes.xaxis.grid(self.params['x_grid'])
         axes.yaxis.grid(self.params['y_grid'])
         # Log #
