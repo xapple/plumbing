@@ -60,9 +60,9 @@ class Graph(object):
         # Parameters #
         self.params = {}
         for key in self.default_params:
-            if key in kwargs:          self.params['key'] = kwargs['key']
-            elif key in self.__dict__: self.params['key'] = self.__dict__['key']
-            else:                      self.params['key'] = self.default_params['key']
+            if key in kwargs:          self.params[key] = kwargs[key]
+            elif key in self.__dict__: self.params[key] = self.__dict__[key]
+            else:                      self.params[key] = self.default_params[key]
         # Adjust #
         fig.set_figwidth(self.params['width'])
         fig.set_figheight(self.params['height'])
