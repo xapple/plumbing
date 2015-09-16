@@ -4,6 +4,7 @@ import os, time, getpass
 # Internal modules #
 from common import split_thousands
 from autopaths import FilePath
+from collections import OrderedDict
 
 # Third party modules #
 import matplotlib, brewer2mpl
@@ -21,13 +22,20 @@ cool_colors += brewer2mpl.get_map('Greys',   'sequential',  8).mpl_colors
 
 ################################################################################
 class Graph(object):
-    width  = 12.0
-    height = 7.0
-    bottom = 0.14
-    top    = 0.93
-    left   = 0.06
-    right  = 0.98
-    formats = ('pdf',)
+    default_params = OrderedDict((
+        ('width'  , 12.0),
+        ('height' , 7.0),
+        ('bottom' , 0.14),
+        ('top'    , 0.93),
+        ('left'   , 0.06),
+        ('right'  , 0.98),
+        ('x_grid' , False),
+        ('y_grid' , False),
+        ('x_scale', 'linear'),
+        ('y_scale', 'linear'),
+        ('sep'    , ()),
+        ('formats', ('pdf',)),
+    ))
 
     def __nonzero__(self): return self.path.__nonzero__()
 
@@ -48,35 +56,41 @@ class Graph(object):
         if not self: self.plot(*args, **kwatgs)
         return self.path
 
-    def save_plot(self, fig, axes, width=None, height=None, bottom=None, top=None, left=None, right=None, sep=()):
-        # Attributes or parameters #
-        w = width  if width  != None else self.width
-        h = height if height != None else self.height
-        b = bottom if bottom != None else self.bottom
-        t = top    if top    != None else self.top
-        l = left   if left   != None else self.left
-        r = right  if right  != None else self.right
+    def save_plot(self, fig, axes, **kwargs):
+        # Parameters #
+        self.params = {}
+        for key in self.default_params:
+            if key in kwargs:          self.params['key'] = kwargs['key']
+            elif key in self.__dict__: self.params['key'] = self.__dict__['key']
+            else:                      self.params['key'] = self.default_params['key']
         # Adjust #
-        fig.set_figwidth(w)
-        fig.set_figheight(h)
-        fig.subplots_adjust(hspace=0.0, bottom=b, top=t, left=l, right=r)
+        fig.set_figwidth(self.params['width'])
+        fig.set_figheight(self.params['height'])
+        fig.subplots_adjust(hspace=0.0, bottom = self.params['bottom'], top   = self.params['top'],
+                                        left   = self.params['left'],   right = self.params['right'])
+        # Grid #
+        axes.xaxis.grid(self.params['x_grid'])
+        axes.yaxis.grid(self.params['y_grid'])
+        # Log #
+        axes.set_xscale(self.params['x_scale'])
+        axes.set_yscale(self.params['y_scale'])
         # Data and source #
-        if hasattr(self, 'dev_mode'):
+        if hasattr(self, 'dev_mode') and self.dev_mode is True:
             fig.text(0.99, 0.98, time.asctime(), horizontalalignment='right')
             job_name = os.environ.get('SLURM_JOB_NAME', 'Unnamed')
             user_msg = 'user: %s, job: %s' % (getpass.getuser(), job_name)
             fig.text(0.01, 0.98, user_msg, horizontalalignment='left')
         # Nice digit grouping #
-        if 'x' in sep:
+        if 'x' in self.params['sep']:
             seperate = lambda x,pos: split_thousands(x)
             axes.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(seperate))
-        if 'y' in sep:
+        if 'y' in self.params['sep']:
             seperate = lambda y,pos: split_thousands(y)
             axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(seperate))
         # Save it as different formats #
-        for ext in self.formats: fig.savefig(self.path.replace_extension(ext))
+        for ext in self.params['formats']: fig.savefig(self.path.replace_extension(ext))
 
-    def plot(self):
+    def plot(self, **kwargs):
         """An example plot function. You have to subclass this method."""
         fig = pyplot.figure()
         axes = fig.add_subplot(111)
@@ -84,10 +98,8 @@ class Graph(object):
         axes.set_title("Rarefaction curve of the diversity estimate")
         axes.set_xlabel("Sequences rarefied down to this many sequences")
         axes.set_ylabel("The diversity estimate")
-        axes.yaxis.grid(True)
-        axes.set_xscale('symlog')
         axes.set_xlim(0, axes.get_xlim()[1])
-        self.save_plot(fig, axes, sep=('x',))
+        self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)
 
     def save_anim(self, fig, animate, init, bitrate=10000, fps=30):
