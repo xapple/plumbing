@@ -63,6 +63,9 @@ class Graph(object):
             if key in kwargs:          self.params[key] = kwargs[key]
             elif key in self.__dict__: self.params[key] = self.__dict__[key]
             else:                      self.params[key] = self.default_params[key]
+        # Backwards compatibility #
+        if kwargs.get('x_log', False): self.params['x_scale'] = 'symlog'
+        if kwargs.get('y_log', False): self.params['y_scale'] = 'symlog'
         # Adjust #
         fig.set_figwidth(self.params['width'])
         fig.set_figheight(self.params['height'])
