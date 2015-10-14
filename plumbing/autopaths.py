@@ -252,13 +252,18 @@ class DirectoryPath(str):
 
     #-------------------------------- Other ----------------------------------#
     @property
+    def is_symlink(self):
+        """Is this directory a symbolic link to an other directory?"""
+        return os.path.islink(self.path.rstrip('/'))
+
+    @property
     def exists(self):
         """Does it exist in the file system"""
         return os.path.lexists(self.path) # Include broken symlinks
 
     @property
     def empty(self):
-        """Does the directory contain no files ?"""
+        """Does the directory contain no files?"""
         return len(list(self.flat_contents)) == 0
 
     @property
@@ -273,6 +278,7 @@ class DirectoryPath(str):
 
     def remove(self):
         if not self.exists: return False
+        if self.is_symlink: return self.remove_when_symlink()
         shutil.rmtree(self.path, ignore_errors=True)
         return True
 
@@ -297,15 +303,16 @@ class DirectoryPath(str):
         shutil.make_archive(self.prefix_path , "zip", self.directory, self.name)
         if not keep_orig: self.remove()
 
-    def link_from(self, path, safe=False):
+    def link_from(self, where, safe=False):
         """Make a link here pointing to another directory somewhere else.
-        The destination is hence self.path and the source is *path*"""
+        The destination is hence self.path and the source is *where*"""
         if not safe:
-            return os.symlink(path, self.path)
+            self.remove()
+            return os.symlink(where, self.path)
         if safe:
-            try: shutil.rmtree(self.path)
+            try: self.remove()
             except OSError: pass
-            try: os.symlink(path, self.path.rstrip('/'))
+            try: os.symlink(where, self.path.rstrip('/'))
             except OSError: warnings.warn("Symlink of %s did not work" % self)
 
 ################################################################################
