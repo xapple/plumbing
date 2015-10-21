@@ -336,6 +336,18 @@ class FilePath(str):
         with open(self.path, 'r') as handle:
             for line in handle: yield line
 
+    def __new__(cls, path, *args, **kwargs):
+        """A FilePath is in fact a string"""
+        return str.__new__(cls, cls.clean_path(path))
+
+    def __init__(self, path):
+        self.path = self.clean_path(path)
+
+    def __sub__(self, directory):
+        """Subtract a directory from the current path to get the relative path
+        of the current file from that directory."""
+        return os.path.relpath(self.path, directory)
+
     @classmethod
     def clean_path(cls, path):
         """Given a path, return a cleaned up version for initialization"""
@@ -354,12 +366,11 @@ class FilePath(str):
         # Return the result #
         return path
 
-    def __new__(cls, path, *args, **kwargs):
-        """A FilePath is in fact a string"""
-        return str.__new__(cls, cls.clean_path(path))
-
-    def __init__(self, path):
-        self.path = self.clean_path(path)
+    @property
+    def first(self):
+        """Just the first line"""
+        with open(self.path, 'r') as handle:
+            for line in handle: return line
 
     @property
     def exists(self):
@@ -420,7 +431,7 @@ class FilePath(str):
     @property
     def contents(self):
         """The contents as a string"""
-        return open(self.path).read()
+        with open(self.path, 'r') as handle: return handle.read()
 
     @property
     def absolute_path(self):
@@ -437,10 +448,10 @@ class FilePath(str):
         """The relative path when compared with current directory"""
         return os.path.relpath(self.physical_path)
 
-    def __sub__(self, directory):
-        """Subtract a directory from the current path to get the relative path
-        of the current file from that directory."""
-        return os.path.relpath(self.path, directory)
+    @property
+    def md5(self):
+        """Return the md5 checksum."""
+        return md5sum(self.path)
 
     def remove(self):
         if not self.exists: return False
@@ -461,7 +472,10 @@ class FilePath(str):
             with codecs.open(self.path, 'w', encoding) as handle: handle.write(content)
 
     def writelines(self, content, encoding=None):
-        with codecs.open(self.path, 'w', encoding) as handle: handle.writelines(content)
+        if encoding is None:
+            with open(self.path, 'w') as handle: handle.writelines(content)
+        else:
+            with codecs.open(self.path, 'w', encoding) as handle: handle.writelines(content)
 
     def link_from(self, path, safe=False):
         """Make a link here pointing to another file somewhere else.
@@ -539,11 +553,6 @@ class FilePath(str):
         content = iter(self)
         for x in xrange(lines):
             yield content.next()
-
-    @property
-    def md5(self):
-        """Return the md5 checksum."""
-        return md5sum(self.path)
 
 ################################################################################
 class Filesize(object):
