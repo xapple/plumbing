@@ -152,6 +152,11 @@ class Database(FilePath):
         """Just the last entry"""
         return self.own_cursor.execute("SELECT * FROM data ORDER BY ROWID DESC LIMIT 1;").fetchone()
 
+    @property
+    def frame(self):
+        """The main table as a blaze data structure"""
+        return blaze.Data('sqlite:///%s::%s') % (self.path, self.main_table)
+
     #-------------------------------- Methods --------------------------------#
     def check_format(self):
         if self.count_bytes == 0: return

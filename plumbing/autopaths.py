@@ -329,9 +329,12 @@ class FilePath(str):
     Such as: path.make_executable() etc etc."""
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
-    def __iter__(self): return open(self.path)
     def __nonzero__(self): return self.path != None and self.count_bytes != 0
     def __len__(self): return self.count
+    def __list__(self): return self.count
+    def __iter__(self):
+        with open(self.path, 'r') as handle:
+            for line in handle: yield line
 
     @classmethod
     def clean_path(cls, path):
