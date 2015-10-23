@@ -315,6 +315,10 @@ class DirectoryPath(str):
             try: os.symlink(where, self.path.rstrip('/'))
             except OSError: warnings.warn("Symlink of %s did not work" % self)
 
+    def glob(self, pattern):
+        """Perform a glob search in this directory."""
+        for f in glob.glob(self.path + pattern): return FilePath(f)
+
 ################################################################################
 class FilePath(str):
     """I can never remember all those darn `os.path` commands, so I made a class
