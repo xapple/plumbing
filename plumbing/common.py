@@ -441,3 +441,34 @@ class OrderedSet(collections.OrderedDict, collections.MutableSet):
     symmetric_difference = property(lambda self: self.__xor__)
     symmetric_difference_update = property(lambda self: self.__ixor__)
     union = property(lambda self: self.__or__)
+
+################################################################################
+class SuppressAllOutput(object):
+    """For those annoying modules that can't shut-up about warnings"""
+
+    def __enter__(self):
+        # Standard error #
+        sys.stderr.flush()
+        self.old_stderr = sys.stderr
+        sys.stderr = open('/dev/null', 'a+', 0)
+        # Standard out #
+        sys.stdout.flush()
+        self.old_stdout = sys.stdout
+        sys.stdout = open('/dev/null', 'a+', 0)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # Standard error #
+        sys.stderr.flush()
+        sys.stderr = self.old_stderr
+        # Standard out #
+        sys.stdout.flush()
+        sys.stdout = self.old_stdout
+
+    def test():
+        print >>sys.stdout, "printing to stdout before suppression"
+        print >>sys.stderr, "printing to stderr before suppression"
+        with SuppressAllOutput():
+            print >>sys.stdout, "printing to stdout during suppression"
+            print >>sys.stderr, "printing to stderr during suppression"
+        print >>sys.stdout, "printing to stdout after suppression"
+        print >>sys.stderr, "printing to stderr after suppression"

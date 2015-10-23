@@ -453,11 +453,6 @@ class FilePath(str):
         """Return the md5 checksum."""
         return md5sum(self.path)
 
-    def remove(self):
-        if not self.exists: return False
-        os.remove(self.path)
-        return True
-
     def read(self, encoding=None):
         with codecs.open(self.path, 'r', encoding) as handle: content = handle.read()
         return content
@@ -476,6 +471,44 @@ class FilePath(str):
             with open(self.path, 'w') as handle: handle.writelines(content)
         else:
             with codecs.open(self.path, 'w', encoding) as handle: handle.writelines(content)
+
+    def remove(self):
+        if not self.exists: return False
+        os.remove(self.path)
+        return True
+
+    def copy(self, path):
+        shutil.copy2(self.path, path)
+
+    def execute(self):
+        return subprocess.call([self.path])
+
+    def replace_extension(self, new_extension='txt'):
+        """Return a new path with the extension swapped out"""
+        return FilePath(os.path.splitext(self.path)[0] + '.' + new_extension)
+
+    def new_name_insert(self, string):
+        """Return a new name by appending a string before the extension"""
+        return self.prefix_path + "." + string + self.extension
+
+    def make_directory(self):
+        """Create the directory the file is supposed to be in if it does not exist"""
+        if not self.directory.exists: self.directory.create()
+
+    def must_exist(self):
+        """Raise an exception if the path doesn't exist."""
+        if not self.exists: raise Exception("The file path '%s' does not exist." % self.path)
+
+    def head(self, lines=10):
+        """Return the first few lines."""
+        content = iter(self)
+        for x in xrange(lines):
+            yield content.next()
+
+    def move_to(self, path):
+        """Move the file."""
+        assert not os.path.exists(path)
+        shutil.move(self.path, path)
 
     def link_from(self, path, safe=False):
         """Make a link here pointing to another file somewhere else.
@@ -499,24 +532,6 @@ class FilePath(str):
             except OSError: pass
             try: os.symlink(self.path, path)
             except OSError: pass
-
-    def copy(self, path):
-        shutil.copy2(self.path, path)
-
-    def execute(self):
-        return subprocess.call([self.path])
-
-    def replace_extension(self, new_extension='txt'):
-        """Return a new path with the extension swapped out"""
-        return FilePath(os.path.splitext(self.path)[0] + '.' + new_extension)
-
-    def new_name_insert(self, string):
-        """Return a new name by appending a string before the extension"""
-        return self.prefix_path + "." + string + self.extension
-
-    def make_directory(self):
-        """Create the directory the file is supposed to be in if it does not exist"""
-        if not self.directory.exists: self.directory.create()
 
     def gzip_to(self, path=None):
         """Make a gzpied version of the file at a given path"""
@@ -543,16 +558,6 @@ class FilePath(str):
         """Append some text or an other file to the current file"""
         if isinstance(what, FilePath): what = what.contents
         prepend_to_file(self.path, what)
-
-    def must_exist(self):
-        """Raise an exception if the path doesn't exist."""
-        if not self.exists: raise Exception("The file path '%s' does not exist." % self.path)
-
-    def head(self, lines=10):
-        """Return the first few lines."""
-        content = iter(self)
-        for x in xrange(lines):
-            yield content.next()
 
 ################################################################################
 class Filesize(object):
