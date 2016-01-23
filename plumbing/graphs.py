@@ -90,8 +90,11 @@ class Graph(object):
         if 'y' in self.params['sep']:
             seperate = lambda y,pos: split_thousands(y)
             axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(seperate))
+        # Possiblity to overwrite path #
+        if 'path' in kwargs: path = FilePath(kwargs['path'])
+        else:                path = self.path
         # Save it as different formats #
-        for ext in self.params['formats']: fig.savefig(self.path.replace_extension(ext))
+        for ext in self.params['formats']: fig.savefig(path.replace_extension(ext))
 
     def plot(self, **kwargs):
         """An example plot function. You have to subclass this method."""

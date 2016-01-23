@@ -160,7 +160,7 @@ class DirectoryPath(str):
 
     @classmethod
     def clean_path(cls, path):
-        """Given a path, return a cleaned up version for initialization"""
+        """Given a path, return a cleaned up version for initialization."""
         # Conserve 'None' object style #
         if path is None: return None
         # Don't nest DirectoryPaths or the like #
@@ -206,20 +206,20 @@ class DirectoryPath(str):
     #-------------------------- Recursive contents ---------------------------#
     @property
     def contents(self):
-        """The files and directories in this directory, recursively"""
+        """The files and directories in this directory, recursively."""
         for root, dirs, files in os.walk(self.path, topdown=False):
             for d in dirs:  yield DirectoryPath(os.path.join(root, d))
             for f in files: yield FilePath(os.path.join(root, f))
 
     @property
     def files(self):
-        """The files in this directory, recursively"""
+        """The files in this directory, recursively."""
         for root, dirs, files in os.walk(self.path, topdown=False):
             for f in files: yield FilePath(os.path.join(root, f))
 
     @property
     def directories(self):
-        """The directories in this directory, recursively"""
+        """The directories in this directory, recursively."""
         for root, dirs, files in os.walk(self.path, topdown=False):
             for d in dirs: yield DirectoryPath(os.path.join(root, d))
 
@@ -258,7 +258,7 @@ class DirectoryPath(str):
 
     @property
     def exists(self):
-        """Does it exist in the file system"""
+        """Does it exist in the file system?"""
         return os.path.lexists(self.path) # Include broken symlinks
 
     @property
@@ -268,7 +268,7 @@ class DirectoryPath(str):
 
     @property
     def permissions(self):
-        """Convenience object for dealing with permissions"""
+        """Convenience object for dealing with permissions."""
         return FilePermissions(self.path)
 
     @property
@@ -319,6 +319,11 @@ class DirectoryPath(str):
         """Perform a glob search in this directory."""
         for f in glob.glob(self.path + pattern): return FilePath(f)
 
+    def find(self, pattern):
+        """Find a file in this directory."""
+        f = glob.glob(self.path + pattern)[0]
+        return FilePath(f)
+
 ################################################################################
 class FilePath(str):
     """I can never remember all those darn `os.path` commands, so I made a class
@@ -332,10 +337,10 @@ class FilePath(str):
     You can find lots of the common things you would need to do with file paths.
     Such as: path.make_executable() etc etc."""
 
-    def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
+    def __repr__(self):    return '<%s object "%s">' % (self.__class__.__name__, self.path)
     def __nonzero__(self): return self.path != None and self.count_bytes != 0
-    def __len__(self): return self.count
-    def __list__(self): return self.count
+    def __len__(self):     return self.count
+    def __list__(self):    return self.count
     def __iter__(self):
         with open(self.path, 'r') as handle:
             for line in handle: yield line
@@ -456,6 +461,18 @@ class FilePath(str):
     def md5(self):
         """Return the md5 checksum."""
         return md5sum(self.path)
+
+    @property
+    def contains_binary(self):
+        """Try to quickly guess if the file is binary."""
+        from binaryornot.check import is_binary
+        return is_binary(self.path)
+
+    @property
+    def contains_binary(self):
+        """Return True if the file contains binary characters."""
+        from binaryornot.helpers import is_binary_string
+        return is_binary_string(self.contents)
 
     def read(self, encoding=None):
         with codecs.open(self.path, 'r', encoding) as handle: content = handle.read()
