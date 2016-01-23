@@ -31,8 +31,8 @@ class Graph(object):
         ('right'  , 0.98),
         ('x_grid' , False),
         ('y_grid' , False),
-        ('x_scale', 'linear'),
-        ('y_scale', 'linear'),
+        ('x_scale', None),
+        ('y_scale', None),
         ('sep'    , ()),
         ('formats', ('pdf',)),
     ))
@@ -60,12 +60,15 @@ class Graph(object):
         # Parameters #
         self.params = {}
         for key in self.default_params:
-            if key in kwargs:        self.params[key] = kwargs[key]
-            elif hasattr(self, key): self.params[key] = getattr(self, key)
-            else:                    self.params[key] = self.default_params[key]
+            if key in kwargs:                      self.params[key] = kwargs[key]
+            elif hasattr(self, key):               self.params[key] = getattr(self, key)
+            elif self.default_params[key] != None: self.params[key] = self.default_params[key]
         # Backwards compatibility #
         if kwargs.get('x_log', False): self.params['x_scale'] = 'symlog'
         if kwargs.get('y_log', False): self.params['y_scale'] = 'symlog'
+        # Log #
+        if 'x_scale' in self.params: axes.set_xscale(self.params['x_scale'])
+        if 'y_scale' in self.params: axes.set_xscale(self.params['y_scale'])
         # Adjust #
         fig.set_figwidth(self.params['width'])
         fig.set_figheight(self.params['height'])
@@ -74,9 +77,6 @@ class Graph(object):
         # Grid #
         axes.xaxis.grid(self.params['x_grid'])
         axes.yaxis.grid(self.params['y_grid'])
-        # Log #
-        axes.set_xscale(self.params['x_scale'])
-        axes.set_yscale(self.params['y_scale'])
         # Data and source #
         if hasattr(self, 'dev_mode') and self.dev_mode is True:
             fig.text(0.99, 0.98, time.asctime(), horizontalalignment='right')
