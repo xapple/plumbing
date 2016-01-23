@@ -4,7 +4,7 @@
 
 # Third party modules #
 import pandas, numpy
-from pandas.rpy.common import convert_to_r_dataframe
+#from pandas.rpy.common import convert_to_r_dataframe
 
 ################################################################################
 def r_matrix_to_dataframe(matrix):

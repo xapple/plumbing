@@ -90,7 +90,7 @@ class Graph(object):
         if 'y' in self.params['sep']:
             seperate = lambda y,pos: split_thousands(y)
             axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(seperate))
-        # Possiblity to overwrite path #
+        # Possibility to overwrite path #
         if 'path' in kwargs: path = FilePath(kwargs['path'])
         else:                path = self.path
         # Save it as different formats #
