@@ -90,6 +90,9 @@ class Graph(object):
         if 'y' in self.params['sep']:
             seperate = lambda y,pos: split_thousands(y)
             axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(seperate))
+        # Add custom labels #
+        if 'x_labels' in kwargs: axes.set_xticklabels(kwargs['x_labels'])
+        if 'x_labels_rot' in kwargs: axes.set_xticklabels(rotation=kwargs['x_labels_rot'])
         # Possibility to overwrite path #
         if 'path' in kwargs: path = FilePath(kwargs['path'])
         else:                path = self.path
