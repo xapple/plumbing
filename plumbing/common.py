@@ -6,32 +6,20 @@ import getpass, hashlib, datetime, collections
 from itertools import compress, product
 
 # Third party modules #
-import sh, numpy, dateutil
+import numpy, dateutil
 
 # One liners #
 flatter = lambda x: [item for sublist in x for item in sublist]
 
 ################################################################################
-def load_json_path(path):
-    """Load a file with the json module, but report better errors if it
-    fails. And have it ordered too !"""
-    with open(path) as handle:
-        try: return json.load(handle, object_pairs_hook=collections.OrderedDict)
-        except ValueError as error:
-            message = "Could not decode JSON file '%s'." % path
-            message = "-"*20 + "\n" + message + "\n" + str(error) + "\n" + "-"*20 + "\n"
-            sys.stderr.write(message)
-            raise error
-
-################################################################################
 def all_combinations(items):
-    """Generate all combinations of a given list of items"""
+    """Generate all combinations of a given list of items."""
     return (set(compress(items,mask)) for mask in product(*[[0,1]]*len(items)))
 
 ################################################################################
 def pad_with_whitespace(string, pad=None):
     """Given a multiline string, add whitespaces to every line
-    so that every line has the same length"""
+    so that every line has the same length."""
     if pad is None: pad = max(map(len, string.split('\n'))) + 1
     return '\n'.join(('{0: <%i}' % pad).format(line) for line in string.split('\n'))
 
@@ -68,17 +56,21 @@ def count_string_diff(a,b):
 
 ################################################################################
 def iflatten(L):
-    """Iterative flatten"""
+    """Iterative flatten."""
     for sublist in L:
         if hasattr(sublist, '__iter__'):
             for item in iflatten(sublist): yield item
         else: yield sublist
 
-###############################################################################
-def find_file_by_name(name, root=os.curdir):
-    for dirpath, dirnames, filenames in os.walk(os.path.abspath(root)):
-        if name in filenames: return os.path.join(dirpath, name)
-    raise Exception("Could not find file '%s' in '%s'" % (name, root))
+################################################################################
+def average(iterator):
+    """Iterative mean."""
+    count = 0
+    total = 0
+    for num in iterator:
+        count += 1
+        total += num
+    return float(total)/count
 
 ################################################################################
 def get_next_item(iterable):
@@ -108,45 +100,6 @@ def andify(list_of_strings):
     comma_index = result.rfind(',')
     if comma_index > -1: result = result[:comma_index] + ' and' + result[comma_index+1:]
     return result
-
-################################################################################
-class GenWithLength(object):
-    """A generator with a length attribute"""
-    def __init__(self, gen, length): self.gen, self.length = gen, length
-    def __iter__(self): return self.gen
-    def __len__(self): return self.length
-
-###############################################################################
-class Password(object):
-    """A password object that will only prompt the user once per session"""
-    def __str__(self): return self.value
-    def __init__(self, prompt=None):
-        self._value = None
-        self.prompt = prompt
-
-    @property
-    def value(self):
-        if self._value == None: self._value = getpass.getpass(self.prompt)
-        return self._value
-
-################################################################################
-def md5sum(file_path, blocksize=65536):
-    """Compute the md5 of a file. Pretty fast."""
-    md5 = hashlib.md5()
-    with open(file_path, "rb") as f:
-        for block in iter(lambda: f.read(blocksize), ""):
-            md5.update(block)
-    return md5.hexdigest()
-
-################################################################################
-def average(iterator):
-    """Iterative mean"""
-    count = 0
-    total = 0
-    for num in iterator:
-        count += 1
-        total += num
-    return float(total)/count
 
 ################################################################################
 def isubsample(full_sample, k, full_sample_len=None):
@@ -213,7 +166,7 @@ def moving_average(interval, windowsize, borders=None):
 
 ################################################################################
 def wait(predicate, interval=1, message=lambda: "Waiting..."):
-    """Wait until the predicate turns true and display a turning ball"""
+    """Wait until the predicate turns true and display a turning ball."""
     ball, next_ball = u"|/-\\", "|"
     sys.stdout.write("    \033[K")
     sys.stdout.flush()
@@ -224,36 +177,6 @@ def wait(predicate, interval=1, message=lambda: "Waiting..."):
         sys.stdout.flush()
     print "\r Done. \033[K"
     sys.stdout.flush()
-
-################################################################################
-def get_git_tag(directory):
-    if os.path.exists(directory + '/.git'):
-        return sh.git("--git-dir=" + directory + '/.git', "describe", "--tags", "--dirty", "--always").strip('\n')
-    else:
-        return None
-
-###############################################################################
-def reversed_lines(path):
-    """Generate the lines of file in reverse order."""
-    with open(path, 'r') as handle:
-        part = ''
-        for block in reversed_blocks(handle):
-            for c in reversed(block):
-                if c == '\n' and part:
-                    yield part[::-1]
-                    part = ''
-                part += c
-        if part: yield part[::-1]
-
-def reversed_blocks(handle, blocksize=4096):
-    """Generate blocks of file's contents in reverse order."""
-    handle.seek(0, os.SEEK_END)
-    here = handle.tell()
-    while 0 < here:
-        delta = min(blocksize, here)
-        here -= delta
-        handle.seek(here, os.SEEK_SET)
-        yield handle.read(delta)
 
 ###############################################################################
 def natural_sort(item):
@@ -270,51 +193,6 @@ def natural_sort(item):
         try: return int(s)
         except ValueError: return s
     return map(try_int, re.findall(r'(\d+|\D+)', item))
-
-###############################################################################
-def which(cmd, safe=False):
-    """https://github.com/jc0n/python-which"""
-    def is_executable(path):
-        return os.path.exists(path) and os.access(path, os.X_OK) and not os.path.isdir(path)
-    path, name = os.path.split(cmd)
-    if path:
-        if is_executable(cmd): return cmd
-    else:
-        for path in os.environ['PATH'].split(os.pathsep):
-            candidate = os.path.join(path, cmd)
-            if is_executable(candidate): return candidate
-    if not safe: raise Exception('which failed to locate a proper command path "%s"' % cmd)
-
-################################################################################
-def tail(path, window=20):
-    with open(path, 'r') as f:
-        BUFSIZ = 1024
-        f.seek(0, 2)
-        num_bytes = f.tell()
-        size = window + 1
-        block = -1
-        data = []
-        while size > 0 and num_bytes > 0:
-            if num_bytes - BUFSIZ > 0:
-                # Seek back one whole BUFSIZ
-                f.seek(block * BUFSIZ, 2)
-                # Read BUFFER
-                data.insert(0, f.read(BUFSIZ))
-            else:
-                # File too small, start from beginning
-                f.seek(0,0)
-                # Only read what was not read
-                data.insert(0, f.read(num_bytes))
-            linesFound = data[0].count('\n')
-            size -= linesFound
-            num_bytes -= BUFSIZ
-            block -= 1
-        return '\n'.join(''.join(data).splitlines()[-window:])
-
-################################################################################
-def head(path, lines=20):
-    with open(path, 'r') as handle:
-        return ''.join(handle.next() for line in xrange(lines))
 
 ###############################################################################
 def split_thousands(s, tSep='\'', dSep='.'):
@@ -366,34 +244,31 @@ def is_integer(string):
 
 ################################################################################
 def reverse_compl_with_name(old_seq):
-    """Reverse a SeqIO sequence, but keep its name intact"""
+    """Reverse a SeqIO sequence, but keep its name intact."""
     new_seq = old_seq.reverse_complement()
     new_seq.id = old_seq.id
     new_seq.description = old_seq.description
     return new_seq
 
 ################################################################################
-def prepend_to_file(path, data, bufsize=1<<15):
-    # Backup the file #
-    backupname = path + os.extsep + 'bak'
-    # Remove previous backup if it exists #
-    try: os.unlink(backupname)
-    except OSError: pass
-    os.rename(path, backupname)
-    # Open input/output files,  note: outputfile's permissions lost #
-    with open(backupname) as inputfile:
-        with open(path, 'w') as outputfile:
-            outputfile.write(data)
-            buf = inputfile.read(bufsize)
-            while buf:
-                outputfile.write(buf)
-                buf = inputfile.read(bufsize)
-    # Remove backup on success #
-    os.remove(backupname)
+class GenWithLength(object):
+    """A generator with a length attribute"""
+    def __init__(self, gen, length): self.gen, self.length = gen, length
+    def __iter__(self): return self.gen
+    def __len__(self):  return self.length
 
-def append_to_file(path, data):
-    with open(path, "a") as handle:
-        handle.write(data)
+###############################################################################
+class Password(object):
+    """A password object that will only prompt the user once per session"""
+    def __str__(self): return self.value
+    def __init__(self, prompt=None):
+        self._value = None
+        self.prompt = prompt
+
+    @property
+    def value(self):
+        if self._value == None: self._value = getpass.getpass(self.prompt)
+        return self._value
 
 ################################################################################
 class OrderedSet(collections.OrderedDict, collections.MutableSet):
@@ -444,7 +319,7 @@ class OrderedSet(collections.OrderedDict, collections.MutableSet):
 
 ################################################################################
 class SuppressAllOutput(object):
-    """For those annoying modules that can't shut-up about warnings"""
+    """For those annoying modules that can't shut-up about warnings."""
 
     def __enter__(self):
         # Standard error #
@@ -472,3 +347,161 @@ class SuppressAllOutput(object):
             print >>sys.stderr, "printing to stderr during suppression"
         print >>sys.stdout, "printing to stdout after suppression"
         print >>sys.stderr, "printing to stderr after suppression"
+
+################################################################################
+def load_json_path(path):
+    """Load a file with the json module, but report errors better if it
+    fails. And have it ordered too !"""
+    with open(path) as handle:
+        try: return json.load(handle, object_pairs_hook=collections.OrderedDict)
+        except ValueError as error:
+            message = "Could not decode JSON file '%s'." % path
+            message = "-"*20 + "\n" + message + "\n" + str(error) + "\n" + "-"*20 + "\n"
+            sys.stderr.write(message)
+            raise error
+
+###############################################################################
+def find_file_by_name(name, root=os.curdir):
+    for dirpath, dirnames, filenames in os.walk(os.path.abspath(root)):
+        if name in filenames: return os.path.join(dirpath, name)
+    raise Exception("Could not find file '%s' in '%s'" % (name, root))
+
+
+################################################################################
+def md5sum(file_path, blocksize=65536):
+    """Compute the md5 of a file. Pretty fast."""
+    md5 = hashlib.md5()
+    with open(file_path, "rb") as f:
+        for block in iter(lambda: f.read(blocksize), ""):
+            md5.update(block)
+    return md5.hexdigest()
+
+################################################################################
+def download_from_url(source, destination, progress=False, uncompress=True):
+    """Download a file from an URL and place it somewhere. Like wget.
+    Uses requests and tqdm to display progress if you want.
+    By default it will uncompress files."""
+    from tqdm import tqdm
+    import requests
+    response = requests.get(source, stream=True)
+    with open(destination, "wb") as handle:
+        if progress:
+            for data in tqdm(response.iter_content()): handle.write(data)
+        else:
+            for data in response.iter_content(): handle.write(data)
+    if uncompress:
+        with open(destination, 'r') as f: header = f.read(4)
+        if header == "PK\x03\x04": unzip(destination, inplace=True)
+        # Add other compression formats here
+
+################################################################################
+def unzip(source, destination=None, inplace=False, single=True):
+    """Unzip a standard zip file. Can specify the destination of the
+    uncompressed file, or just set inplace=True to delete the original."""
+    # Load #
+    import zipfile, tempfile, shutil
+    z = zipfile.ZipFile(source)
+    # Check #
+    assert z.is_zipfile
+    if single or inplace: assert len(z.infolist()) == 1
+    # Single file #
+    if single:
+        member = z.infolist()[0]
+        tmpdir = tempfile.mkdtemp() + '/'
+        z.extract(member, tmpdir)
+        z.close()
+        if inplace: shutil.move(tmpdir + member.filename, source)
+        else:       shutil.move(tmpdir + member.filename, destination)
+    # Multifile - no security, dangerous #
+    if not single:
+        z.extractall()
+
+###############################################################################
+def reversed_lines(path):
+    """Generate the lines of file in reverse order."""
+    with open(path, 'r') as handle:
+        part = ''
+        for block in reversed_blocks(handle):
+            for c in reversed(block):
+                if c == '\n' and part:
+                    yield part[::-1]
+                    part = ''
+                part += c
+        if part: yield part[::-1]
+
+def reversed_blocks(handle, blocksize=4096):
+    """Generate blocks of file's contents in reverse order."""
+    handle.seek(0, os.SEEK_END)
+    here = handle.tell()
+    while 0 < here:
+        delta = min(blocksize, here)
+        here -= delta
+        handle.seek(here, os.SEEK_SET)
+        yield handle.read(delta)
+
+################################################################################
+def prepend_to_file(path, data, bufsize=1<<15):
+    # Backup the file #
+    backupname = path + os.extsep + 'bak'
+    # Remove previous backup if it exists #
+    try: os.unlink(backupname)
+    except OSError: pass
+    os.rename(path, backupname)
+    # Open input/output files,  note: outputfile's permissions lost #
+    with open(backupname) as inputfile:
+        with open(path, 'w') as outputfile:
+            outputfile.write(data)
+            buf = inputfile.read(bufsize)
+            while buf:
+                outputfile.write(buf)
+                buf = inputfile.read(bufsize)
+    # Remove backup on success #
+    os.remove(backupname)
+
+def append_to_file(path, data):
+    with open(path, "a") as handle:
+        handle.write(data)
+
+################################################################################
+def tail(path, window=20):
+    with open(path, 'r') as f:
+        BUFSIZ = 1024
+        f.seek(0, 2)
+        num_bytes = f.tell()
+        size = window + 1
+        block = -1
+        data = []
+        while size > 0 and num_bytes > 0:
+            if num_bytes - BUFSIZ > 0:
+                # Seek back one whole BUFSIZ
+                f.seek(block * BUFSIZ, 2)
+                # Read BUFFER
+                data.insert(0, f.read(BUFSIZ))
+            else:
+                # File too small, start from beginning
+                f.seek(0,0)
+                # Only read what was not read
+                data.insert(0, f.read(num_bytes))
+            linesFound = data[0].count('\n')
+            size -= linesFound
+            num_bytes -= BUFSIZ
+            block -= 1
+        return '\n'.join(''.join(data).splitlines()[-window:])
+
+def head(path, lines=20):
+    with open(path, 'r') as handle:
+        return ''.join(handle.next() for line in xrange(lines))
+
+###############################################################################
+def which(cmd, safe=False):
+    """https://github.com/jc0n/python-which"""
+    def is_executable(path):
+        return os.path.exists(path) and os.access(path, os.X_OK) and not os.path.isdir(path)
+    path, name = os.path.split(cmd)
+    if path:
+        if is_executable(cmd): return cmd
+    else:
+        for path in os.environ['PATH'].split(os.pathsep):
+            candidate = os.path.join(path, cmd)
+            if is_executable(candidate): return candidate
+    if not safe: raise Exception('which failed to locate a proper command path "%s"' % cmd)
