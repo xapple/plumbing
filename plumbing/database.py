@@ -89,7 +89,7 @@ class Database(FilePath):
         """Called when evaluating ``"P81239A" in seqs``."""
         command = "SELECT EXISTS(SELECT 1 FROM '%s' WHERE id=='%s' LIMIT 1);"
         self.own_cursor.execute(command % (self.main_table, key))
-        return bool(self.own_cursor.fetchone())
+        return bool(self.own_cursor.fetchone()[0])
 
     def __len__(self):
         """Called when evaluating ``len(seqs)``."""
