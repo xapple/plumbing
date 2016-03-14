@@ -339,11 +339,13 @@ class FilePath(str):
 
     def __repr__(self):    return '<%s object "%s">' % (self.__class__.__name__, self.path)
     def __nonzero__(self): return self.path != None and self.count_bytes != 0
-    def __len__(self):     return self.count
     def __list__(self):    return self.count
     def __iter__(self):
         with open(self.path, 'r') as handle:
             for line in handle: yield line
+    def __len__(self):
+        if self.path is None: return 0
+        return self.count
 
     def __new__(cls, path, *args, **kwargs):
         """A FilePath is in fact a string"""
@@ -409,6 +411,7 @@ class FilePath(str):
     @property
     def directory(self):
         """The directory containing this file"""
+        if os.path.dirname(self.path) == "": return DirectoryPath(self)
         return DirectoryPath(os.path.dirname(self.path) + '/')
 
     @property
@@ -533,7 +536,7 @@ class FilePath(str):
 
     def link_from(self, path, safe=False):
         """Make a link here pointing to another file somewhere else.
-        The destination is hence self.path and the source is *path*"""
+        The destination is hence self.path and the source is *path*."""
         if not safe:
             self.remove()
             return os.symlink(path, self.path)
@@ -544,7 +547,8 @@ class FilePath(str):
             except OSError: pass
 
     def link_to(self, path, safe=False):
-        """Create a link somewhere else pointing to this file."""
+        """Create a link somewhere else pointing to this file.
+        The destination is hence *path* and the source is self.path."""
         if not safe:
             if os.path.exists(path): os.remove(path)
             os.symlink(self.path, path)
