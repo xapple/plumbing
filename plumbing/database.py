@@ -110,9 +110,9 @@ class Database(FilePath):
         return 'data'
 
     @property
-    def fields(self):
-        """The list of fields available for every entry."""
-        return self.get_fields_of_table(self.main_table)
+    def columns(self):
+        """The list of columns available in every entry."""
+        return self.get_columns_of_table(self.main_table)
 
     @property
     def first(self):
@@ -168,24 +168,24 @@ class Database(FilePath):
         if if_not_exists: query = "CREATE IF NOT EXISTS table '%s' (%s)"
         else:             query = "CREATE table '%s' (%s)"
         # Do it #
-        fields = ','.join(['"' + c + '"' + ' ' + types.get(c, 'text') for c in columns])
-        self.own_cursor.execute(query % (self.main_table, fields))
+        cols = ','.join(['"' + c + '"' + ' ' + types.get(c, 'text') for c in columns])
+        self.own_cursor.execute(query % (self.main_table, cols))
 
     def execute(self, *args, **kwargs):
         """Convenience shortcut."""
         return self.cursor.execute(*args, **kwargs)
 
-    def get_fields_of_table(self, table=None):
-        """Return the list of fields for a particular table
+    def get_columns_of_table(self, table=None):
+        """Return the list of columns for a particular table
         by querying the SQL for the complete list of column names."""
         # Check the table exists #
         if table is None: table = self.main_table
         if not table in self.tables: return []
         # A PRAGMA statement will implicitly issue a commit, don't use #
         self.own_cursor.execute("SELECT * from '%s' LIMIT 1" % table)
-        fields = [x[0] for x in self.own_cursor.description]
+        columns = [x[0] for x in self.own_cursor.description]
         self.cursor.fetchall()
-        return fields
+        return columns
 
     def index(self, column='id', table=None):
         if table is None: table = self.main_table
@@ -199,24 +199,27 @@ class Database(FilePath):
     def add(self, entries, table=None, columns=None):
         """Add entries to a table.
         The *entries* variable should be an iterable."""
-        # Default table #
-        if table is None: table = self.main_table
+        # Default table and columns #
+        if table is None:   table   = self.main_table
+        if columns is None: columns = self.columns
         # Default columns #
-        if columns is None:
-            question_marks = '(' + ','.join(['?' for x in self.fields]) + ')'
-            sql_command = "INSERT into '%s' values " % table + question_marks
-        else:
-            pass
+        fields         = ','.join('"' + c + '"' for c in columns)
+        question_marks = ','.join('?' for c in columns)
+        sql_command    = "INSERT into '%s' (%s) VALUES (%s)" % (table, fields, question_marks)
         try:
             self.own_cursor.executemany(sql_command, entries)
         except (ValueError, sqlite3.OperationalError, sqlite3.ProgrammingError, sqlite3.InterfaceError) as err:
             first_elem = islice(entries, 0, 1)
             message1 = "The command <%s%s%s> on the database '%s' failed with error:\n %s%s%s"
-            message1 = message1 % (Color.cyn, sql_command, Color.end, self, Color.u_red, err, Color.end)
+            params   =  (Color.cyn, sql_command, Color.end, self, Color.u_red, err, Color.end)
+            message1 = message1 % params
             message2 = "\n * %sThe bindings (%i) %s: %s \n * %sYou gave%s: %s"
-            message2 = message2 % (Color.b_ylw, len(self.fields), Color.end, self.fields, Color.b_ylw, Color.end, entries)
+            params   =  (Color.b_ylw, len(self.columns), Color.end)
+            params  +=  (self.columns, Color.b_ylw, Color.end, entries)
+            message2 = message2 % params
             message3 = "\n * %sFirst element (%i)%s: %s \n"
-            message3 = message3 % (Color.b_ylw, len(first_elem) if first_elem else 0, Color.end, first_elem)
+            params   =  (Color.b_ylw, len(first_elem) if first_elem else 0, Color.end, first_elem)
+            message3 = message3 % params
             message4 = "\n The original error was: '%s'" % err
             raise Exception(message1 + message2 + message3 + message4)
         except KeyboardInterrupt as err:
