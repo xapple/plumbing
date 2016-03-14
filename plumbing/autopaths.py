@@ -199,6 +199,11 @@ class DirectoryPath(str):
         return os.path.splitext(self.path)[0].rstrip('/')
 
     @property
+    def absolute_path(self):
+        """The absolute path starting with a `/`"""
+        return os.path.abspath(self.path) + '/'
+
+    @property
     def directory(self):
         """The full path of directory containing this one"""
         return DirectoryPath(os.path.dirname(os.path.dirname(self.path)))
@@ -447,7 +452,7 @@ class FilePath(str):
 
     @property
     def absolute_path(self):
-        """The absolute path starting with a /"""
+        """The absolute path starting with a `/`"""
         return os.path.abspath(self.path)
 
     @property
@@ -466,7 +471,7 @@ class FilePath(str):
         return md5sum(self.path)
 
     @property
-    def contains_binary(self):
+    def might_be_binary(self):
         """Try to quickly guess if the file is binary."""
         from binaryornot.check import is_binary
         return is_binary(self.path)
@@ -537,25 +542,36 @@ class FilePath(str):
     def link_from(self, path, safe=False):
         """Make a link here pointing to another file somewhere else.
         The destination is hence self.path and the source is *path*."""
+        # Get source and destination #
+        source      = path
+        destination = self.path
+        # Do it #
         if not safe:
-            self.remove()
-            return os.symlink(path, self.path)
+            if os.path.exists(destination): os.remove(destination)
+            os.symlink(source, destination)
+        # Do it safely #
         if safe:
-            try: os.remove(self.path)
+            try: os.remove(destination)
             except OSError: pass
-            try: os.symlink(path, self.path)
+            try: os.symlink(source, destination)
             except OSError: pass
 
-    def link_to(self, path, safe=False):
+    def link_to(self, path, safe=False, absolute=True):
         """Create a link somewhere else pointing to this file.
         The destination is hence *path* and the source is self.path."""
+        # Get source and destination #
+        if absolute: source = self.absolute_path
+        else:        source = self.path
+        destination = path
+        # Do it #
         if not safe:
-            if os.path.exists(path): os.remove(path)
-            os.symlink(self.path, path)
+            if os.path.exists(destination): os.remove(destination)
+            os.symlink(source, destination)
+        # Do it safely #
         if safe:
-            try: os.remove(path)
+            try: os.remove(destination)
             except OSError: pass
-            try: os.symlink(self.path, path)
+            try: os.symlink(source, destination)
             except OSError: pass
 
     def gzip_to(self, path=None):

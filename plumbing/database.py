@@ -9,45 +9,6 @@ from cache     import property_cached
 from common    import download_from_url, md5sum
 
 ################################################################################
-def convert_to_sql(source, dest, keys, values, sql_field_types=None):
-    if sql_field_types is None: sql_field_types = {}
-    with sqlite3.connect(dest) as connection:
-        # Prepare #
-        cursor = connection.cursor()
-        fields = ','.join(['"' + f + '"' + ' ' + sql_field_types.get(f, 'text') for f in keys])
-        cursor.execute("CREATE table 'data' (%s)" % fields)
-        question_marks = '(' + ','.join(['?' for x in keys]) + ')'
-        sql_command = "INSERT into 'data' values " + question_marks
-        # Main loop #
-        try:
-            cursor.executemany(sql_command, values)
-        except (ValueError, sqlite3.OperationalError, sqlite3.ProgrammingError, sqlite3.InterfaceError) as err:
-            first_elem = islice(values, 0, 1)
-            message1 = "The command <%s%s%s> on the database '%s' failed with error:\n %s%s%s"
-            message1 = message1 % (Color.cyn, sql_command, Color.end, dest, Color.u_red, err, Color.end)
-            message2 = "\n * %sThe bindings (%i) %s: %s \n * %sYou gave%s: %s"
-            message2 = message2 % (Color.b_ylw, len(keys), Color.end, keys, Color.b_ylw, Color.end, values)
-            message3 = "\n * %sFirst element (%i)%s: %s \n"
-            message3 = message3 % (Color.b_ylw, len(first_elem) if first_elem else 0, Color.end, first_elem)
-            raise Exception(message1 + message2 + message3)
-        except KeyboardInterrupt as err:
-            print "You interrupted the creation of the database. Committing everything done up to this point."
-            connection.commit()
-            cursor.close()
-            raise err
-        # Index #
-        try:
-            cursor.execute("CREATE INDEX if not exists 'data_index' on 'data' (id)")
-        except KeyboardInterrupt as err:
-            print "You interrupted the creation of the index. Committing everything done up to this point."
-            connection.commit()
-            cursor.close()
-            raise err
-        # Close #
-        connection.commit()
-        cursor.close()
-
-################################################################################
 class Database(FilePath):
 
     def __init__(self, path, factory=None, isolation=None, retrieve=None, md5=None):
@@ -66,7 +27,7 @@ class Database(FilePath):
         self.md5       = md5
 
     def __repr__(self):
-        """Called when evaluating ``print seqs``."""
+        """Called when evaluating ``print database``."""
         return '<%s object on "%s">' % (self.__class__.__name__, self.path)
 
     def __enter__(self):
@@ -80,28 +41,27 @@ class Database(FilePath):
         self.close()
 
     def __iter__(self):
-        """Called when evaluating ``for x in seqs: pass``."""
+        """Called when evaluating ``for x in database: pass``."""
         new_cursor = self.own_connection.cursor()
         new_cursor.execute("SELECT * from '%s'" % self.main_table)
         return new_cursor
 
     def __contains__(self, key):
-        """Called when evaluating ``"P81239A" in seqs``."""
+        """Called when evaluating ``"P81239A" in database``."""
         command = "SELECT EXISTS(SELECT 1 FROM '%s' WHERE id=='%s' LIMIT 1);"
         self.own_cursor.execute(command % (self.main_table, key))
         return bool(self.own_cursor.fetchone()[0])
 
     def __len__(self):
-        """Called when evaluating ``len(seqs)``."""
-        self.own_cursor.execute("SELECT COUNT(1) FROM '%s';" % self.main_table)
-        return int(self.own_cursor.fetchone())
+        """Called when evaluating ``len(database)``."""
+        return self.count_entries()
 
     def __nonzero__(self):
-        """Called when evaluating ``if seqs: pass``."""
+        """Called when evaluating ``if database: pass``."""
         return True if len(self) != 0 else False
 
     def __getitem__(self, key):
-        """Called when evaluating ``seqs[0] or seqs['P81239A']``."""
+        """Called when evaluating ``database[0] or database['P81239A']``."""
         if isinstance(key, int):
             self.own_cursor.execute("SELECT * from '%s' LIMIT 1 OFFSET %i;" % (self.main_table, key))
         else:
@@ -109,7 +69,7 @@ class Database(FilePath):
             self.own_cursor.execute("SELECT * from '%s' where id=='%s' LIMIT 1;" % (self.main_table, key))
         return self.own_cursor.fetchone()
 
-    #------------------------------- Properties ------------------------------#
+    # ------------------------------ Properties ----------------------------- #
     @property_cached
     def connection(self):
         """To be used externally by the user."""
@@ -162,7 +122,7 @@ class Database(FilePath):
     @property
     def last(self):
         """Just the last entry."""
-        return self.own_cursor.execute("SELECT * FROM data ORDER BY ROWID DESC LIMIT 1;").fetchone()
+        return self.get_last()
 
     @property
     def frame(self):
@@ -170,7 +130,7 @@ class Database(FilePath):
         pass
         #return blaze.Data('sqlite:///%s::%s') % (self.path, self.main_table)
 
-    #-------------------------------- Methods --------------------------------#
+    # ------------------------------- Methods ------------------------------- #
     def prepare(self):
         """Check that the file exists, optionally downloads it.
         Checks that the file is indeed an SQLite3 database.
@@ -189,10 +149,37 @@ class Database(FilePath):
         if header != 'SQLite format 3':
             raise Exception("The file '" + self.path + "' is not an SQLite database.")
 
-    def get_fields_of_table(self, table):
+    def create(self, columns, type_map=None, overwrite=False):
+        """Create a new database with a certain schema."""
+        # Check already exists #
+        if self.count_bytes > 0:
+            if overwrite: self.remove()
+            else: raise Exception("File exists already at '%s'" % self)
+        # Make the table #
+        self.add_table(self.main_table, columns=columns, type_map=type_map)
+
+    def add_table(self, name, columns, type_map=None, if_not_exists=False):
+        """Add add a new table to the database.  For instance you could do this:
+        self.add_table('data', {'id':'integer', 'source':'text', 'pubmed':'integer'})"""
+        # Check types mapping #
+        if type_map is None and isinstance(columns, dict): types = columns
+        if type_map is None:                               types = {}
+        # Safe or unsafe #
+        if if_not_exists: query = "CREATE IF NOT EXISTS table '%s' (%s)"
+        else:             query = "CREATE table '%s' (%s)"
+        # Do it #
+        fields = ','.join(['"' + c + '"' + ' ' + types.get(c, 'text') for c in columns])
+        self.own_cursor.execute(query % (self.main_table, fields))
+
+    def execute(self, *args, **kwargs):
+        """Convenience shortcut."""
+        return self.cursor.execute(*args, **kwargs)
+
+    def get_fields_of_table(self, table=None):
         """Return the list of fields for a particular table
         by querying the SQL for the complete list of column names."""
         # Check the table exists #
+        if table is None: table = self.main_table
         if not table in self.tables: return []
         # A PRAGMA statement will implicitly issue a commit, don't use #
         self.own_cursor.execute("SELECT * from '%s' LIMIT 1" % table)
@@ -200,27 +187,8 @@ class Database(FilePath):
         self.cursor.fetchall()
         return fields
 
-    def close(self):
-        self.cursor.close()
-        self.connection.close()
-        self.own_cursor.close()
-        self.own_connection.close()
-
-    def create(self, fields, types=None, overwrite=False):
-        """Create a new database with a certain schema. For instance you could do this:
-        self.create({'id':'integer', 'source':'text', 'pubmed':'integer'})"""
-        # Check already exists #
-        if self.count_bytes > 0:
-            if overwrite: self.remove()
-            else: raise Exception("File exists already at '%s'" % self)
-        # Check types #
-        if types is None and isinstance(fields, dict): types=fields
-        if types is None: types = {}
-        # Do it #
-        fields = ','.join(['"' + f + '"' + ' ' + types.get(f, 'text') for f in fields])
-        self.own_cursor.execute("CREATE table '%s' (%s)" % (self.main_table, fields))
-
-    def index(self, column='id'):
+    def index(self, column='id', table=None):
+        if table is None: table = self.main_table
         try:
             command = "CREATE INDEX if not exists 'main_index' on '%s' (%s)"
             self.own_cursor.execute(command % (self.main_table, column))
@@ -228,11 +196,17 @@ class Database(FilePath):
             print "You interrupted the creation of the index. Not committing."
             raise err
 
-    def add(self, entries):
-        """Add entries to the main table.
+    def add(self, entries, table=None, columns=None):
+        """Add entries to a table.
         The *entries* variable should be an iterable."""
-        question_marks = '(' + ','.join(['?' for x in self.fields]) + ')'
-        sql_command = "INSERT into 'data' values " + question_marks
+        # Default table #
+        if table is None: table = self.main_table
+        # Default columns #
+        if columns is None:
+            question_marks = '(' + ','.join(['?' for x in self.fields]) + ')'
+            sql_command = "INSERT into '%s' values " % table + question_marks
+        else:
+            pass
         try:
             self.own_cursor.executemany(sql_command, entries)
         except (ValueError, sqlite3.OperationalError, sqlite3.ProgrammingError, sqlite3.InterfaceError) as err:
@@ -250,7 +224,30 @@ class Database(FilePath):
             self.own_connection.commit()
             raise err
 
-    def add_by_steps(self, entries_by_step):
+    def add_by_steps(self, entries_by_step, table=None, columns=None):
         """Add entries to the main table.
         The *entries* variable should be an iterable yielding iterables."""
-        for entries in entries_by_step: self.add(entries)
+        for entries in entries_by_step: self.add(entries, table=table, columns=columns)
+
+    def count_entries(self, table=None):
+        """How many rows in a table."""
+        if table is None: table = self.main_table
+        self.own_cursor.execute("SELECT COUNT(1) FROM '%s';" % table)
+        return int(self.own_cursor.fetchone()[0])
+
+    def get_last(self, table=None):
+        """Just the last entry."""
+        if table is None: table = self.main_table
+        query = "SELECT * FROM %s ORDER BY ROWID DESC LIMIT 1;" % table
+        return self.own_cursor.execute(query).fetchone()
+
+    def close(self):
+        self.cursor.close()
+        self.connection.close()
+        self.own_cursor.close()
+        self.own_connection.close()
+
+    # ------------------------------- Extended ------------------------------- #
+    def add_column(self, name, kind=None, table=None):
+        """Add add a new column to a table."""
+        pass
