@@ -11,20 +11,28 @@ from common    import download_from_url, md5sum
 ################################################################################
 class Database(FilePath):
 
-    def __init__(self, path, factory=None, isolation=None, retrieve=None, md5=None):
+    def __init__(self, path,
+                       factory   = None,
+                       text_fact = None,
+                       isolation = None,
+                       retrieve  = None,
+                       md5       = None):
         """
         * The path of the database comes first.
         * The factory option enables you to change how results are returned.
+        * The text_fact option enables you to change text factory (useful for BLOB).
         * The Isolation source can be `None` for autocommit mode or one of:
         'DEFERRED', 'IMMEDIATE' or 'EXCLUSIVE'.
         * The retrieve option is an URL at which the database will be downloaded
         if it was not found at the `path` given.
-        * The md5 option is used to check the integrety of a database."""
+        * The md5 option is used to check the integrity of a database."""
         self.path      = path
+        self.text_fact = text_fact
         self.factory   = factory
         self.isolation = isolation
         self.retrieve  = retrieve
         self.md5       = md5
+        self.prepared  = False
 
     def __repr__(self):
         """Called when evaluating ``print database``."""
@@ -43,12 +51,12 @@ class Database(FilePath):
     def __iter__(self):
         """Called when evaluating ``for x in database: pass``."""
         new_cursor = self.own_connection.cursor()
-        new_cursor.execute("SELECT * from '%s'" % self.main_table)
+        new_cursor.execute('SELECT * from "%s";' % self.main_table)
         return new_cursor
 
     def __contains__(self, key):
         """Called when evaluating ``"P81239A" in database``."""
-        command = "SELECT EXISTS(SELECT 1 FROM '%s' WHERE id=='%s' LIMIT 1);"
+        command = 'SELECT EXISTS(SELECT 1 FROM "%s" WHERE id=="%s" LIMIT 1);'
         self.own_cursor.execute(command % (self.main_table, key))
         return bool(self.own_cursor.fetchone()[0])
 
@@ -63,31 +71,27 @@ class Database(FilePath):
     def __getitem__(self, key):
         """Called when evaluating ``database[0] or database['P81239A']``."""
         if isinstance(key, int):
-            self.own_cursor.execute("SELECT * from '%s' LIMIT 1 OFFSET %i;" % (self.main_table, key))
+            self.own_cursor.execute('SELECT * from "%s" LIMIT 1 OFFSET %i;' % (self.main_table, key))
         else:
             key = key.replace("'","''")
-            self.own_cursor.execute("SELECT * from '%s' where id=='%s' LIMIT 1;" % (self.main_table, key))
+            self.own_cursor.execute('SELECT * from "%s" where id=="%s" LIMIT 1;' % (self.main_table, key))
         return self.own_cursor.fetchone()
 
     # ------------------------------ Properties ----------------------------- #
     @property_cached
     def connection(self):
         """To be used externally by the user."""
-        self.prepare()
-        con = sqlite3.connect(self.path, isolation_level=self.isolation)
-        con.row_factory = self.factory
-        return con
+        return self.new_connection()
+
+    @property_cached
+    def own_connection(self):
+        """To be used internally in this object."""
+        return self.new_connection()
 
     @property_cached
     def cursor(self):
         """To be used externally by the user."""
         return self.connection.cursor()
-
-    @property_cached
-    def own_connection(self):
-        """To be used internally in this object."""
-        self.prepare()
-        return sqlite3.connect(self.path, isolation_level=self.isolation)
 
     @property_cached
     def own_cursor(self):
@@ -98,7 +102,7 @@ class Database(FilePath):
     def tables(self):
         """The complete list of SQL tables."""
         self.own_connection.row_factory = sqlite3.Row
-        self.own_cursor.execute("select name from sqlite_master where type='table'")
+        self.own_cursor.execute('SELECT name from sqlite_master where type="table";')
         result = [x[0].encode('ascii') for x in self.own_cursor.fetchall()]
         self.own_connection.row_factory = self.factory
         return result
@@ -131,6 +135,14 @@ class Database(FilePath):
         #return blaze.Data('sqlite:///%s::%s') % (self.path, self.main_table)
 
     # ------------------------------- Methods ------------------------------- #
+    def new_connection(self):
+        """Make a new connection."""
+        if not self.prepared: self.prepare()
+        con = sqlite3.connect(self.path, isolation_level=self.isolation)
+        con.row_factory = self.factory
+        if self.text_fact: con.text_factory = self.text_fact
+        return con
+
     def prepare(self):
         """Check that the file exists, optionally downloads it.
         Checks that the file is indeed an SQLite3 database.
@@ -142,6 +154,7 @@ class Database(FilePath):
             else: raise Exception("The file '" + self.path + "' does not exist.")
         self.check_format()
         if self.md5: assert self.md5 == md5sum(self.path)
+        self.prepared = True
 
     def check_format(self):
         if self.count_bytes == 0: return
@@ -165,8 +178,8 @@ class Database(FilePath):
         if type_map is None and isinstance(columns, dict): types = columns
         if type_map is None:                               types = {}
         # Safe or unsafe #
-        if if_not_exists: query = "CREATE IF NOT EXISTS table '%s' (%s)"
-        else:             query = "CREATE table '%s' (%s)"
+        if if_not_exists: query = 'CREATE IF NOT EXISTS table "%s" (%s);'
+        else:             query = 'CREATE table "%s" (%s);'
         # Do it #
         cols = ','.join(['"' + c + '"' + ' ' + types.get(c, 'text') for c in columns])
         self.own_cursor.execute(query % (self.main_table, cols))
@@ -182,7 +195,7 @@ class Database(FilePath):
         if table is None: table = self.main_table
         if not table in self.tables: return []
         # A PRAGMA statement will implicitly issue a commit, don't use #
-        self.own_cursor.execute("SELECT * from '%s' LIMIT 1" % table)
+        self.own_cursor.execute('SELECT * from "%s" LIMIT 1;' % table)
         columns = [x[0] for x in self.own_cursor.description]
         self.cursor.fetchall()
         return columns
@@ -190,7 +203,7 @@ class Database(FilePath):
     def index(self, column='id', table=None):
         if table is None: table = self.main_table
         try:
-            command = "CREATE INDEX if not exists 'main_index' on '%s' (%s)"
+            command = 'CREATE INDEX if not exists "main_index" on "%s" (%s);'
             self.own_cursor.execute(command % (self.main_table, column))
         except KeyboardInterrupt as err:
             print "You interrupted the creation of the index. Not committing."
@@ -205,7 +218,7 @@ class Database(FilePath):
         # Default columns #
         fields         = ','.join('"' + c + '"' for c in columns)
         question_marks = ','.join('?' for c in columns)
-        sql_command    = "INSERT into '%s' (%s) VALUES (%s)" % (table, fields, question_marks)
+        sql_command    = 'INSERT into "%s"(%s) VALUES (%s);' % (table, fields, question_marks)
         try:
             self.own_cursor.executemany(sql_command, entries)
         except (ValueError, sqlite3.OperationalError, sqlite3.ProgrammingError, sqlite3.InterfaceError) as err:
@@ -235,14 +248,18 @@ class Database(FilePath):
     def count_entries(self, table=None):
         """How many rows in a table."""
         if table is None: table = self.main_table
-        self.own_cursor.execute("SELECT COUNT(1) FROM '%s';" % table)
+        self.own_cursor.execute('SELECT COUNT(1) FROM "%s";' % table)
         return int(self.own_cursor.fetchone()[0])
 
     def get_last(self, table=None):
         """Just the last entry."""
         if table is None: table = self.main_table
-        query = "SELECT * FROM %s ORDER BY ROWID DESC LIMIT 1;" % table
+        query = 'SELECT * FROM "%s" ORDER BY ROWID DESC LIMIT 1;' % table
         return self.own_cursor.execute(query).fetchone()
+
+    def vacuum(self):
+        """Compact the database, remove old transactions."""
+        self.own_cursor.execute("VACUUM")
 
     def close(self):
         self.cursor.close()

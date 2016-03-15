@@ -3,7 +3,8 @@ import os, stat, tempfile, re, subprocess, shutil, codecs, gzip
 import glob, warnings
 
 # Internal modules #
-from plumbing.common import append_to_file, prepend_to_file, md5sum, natural_sort
+from plumbing.common import append_to_file, prepend_to_file
+from plumbing.common import md5sum, natural_sort, unzip
 
 # Third party modules #
 import sh
@@ -575,20 +576,28 @@ class FilePath(str):
             except OSError: pass
 
     def gzip_to(self, path=None):
-        """Make a gzpied version of the file at a given path"""
-        if path is None: path = self + ".gz"
-        with open(self, 'rb') as orig_file:
+        """Make a gzipped version of the file at a given path"""
+        if path is None: path = self.path + ".gz"
+        with open(self.path, 'rb') as orig_file:
             with gzip.open(path, 'wb') as new_file:
                 new_file.writelines(orig_file)
         return FilePath(path)
 
     def ungzip_to(self, path=None):
-        """Make a unzipped version of the file at a given path"""
-        if path is None: path = path[:3]
+        """Make an unzipped version of the file at a given path"""
+        if path is None: path = self.path[:3]
         with gzip.open(self, 'rb') as orig_file:
             with open(path, 'wb') as new_file:
                 new_file.writelines(orig_file)
         return FilePath(path)
+
+    def zip_to(self, path=None):
+        """Make a zipped version of the file at a given path."""
+        pass
+
+    def unzip_to(self, destination=None, inplace=False):
+        """Make an unzipped version of the file at a given path"""
+        return unzip(self.path, destination=destination, inplace=inplace)
 
     def append(self, what):
         """Append some text or an other file to the current file"""

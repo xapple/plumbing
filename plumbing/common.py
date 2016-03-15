@@ -400,9 +400,10 @@ def unzip(source, destination=None, inplace=False, single=True):
     uncompressed file, or just set inplace=True to delete the original."""
     # Load #
     import zipfile, tempfile, shutil
-    z = zipfile.ZipFile(source)
     # Check #
-    assert z.is_zipfile
+    assert zipfile.is_zipfile(source)
+    # Load #
+    z = zipfile.ZipFile(source)
     if single or inplace: assert len(z.infolist()) == 1
     # Single file #
     if single:
