@@ -1,5 +1,5 @@
 # Built-in modules #
-import os
+import os, sys
 
 # Internal modules #
 from plumbing.autopaths import DirectoryPath
@@ -81,14 +81,17 @@ class GitRepo(DirectoryPath):
     def commit(self, message):
         return sh.git(self.default + ['commit', '-m', '"' + message + '"'])
 
-    def push(self, source=None, destination=None, tags=False):
+    def push(self, source=None, destination=None, tags=False, shell=False):
+        # Command #
+        command = self.default + ['push']
         # Tags #
-        if tags: return sh.git(self.default + ['push' , '--tags'])
-        # Other #
-        if not source and not destination: return sh.git(self.default + ['push'])
-        if not source:                     return sh.git(self.default + ['push'])
-        if not destination:                return sh.git(self.default + ['push'])
-        return sh.git(self.default + ['push', source, destination])
+        if tags: command.append('--tags')
+        # Source and dest #
+        if source:                 command.append(source)
+        if source and destination: command.append(destination)
+        # Show on shell #
+        if shell: return sh.git(command, _out=sys.stdout, _err=sys.stderr)
+        else:     return sh.git(command)
 
     def tag_head(self, tag):
         return sh.git(self.default + ['tag', tag, 'HEAD'])
