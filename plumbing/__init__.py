@@ -1,7 +1,7 @@
 b'This module needs Python 2.7.x'
 
 # Special variables #
-__version__ = '2.0.3'
+__version__ = '2.0.4'
 
 # Expose objects #
 from cmd import command
