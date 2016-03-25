@@ -11,11 +11,6 @@
 # IDE files #
 /.idea
 
-# Build stuff #
-_build/
-/MANIFEST
-/build/
-/dist/
-
-# Git files #
-/.gitattributes
+# Automatic documentation #
+documentation/automatic
+documentation/html
