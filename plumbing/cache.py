@@ -9,6 +9,17 @@ from plumbing.autopaths import FilePath
 from decorator import decorator
 
 ################################################################################
+def cached(f):
+    """Decorator for functions evaluated only once."""
+    def memoized(*args, **kwargs):
+        if hasattr(memoized, '__cache__'):
+            return memoized.__cache__
+        result = f(*args, **kwargs)
+        memoized.__cache__ = result
+        return result
+    return memoized
+
+################################################################################
 def property_cached(f):
     """Decorator for properties evaluated only once.
     It can be used to created a cached property like this:
@@ -96,7 +107,7 @@ def expiry_every(seconds=0):
 
 ###############################################################################
 class LazyString(object):
-    """A string-like object that will only compute its value once when accessed"""
+    """A string-like object that will only compute its value once, when accessed."""
     def __str__(self): return self.value
     def __init__(self, function):
         self._value = None
@@ -106,3 +117,26 @@ class LazyString(object):
     def value(self):
         if self._value == None: self._value = self.function()
         return self._value
+
+###############################################################################
+class LazyDict(object):
+    """A dictionary-like object that will only compute its value once, when accessed."""
+    def __init__(self, function):
+        self._value = None
+        self.function = function
+
+    pass
+
+###############################################################################
+class class_property(property):
+    """You can use this like this:
+        class Foo(object):
+            @class_property
+            @classmethod
+            @cached
+            def bar(cls):
+                return 1+1
+    """
+    def __get__(self, cls, owner):
+        return self.fget.__get__(None, owner)()
+
