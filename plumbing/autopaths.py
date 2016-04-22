@@ -417,8 +417,12 @@ class FilePath(str):
     @property
     def directory(self):
         """The directory containing this file"""
-        if os.path.dirname(self.path) == "": return DirectoryPath(self)
-        return DirectoryPath(os.path.dirname(self.path) + '/')
+        # The built-in function #
+        directory = os.path.dirname(self.path)
+        # Maybe we need to go the absolute path way #
+        if not directory: directory = os.path.dirname(self.absolute_path)
+        # Return #
+        return DirectoryPath(directory + '/')
 
     @property
     def extension(self):
