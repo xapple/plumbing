@@ -12,6 +12,18 @@ import numpy, dateutil
 flatter = lambda x: [item for sublist in x for item in sublist]
 
 ################################################################################
+def ascii(text):
+    """Make a safe, ASCII version a string. For instance for use on the web."""
+    import unicodedata
+    return unicodedata.normalize('NFKD', u'a é o').encode('ASCII', 'ignore')
+
+################################################################################
+def sanitize(text):
+    """Make an ultra-safe, ASCII version a string.
+    For instance for use as a filename."""
+    return "".join([c for c in text if re.match(r'\w', c)])
+
+################################################################################
 def all_combinations(items):
     """Generate all combinations of a given list of items."""
     return (set(compress(items,mask)) for mask in product(*[[0,1]]*len(items)))
@@ -23,10 +35,13 @@ def pad_with_whitespace(string, pad=None):
     if pad is None: pad = max(map(len, string.split('\n'))) + 1
     return '\n'.join(('{0: <%i}' % pad).format(line) for line in string.split('\n'))
 
+###############################################################################
 def mirror_lines(string):
-    """Given a multilin string, return its reflection along a vertical axis"""
+    """Given a multiline string, return its reflection along a vertical axis.
+    Can be useful for the visualization of text version of trees."""
     return '\n'.join(line[::-1] for line in string.split('\n'))
 
+###############################################################################
 def concatenate_by_line(first, second):
     """Zip two strings together, line wise"""
     return '\n'.join(x+y for x,y in zip(first.split('\n'), second.split('\n')))
@@ -366,7 +381,6 @@ def find_file_by_name(name, root=os.curdir):
         if name in filenames: return os.path.join(dirpath, name)
     raise Exception("Could not find file '%s' in '%s'" % (name, root))
 
-
 ################################################################################
 def md5sum(file_path, blocksize=65536):
     """Compute the md5 of a file. Pretty fast."""
@@ -430,6 +444,7 @@ def reversed_lines(path):
                 part += c
         if part: yield part[::-1]
 
+###############################################################################
 def reversed_blocks(handle, blocksize=4096):
     """Generate blocks of file's contents in reverse order."""
     handle.seek(0, os.SEEK_END)

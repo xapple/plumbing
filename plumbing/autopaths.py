@@ -304,6 +304,9 @@ class DirectoryPath(str):
                 if inherit: os.chmod(self.path, self.directory.permissions.number)
             except OSError: pass
 
+    def create_if_not_exists(self):
+        if not self.exists: self.create()
+
     def zip(self, keep_orig=False):
         """Make a zip archive of the directory"""
         shutil.make_archive(self.prefix_path , "zip", self.directory, self.name)
