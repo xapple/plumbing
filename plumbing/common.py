@@ -15,7 +15,7 @@ flatter = lambda x: [item for sublist in x for item in sublist]
 def ascii(text):
     """Make a safe, ASCII version a string. For instance for use on the web."""
     import unicodedata
-    return unicodedata.normalize('NFKD', u'a é o').encode('ASCII', 'ignore')
+    return unicodedata.normalize('NFKD', unicode(text)).encode('ASCII', 'ignore')
 
 ################################################################################
 def sanitize(text):
