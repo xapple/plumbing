@@ -76,6 +76,7 @@ class Runner(object):
                 fns = get_children(self.parent, name, level)
                 break
             level += 1
+        assert fns
         return fns
 
     def run_step(self, name, fns, *args, **kwargs):

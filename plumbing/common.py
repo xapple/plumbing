@@ -24,6 +24,14 @@ def sanitize(text):
     return "".join([c for c in text if re.match(r'\w', c)])
 
 ################################################################################
+def bool_to_unicode(b):
+    """Different possibilities for True: ☑️✔︎✓✅👍
+       Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎"""
+    if not isinstance(b, bool): b = bool(b)
+    if b is True:  return u"✅"
+    if b is False: return u"❎"
+
+################################################################################
 def all_combinations(items):
     """Generate all combinations of a given list of items."""
     return (set(compress(items,mask)) for mask in product(*[[0,1]]*len(items)))
@@ -511,13 +519,14 @@ def head(path, lines=20):
 ###############################################################################
 def which(cmd, safe=False):
     """https://github.com/jc0n/python-which"""
+    from plumbing.autopaths import FilePath
     def is_executable(path):
         return os.path.exists(path) and os.access(path, os.X_OK) and not os.path.isdir(path)
     path, name = os.path.split(cmd)
     if path:
-        if is_executable(cmd): return cmd
+        if is_executable(cmd): return FilePath(cmd)
     else:
         for path in os.environ['PATH'].split(os.pathsep):
             candidate = os.path.join(path, cmd)
-            if is_executable(candidate): return candidate
+            if is_executable(candidate): return FilePath(candidate)
     if not safe: raise Exception('which failed to locate a proper command path "%s"' % cmd)

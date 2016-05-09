@@ -206,7 +206,7 @@ class DirectoryPath(str):
 
     @property
     def directory(self):
-        """The full path of directory containing this one"""
+        """The full path of the directory containing this one."""
         return DirectoryPath(os.path.dirname(os.path.dirname(self.path)))
 
     #-------------------------- Recursive contents ---------------------------#
@@ -461,17 +461,17 @@ class FilePath(str):
     @property
     def absolute_path(self):
         """The absolute path starting with a `/`"""
-        return os.path.abspath(self.path)
+        return FilePath(os.path.abspath(self.path))
 
     @property
     def physical_path(self):
         """The physical path like in `pwd -P`"""
-        return os.path.realpath(self.path)
+        return FilePath(os.path.realpath(self.path))
 
     @property
     def relative_path(self):
         """The relative path when compared with current directory"""
-        return os.path.relpath(self.physical_path)
+        return FilePath(os.path.relpath(self.physical_path))
 
     @property
     def md5(self):
