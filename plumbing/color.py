@@ -1,11 +1,17 @@
 ################################################################################
+# Nice colors for plotting stacked bar charts #
+cool_colors = ["#9b59b6", "#3498db", "#95a5a6", "#e74c3c", "#34495e", "#2ecc71",
+               "#FCD124", "#5F0061", "#FBBEBA", "#AAC2F6", "#606925", "#469A55",
+               "#ABD8B2", "#B4B1ED", "#613162", "#76C3E5", "#F05575", "#48CBD1"]
+
+################################################################################
 class Color:
     """Shortcuts for the ANSI escape sequences to control
        formatting, color, etc. on text terminals. Use it like this:
 
             print Color.red + "Hello world" + Color.end
 
-    An easy command to see them all in a terminal:
+    An easy command to see all 256 possible colors in a terminal:
 
         $ for x in 0 1 4 5 7 8; do for i in `seq 30 37`; do for a in `seq 40 47`; do echo -ne "\e[$x;$i;$a""m\\\e[$x;$i;$a""m\e[0;37;40m "; done; echo; done; done; echo "";
 
