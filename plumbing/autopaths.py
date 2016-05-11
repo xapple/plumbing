@@ -326,7 +326,8 @@ class DirectoryPath(str):
 
     def glob(self, pattern):
         """Perform a glob search in this directory."""
-        for f in glob.glob(self.path + pattern): return FilePath(f)
+        files = glob.glob(self.path + pattern)
+        return map(FilePath, files)
 
     def find(self, pattern):
         """Find a file in this directory."""
