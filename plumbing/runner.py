@@ -1,5 +1,5 @@
 # Built-in modules #
-import os, sys, time, datetime
+import sys, time, datetime
 
 # Internal modules #
 from plumbing.common import iflatten

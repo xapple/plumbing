@@ -3,7 +3,7 @@
 Threads and parallelism
 =======================
 
-The ``thread`` module provides some conveniance functions
+The ``thread`` module provides some convenience functions
 for using threads in python.
 """
 
