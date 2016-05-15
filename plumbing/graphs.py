@@ -76,6 +76,12 @@ class Graph(object):
         if 'x_max' in self.params: axes.set_xlim(axes.get_xlim()[0], self.params['x_max'])
         if 'y_min' in self.params: axes.set_xlim(self.params['y_min'], axes.get_ylim()[1])
         if 'y_max' in self.params: axes.set_xlim(axes.get_ylim()[0], self.params['y_max'])
+        # Title #
+        title = self.params.get('title', False)
+        if title: axes.set_title(title)
+        # Axes labels  #
+        if self.params.get('xlabel', False): axes.set_xlabel(self.params['xlabel'])
+        if self.params.get('ylabel', False): axes.set_ylabel(self.params['ylabel'])
         # Adjust #
         fig.set_figwidth(self.params['width'])
         fig.set_figheight(self.params['height'])

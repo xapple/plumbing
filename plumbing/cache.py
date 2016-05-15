@@ -56,7 +56,7 @@ def property_pickled(f):
     """Same thing as above but the result will be stored on disk
     The path of the pickle file will be determined by looking for the
     `cache_dir` attribute of the instance containing the cached property.
-    If no `cache_dir` attribute exists the `p` attribute  will be accessed with
+    If no `cache_dir` attribute exists the `p` attribute will be accessed with
     the name of the property being cached."""
     # Called when you access the property #
     def retrieve_from_cache(self):

@@ -232,7 +232,7 @@ class DirectoryPath(str):
     #----------------------------- Flat contents -----------------------------#
     @property
     def flat_contents(self):
-        """The files and directories in this directory non-recursively"""
+        """The files and directories in this directory non-recursively."""
         for root, dirs, files in os.walk(self.path):
             for d in dirs:  yield DirectoryPath(os.path.join(root, d))
             for f in files: yield FilePath(os.path.join(root, f))
@@ -240,7 +240,9 @@ class DirectoryPath(str):
 
     @property
     def flat_files(self):
-        """The files in this directory non-recursively, and sorted"""
+        """The files in this directory non-recursively, and sorted.
+        #TODO: check for permission denied in directory."""
+        result = []
         for root, dirs, files in os.walk(self.path):
             result = [FilePath(os.path.join(root, f)) for f in files]
             break
@@ -249,7 +251,8 @@ class DirectoryPath(str):
 
     @property
     def flat_directories(self):
-        """The directories in this directory non-recursively, and sorted"""
+        """The directories in this directory non-recursively, and sorted."""
+        result = []
         for root, dirs, files in os.walk(self.path):
             result = [DirectoryPath(os.path.join(root, d)) for d in dirs]
             break
