@@ -125,6 +125,18 @@ def andify(list_of_strings):
     return result
 
 ################################################################################
+def num_to_ith(num):
+    """1 becomes 1st, 2 becomes 2nd, etc."""
+    value             = str(num)
+    before_last_digit = value[-2]
+    last_digit        = value[-1]
+    if len(value) > 1 and before_last_digit == '1': return value +'th'
+    if last_digit == '1': return value + 'st'
+    if last_digit == '2': return value + 'nd'
+    if last_digit == '3': return value + 'rd'
+    return value + 'th'
+
+################################################################################
 def isubsample(full_sample, k, full_sample_len=None):
     """Down-sample an enumerable list of things"""
     # Determine length #

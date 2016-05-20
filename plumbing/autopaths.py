@@ -40,6 +40,9 @@ class AutoPaths(object):
         # Parse input #
         self._paths = [PathItems(p.lstrip(' '), base_dir) for p in all_paths.split('\n')]
 
+    def __call__(self, key):    return self.__getattr__(key)
+    def __getitem__(self, key): return self.__getattr__(key)
+
     def __getattr__(self, key):
         # Let built-ins pass through to object #
         if key.startswith('__') and key.endswith('__'): return object.__getattr__(key)
@@ -320,12 +323,12 @@ class DirectoryPath(str):
         The destination is hence self.path and the source is *where*"""
         if not safe:
             self.remove()
-            return os.symlink(where, self.path)
+            return os.symlink(where, self.path.rstrip('/'))
         if safe:
             try: self.remove()
             except OSError: pass
             try: os.symlink(where, self.path.rstrip('/'))
-            except OSError: warnings.warn("Symlink of %s did not work" % self)
+            except OSError: warnings.warn("Symlink of %s to %s did not work" % (where, self))
 
     def glob(self, pattern):
         """Perform a glob search in this directory."""
