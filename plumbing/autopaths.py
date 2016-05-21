@@ -330,6 +330,10 @@ class DirectoryPath(str):
             try: os.symlink(where, self.path.rstrip('/'))
             except OSError: warnings.warn("Symlink of %s to %s did not work" % (where, self))
 
+    def copy(self, path):
+        assert not os.path.exists(path)
+        shutil.copytree(self.path, path)
+
     def glob(self, pattern):
         """Perform a glob search in this directory."""
         files = glob.glob(self.path + pattern)

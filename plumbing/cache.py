@@ -80,8 +80,12 @@ def property_pickled(f):
         return result
     # Called when you set the property #
     def overwrite_cache(self, value):
-        path = getattr(self.p, f.func_name)
-        if value is None: os.remove(path)
+        # Where should we look in the file system ? #
+        if 'cache_dir' in self.__dict__:
+            path = FilePath(self.__dict__['cache_dir'] + f.func_name + '.pickle')
+        else:
+            path = getattr(self.p, f.func_name)
+        if value is None: path.remove()
         else: raise Exception("You can't set a pickled property, you can only delete it")
     # Return a wrapper #
     retrieve_from_cache.__doc__ = f.__doc__
