@@ -80,8 +80,8 @@ class Graph(object):
         title = self.params.get('title', False)
         if title: axes.set_title(title)
         # Axes labels  #
-        if self.params.get('xlabel', False): axes.set_xlabel(self.params['xlabel'])
-        if self.params.get('ylabel', False): axes.set_ylabel(self.params['ylabel'])
+        if self.params.get('x_label', False): axes.set_xlabel(self.params['x_label'])
+        if self.params.get('y_label', False): axes.set_ylabel(self.params['y_label'])
         # Adjust #
         fig.set_figwidth(self.params['width'])
         fig.set_figheight(self.params['height'])
@@ -104,11 +104,11 @@ class Graph(object):
             separate = lambda y,pos: split_thousands(y)
             axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
         # Add custom labels #
-        if 'x_labels' in kwargs: axes.set_xticklabels(kwargs['x_labels'])
-        if 'x_labels_rot' in kwargs: pyplot.setp(axes.xaxis.get_majorticklabels(), rotation=kwargs['x_labels_rot'])
+        if 'x_labels' in self.params: axes.set_xticklabels(self.params['x_labels'])
+        if 'x_labels_rot' in self.params: pyplot.setp(axes.xaxis.get_majorticklabels(), rotation=self.params['x_labels_rot'])
         # Possibility to overwrite path #
-        if 'path' in kwargs: path = FilePath(kwargs['path'])
-        else:                path = self.path
+        if 'path' in self.params: path = FilePath(self.params['path'])
+        else:                     path = self.path
         # Save it as different formats #
         for ext in self.params['formats']: fig.savefig(path.replace_extension(ext))
 
