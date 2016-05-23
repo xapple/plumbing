@@ -34,6 +34,8 @@ class Graph(object):
         ('y_grid' , False),
         ('x_scale', None),
         ('y_scale', None),
+        ('x_label', None),
+        ('y_label', None),
         ('sep'    , ()),
         ('formats', ('pdf',)),
     ))
@@ -80,8 +82,8 @@ class Graph(object):
         title = self.params.get('title', False)
         if title: axes.set_title(title)
         # Axes labels  #
-        if self.params.get('x_label', False): axes.set_xlabel(self.params['x_label'])
-        if self.params.get('y_label', False): axes.set_ylabel(self.params['y_label'])
+        if self.params.get('x_label'): axes.set_xlabel(self.params['x_label'])
+        if self.params.get('y_label'): axes.set_ylabel(self.params['y_label'])
         # Adjust #
         fig.set_figwidth(self.params['width'])
         fig.set_figheight(self.params['height'])
