@@ -9,46 +9,51 @@ Adapted from http://stackoverflow.com/a/16071616/287297
 
 Example usage:
 
-    print prll_map(lambda i: i * 2, [1, 2, 3, 4, 6, 7, 8])
+    print prll_map(lambda i: i * 2, [1, 2, 3, 4, 6, 7, 8], 32, verbose=True)
 
 Comments:
 
-"It spawns a predefined amount of workers and only iterates through the input list if there exists an idle worker. I also enabled the "daemon" mode for the workers so that KeyboardInterupt works as expected."
+"It spawns a predefined amount of workers and only iterates through the input list
+ if there exists an idle worker. I also enabled the "daemon" mode for the workers so
+ that KeyboardInterupt works as expected."
 
-All the stdouts are sent back to the parent stdout, intertwined.
+Pitfalls: all the stdouts are sent back to the parent stdout, intertwined.
+
+Alternatively, use this fork of multiprocessing: https://github.com/uqfoundation/multiprocess
 """
 
 # Modules #
 import multiprocessing
+from tqdm import tqdm
 
 ################################################################################
 def target_func(f, q_in, q_out):
-    while True:
+    while not q_in.empty():
         i, x = q_in.get()
-        if i is None:
-            break
         q_out.put((i, f(x)))
 
 ################################################################################
-def prll_map(function_to_apply, items, cpus=None):
+def prll_map(func_to_apply, items, cpus=None, verbose=False):
     # Number of cores #
     if cpus is None: cpus = min(multiprocessing.cpu_count(), 32)
     # Create queues #
     q_in = multiprocessing.Queue(1)
     q_out = multiprocessing.Queue()
     # Process list #
-    processes = [multiprocessing.Process(target = target_func,
-                                         args   = (function_to_apply, q_in, q_out))
-                 for _ in range(cpus)]
+    new_proc = lambda t,a: multiprocessing.Process(target=t, args=a)
+    processes = [new_proc(target_func, (func_to_apply, q_in, q_out)) for x in range(cpus)]
     # Start them all #
     for proc in processes:
         proc.daemon = True
         proc.start()
-    # Undocumented #
+    # Put and get #
     sent = [q_in.put((i, x)) for i, x in enumerate(items)]
-    [q_in.put((None, None)) for _ in range(cpus)]
-    res = [q_out.get() for _ in range(len(sent))]
+    for x in range(cpus): q_in.put((None, None))
+    res  = [q_out.get() for x in range(len(sent))]
     # Wait for them to finish #
-    [proc.join() for proc in processes]
+    if verbose:
+        for proc in tqdm(processes): proc.join()
+    else:
+        for proc in processes: proc.join()
     # Return results #
     return [x for i, x in sorted(res)]
