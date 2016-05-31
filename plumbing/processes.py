@@ -28,8 +28,9 @@ from tqdm import tqdm
 
 ################################################################################
 def target_func(f, q_in, q_out):
-    while not q_in.empty():
+    while True:
         i, x = q_in.get()
+        if i is None: break
         q_out.put((i, f(x)))
 
 ################################################################################

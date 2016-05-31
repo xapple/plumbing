@@ -578,6 +578,8 @@ class FilePath(str):
     def link_to(self, path, safe=False, absolute=True):
         """Create a link somewhere else pointing to this file.
         The destination is hence *path* and the source is self.path."""
+        # If source is a file and destination a dir, put it inside #
+        if path.endswith('/'): path = path + self.filename
         # Get source and destination #
         if absolute: source = self.absolute_path
         else:        source = self.path
