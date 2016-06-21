@@ -141,6 +141,7 @@ class LazyDict(object):
 class LazyList(object):
     """A list-like object that will only compute its value once, when accessed."""
     def __iter__(self): return iter(self.value)
+    def __len__(self):  return len(self.value)
 
     def __init__(self, function):
         self._value = None

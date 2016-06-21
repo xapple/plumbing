@@ -30,8 +30,8 @@ class Graph(object):
         ('top'    , 0.93),
         ('left'   , 0.06),
         ('right'  , 0.98),
-        ('x_grid' , False),
-        ('y_grid' , False),
+        ('x_grid' , False), # Vertical lines
+        ('y_grid' , False), # Horizontal lines
         ('x_scale', None),
         ('y_scale', None),
         ('x_label', None),
