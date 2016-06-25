@@ -28,7 +28,7 @@ class Graph(object):
         ('height' , 7.0),
         ('bottom' , 0.14),
         ('top'    , 0.93),
-        ('left'   , 0.06),
+        ('left'   , 0.09),
         ('right'  , 0.98),
         ('x_grid' , False), # Vertical lines
         ('y_grid' , False), # Horizontal lines
@@ -36,6 +36,7 @@ class Graph(object):
         ('y_scale', None),
         ('x_label', None),
         ('y_label', None),
+        ('title', None),
         ('sep'    , ()),
         ('formats', ('pdf',)),
     ))
@@ -109,8 +110,9 @@ class Graph(object):
         if 'x_labels' in self.params: axes.set_xticklabels(self.params['x_labels'])
         if 'x_labels_rot' in self.params: pyplot.setp(axes.xaxis.get_majorticklabels(), rotation=self.params['x_labels_rot'])
         # Possibility to overwrite path #
-        if 'path' in self.params: path = FilePath(self.params['path'])
-        else:                     path = self.path
+        if 'path' in self.params:   path = FilePath(self.params['path'])
+        elif hasattr(self, 'path'): path = FilePath(self.path)
+        else:                       path = FilePath(self.short_name + '.pdf')
         # Save it as different formats #
         for ext in self.params['formats']: fig.savefig(path.replace_extension(ext))
 
