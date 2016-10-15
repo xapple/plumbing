@@ -288,6 +288,11 @@ class DirectoryPath(str):
         """The modification time"""
         return os.stat(self.path).st_mtime
 
+    @property
+    def size(self):
+        """The total size in bytes of all file contents."""
+        return Filesize(sum(f.count_bytes for f in self.files))
+
     def remove(self):
         if not self.exists: return False
         if self.is_symlink: return self.remove_when_symlink()
