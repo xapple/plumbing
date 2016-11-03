@@ -70,6 +70,11 @@ class GitRepo(DirectoryPath):
         return result.strip('\n')
 
     #--------------------------------- Methods -------------------------------#
+    def clone_from(self, remote_url):
+        """Clone it when it doesn't exist yet."""
+        assert not self
+        sh.git('clone', remote_url, self.path)
+
     def re_clone(self, repo_dir):
         """Clone again, somewhere else"""
         sh.git('clone', self.remote_url, repo_dir)

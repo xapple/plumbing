@@ -511,6 +511,7 @@ class FilePath(str):
         return content
 
     def create(self):
+        if not self.directory.exists: self.directory.create()
         with open(self.path, 'w'): pass
 
     def write(self, content, encoding=None):
@@ -554,7 +555,7 @@ class FilePath(str):
 
     def head(self, lines=10):
         """Return the first few lines."""
-        content = iter(self)
+        content = FilePath.__iter__(self)
         for x in xrange(lines):
             yield content.next()
 
