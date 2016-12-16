@@ -532,6 +532,9 @@ class FilePath(str):
         return True
 
     def copy(self, path):
+        # Directory special case #
+        if path.endswith('/'): path += self.filename
+        # Normal case #
         shutil.copy2(self.path, path)
 
     def execute(self):

@@ -36,7 +36,7 @@ class Graph(object):
         ('y_scale', None),
         ('x_label', None),
         ('y_label', None),
-        ('title', None),
+        ('title',   None),
         ('sep'    , ()),
         ('formats', ('pdf',)),
     ))
