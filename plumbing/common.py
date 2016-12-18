@@ -533,8 +533,8 @@ def tail(path, window=20):
                 f.seek(0,0)
                 # Only read what was not read
                 data.insert(0, f.read(num_bytes))
-            linesFound = data[0].count('\n')
-            size -= linesFound
+            lines_found = data[0].count('\n')
+            size -= lines_found
             num_bytes -= BUFSIZ
             block -= 1
         return '\n'.join(''.join(data).splitlines()[-window:])

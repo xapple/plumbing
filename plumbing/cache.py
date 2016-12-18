@@ -44,7 +44,8 @@ def property_cached(f):
             self.__cache__[f.__name__] = result
         return self.__cache__[f.__name__]
     # Called when you set the property #
-    def overwrite_cache(self, value):
+    def overwrite_cache(self, value, verbose=False):
+        if verbose: print "Overwriting '%s' with '%s' on '%s'" % (self, value, f.__name__)
         if '__cache__' not in self.__dict__: self.__cache__ = {}
         self.__cache__[f.__name__] = value
     # Return a wrapper #
