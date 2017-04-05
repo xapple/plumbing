@@ -373,7 +373,7 @@ class FilePath(str):
         return self.count
 
     def __new__(cls, path, *args, **kwargs):
-        """A FilePath is in fact a string"""
+        """A FilePath is in fact a string."""
         return str.__new__(cls, cls.clean_path(path))
 
     def __init__(self, path):
@@ -386,7 +386,7 @@ class FilePath(str):
 
     @classmethod
     def clean_path(cls, path):
-        """Given a path, return a cleaned up version for initialization"""
+        """Given a path, return a cleaned up version for initialization."""
         # Conserve None object style #
         if path is None: return None
         # Don't nest FilePaths or the like #
@@ -404,38 +404,38 @@ class FilePath(str):
 
     @property
     def first(self):
-        """Just the first line"""
+        """Just the first line. Don't try this on binary files."""
         with open(self.path, 'r') as handle:
             for line in handle: return line
 
     @property
     def exists(self):
-        """Does it exist in the file system"""
+        """Does it exist in the file system."""
         return os.path.lexists(self.path) # Returns True even for broken symbolic links
 
     @property
     def prefix_path(self):
-        """The full path without the (last) extension and trailing period"""
+        """The full path without the (last) extension and trailing period."""
         return str(os.path.splitext(self.path)[0])
 
     @property
     def prefix(self):
-        """Just the filename without the (last) extension and trailing period"""
+        """Just the filename without the (last) extension and trailing period."""
         return str(os.path.basename(self.prefix_path))
 
     @property
     def short_prefix(self):
-        """Just the filename without any extension or periods"""
+        """Just the filename without any extension or periods."""
         return self.filename.split('.')[0]
 
     @property
     def filename(self):
-        """Just the filename with the extension"""
+        """Just the filename with the extension."""
         return str(os.path.basename(self.path))
 
     @property
     def directory(self):
-        """The directory containing this file"""
+        """The directory containing this file."""
         # The built-in function #
         directory = os.path.dirname(self.path)
         # Maybe we need to go the absolute path way #
@@ -445,48 +445,48 @@ class FilePath(str):
 
     @property
     def extension(self):
-        """The extension with the leading period"""
+        """The extension with the leading period."""
         return os.path.splitext(self.path)[1]
 
     @property
     def count_bytes(self):
-        """The number of bytes"""
+        """The number of bytes."""
         if not self.exists: return 0
         return os.path.getsize(self.path)
 
     @property
     def count(self):
-        """We are going to default to the number of lines"""
+        """We are going to default to the number of lines."""
         return int(sh.wc('-l', self.path).split()[0])
 
     @property
     def size(self):
-        """Human readable file size"""
+        """Human readable file size."""
         return Filesize(self.count_bytes)
 
     @property
     def permissions(self):
-        """Convenience object for dealing with permissions"""
+        """Convenience object for dealing with permissions."""
         return FilePermissions(self.path)
 
     @property
     def contents(self):
-        """The contents as a string"""
+        """The contents as a string."""
         with open(self.path, 'r') as handle: return handle.read()
 
     @property
     def absolute_path(self):
-        """The absolute path starting with a `/`"""
+        """The absolute path starting with a `/`."""
         return FilePath(os.path.abspath(self.path))
 
     @property
     def physical_path(self):
-        """The physical path like in `pwd -P`"""
+        """The physical path like in `pwd -P`."""
         return FilePath(os.path.realpath(self.path))
 
     @property
     def relative_path(self):
-        """The relative path when compared with current directory"""
+        """The relative path when compared with current directory."""
         return FilePath(os.path.relpath(self.physical_path))
 
     @property
