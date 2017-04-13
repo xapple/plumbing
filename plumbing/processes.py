@@ -27,6 +27,9 @@ https://github.com/uqfoundation/multiprocess
 import multiprocessing
 from tqdm import tqdm
 
+# Optionally switch to dill #
+#import multiprocess as multiprocessing
+
 ################################################################################
 def apply_function(func_to_apply, queue_in, queue_out):
     while not queue_in.empty():
