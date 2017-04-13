@@ -184,7 +184,8 @@ class DirectoryPath(str):
         self.path = self.clean_path(path)
 
     def __add__(self, other):
-        return self.path + other
+        if other.endswith("/"): return DirectoryPath(self.path + other)
+        else:                   return FilePath(self.path + other)
 
     @property
     def p(self):
@@ -379,6 +380,10 @@ class FilePath(str):
     def __init__(self, path):
         self.path = self.clean_path(path)
 
+    def __add__(self, other):
+        if other.endswith("/"): return DirectoryPath(self.path + other)
+        else:                   return FilePath(self.path + other)
+
     def __sub__(self, directory):
         """Subtract a directory from the current path to get the relative path
         of the current file from that directory."""
@@ -506,13 +511,25 @@ class FilePath(str):
         from binaryornot.helpers import is_binary_string
         return is_binary_string(self.contents)
 
+    #-------------------------------- Methods --------------------------------#
     def read(self, encoding=None):
         with codecs.open(self.path, 'r', encoding) as handle: content = handle.read()
         return content
 
     def create(self):
         if not self.directory.exists: self.directory.create()
-        with open(self.path, 'w'): pass
+        self.open('w')
+        return self
+
+    def open(self, mode='r'):
+        self.handle = open(self.path, mode)
+        return self.handle
+
+    def add_str(self, string):
+        self.handle.write(string)
+
+    def close(self):
+        self.handle.close()
 
     def write(self, content, encoding=None):
         if encoding is None:
@@ -541,15 +558,15 @@ class FilePath(str):
         return subprocess.call([self.path])
 
     def replace_extension(self, new_extension='txt'):
-        """Return a new path with the extension swapped out"""
+        """Return a new path with the extension swapped out."""
         return FilePath(os.path.splitext(self.path)[0] + '.' + new_extension)
 
     def new_name_insert(self, string):
-        """Return a new name by appending a string before the extension"""
+        """Return a new name by appending a string before the extension."""
         return self.prefix_path + "." + string + self.extension
 
     def make_directory(self):
-        """Create the directory the file is supposed to be in if it does not exist"""
+        """Create the directory the file is supposed to be in if it does not exist."""
         if not self.directory.exists: self.directory.create()
 
     def must_exist(self):
@@ -627,6 +644,16 @@ class FilePath(str):
     def unzip_to(self, destination=None, inplace=False):
         """Make an unzipped version of the file at a given path"""
         return unzip(self.path, destination=destination, inplace=inplace)
+
+    def targz_to(self, path=None):
+        """Make a targzipped version of the file at a given path."""
+        pass
+
+    def untargz_to(self, destination=None, inplace=False):
+        """Make an untargzipped version of the file at a given path"""
+        import tarfile
+        archive = tarfile.open(self.path, 'r:gz')
+        archive.extractall(destination)
 
     def append(self, what):
         """Append some text or an other file to the current file"""
