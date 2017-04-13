@@ -1,10 +1,10 @@
 # Built-in modules #
 import os, time, getpass
+from collections import OrderedDict
 
 # Internal modules #
-from common import split_thousands
-from autopaths import FilePath
-from collections import OrderedDict
+from plumbing.common      import split_thousands
+from plumbing.autopaths   import FilePath, DirectoryPath
 
 # Third party modules #
 import numpy
@@ -47,8 +47,11 @@ class Graph(object):
         # Save parent #
         self.parent = parent
         # Base dir #
-        if base_dir is None: self.base_dir = self.parent.p.graphs_dir
-        else: self.base_dir = base_dir
+        if base_dir is None:
+            self.base_dir = self.parent.p.graphs_dir
+        else:
+            self.base_dir = DirectoryPath(base_dir)
+            self.base_dir.create_if_not_exists()
         # Short name #
         if short_name: self.short_name = short_name
         if not hasattr(self, 'short_name'): self.short_name = 'graph'
