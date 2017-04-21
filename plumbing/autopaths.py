@@ -1,10 +1,10 @@
 # Built-in modules #
 import os, stat, tempfile, re, subprocess, shutil, codecs, gzip
-import glob, warnings
+import glob, warnings, zipfile
 
 # Internal modules #
 from plumbing.common import append_to_file, prepend_to_file
-from plumbing.common import md5sum, natural_sort, unzip
+from plumbing.common import md5sum, natural_sort
 
 # Third party modules #
 import sh
@@ -622,7 +622,7 @@ class FilePath(str):
             except OSError: pass
 
     def gzip_to(self, path=None):
-        """Make a gzipped version of the file at a given path"""
+        """Make a gzipped version of the file at a given path."""
         if path is None: path = self.path + ".gz"
         with open(self.path, 'rb') as orig_file:
             with gzip.open(path, 'wb') as new_file:
@@ -630,7 +630,7 @@ class FilePath(str):
         return FilePath(path)
 
     def ungzip_to(self, path=None):
-        """Make an unzipped version of the file at a given path"""
+        """Make an unzipped version of the file at a given path."""
         if path is None: path = self.path[:3]
         with gzip.open(self, 'rb') as orig_file:
             with open(path, 'wb') as new_file:
@@ -641,9 +641,26 @@ class FilePath(str):
         """Make a zipped version of the file at a given path."""
         pass
 
-    def unzip_to(self, destination=None, inplace=False):
-        """Make an unzipped version of the file at a given path"""
-        return unzip(self.path, destination=destination, inplace=inplace)
+    def unzip_to(self, destination=None, inplace=False, single=True):
+        """Unzip a standard zip file. Can specify the destination of the
+        uncompressed file, or just set inplace=True to delete the original."""
+        # Check #
+        assert zipfile.is_zipfile(self.path)
+        # Load #
+        z = zipfile.ZipFile(self.path)
+        if single or inplace: assert len(z.infolist()) == 1
+        # Single file #
+        if single:
+            member = z.infolist()[0]
+            tmpdir = tempfile.mkdtemp() + '/'
+            z.extract(member, tmpdir)
+            z.close()
+            if inplace: shutil.move(tmpdir + member.filename, source)
+            else:       shutil.move(tmpdir + member.filename, destination)
+        # Multifile - no security, dangerous - Will use CWD if dest is None!! #
+        # If a file starts with an absolute path, will overwrite your files anywhere #
+        if not single:
+            z.extractall(destination)
 
     def targz_to(self, path=None):
         """Make a targzipped version of the file at a given path."""

@@ -429,29 +429,6 @@ def download_from_url(source, destination, progress=False, uncompress=True):
     # Return #
     return destination
 
-################################################################################
-def unzip(source, destination=None, inplace=False, single=True):
-    """Unzip a standard zip file. Can specify the destination of the
-    uncompressed file, or just set inplace=True to delete the original."""
-    # Load #
-    import zipfile, tempfile, shutil
-    # Check #
-    assert zipfile.is_zipfile(source)
-    # Load #
-    z = zipfile.ZipFile(source)
-    if single or inplace: assert len(z.infolist()) == 1
-    # Single file #
-    if single:
-        member = z.infolist()[0]
-        tmpdir = tempfile.mkdtemp() + '/'
-        z.extract(member, tmpdir)
-        z.close()
-        if inplace: shutil.move(tmpdir + member.filename, source)
-        else:       shutil.move(tmpdir + member.filename, destination)
-    # Multifile - no security, dangerous #
-    if not single:
-        z.extractall()
-
 ###############################################################################
 def reversed_lines(path):
     """Generate the lines of file in reverse order."""
