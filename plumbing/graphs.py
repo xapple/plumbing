@@ -30,8 +30,8 @@ class Graph(object):
         ('top'    , 0.93),
         ('left'   , 0.09),
         ('right'  , 0.98),
-        ('x_grid' , False), # Vertical lines
-        ('y_grid' , False), # Horizontal lines
+        ('x_grid' , None), # Vertical lines
+        ('y_grid' , None), # Horizontal lines
         ('x_scale', None),
         ('y_scale', None),
         ('x_label', None),
@@ -94,8 +94,8 @@ class Graph(object):
         fig.subplots_adjust(hspace=0.0, bottom = self.params['bottom'], top   = self.params['top'],
                                         left   = self.params['left'],   right = self.params['right'])
         # Grid #
-        axes.xaxis.grid(self.params['x_grid'])
-        axes.yaxis.grid(self.params['y_grid'])
+        if 'x_grid' in self.params: axes.xaxis.grid(self.params['x_grid'])
+        if 'y_grid' in self.params: axes.yaxis.grid(self.params['y_grid'])
         # Data and source extra text #
         if hasattr(self, 'dev_mode') and self.dev_mode is True:
             fig.text(0.99, 0.98, time.asctime(), horizontalalignment='right')

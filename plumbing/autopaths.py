@@ -82,7 +82,11 @@ class AutoPaths(object):
         result = result.pop()
         directory = DirectoryPath(result.complete_dir)
         if not directory.exists: directory.create(safe=True)
-        # Return #
+        # Return different types #
+        from plumbing.csv_tables import CSVTable, TSVTable
+        if result.complete_path.endswith('.tsv'): return TSVTable(result.complete_path)
+        if result.complete_path.endswith('.csv'): return CSVTable(result.complete_path)
+        # Return base case #
         return FilePath(result.complete_path)
 
     def search_for_dir(self, key, items):
@@ -187,6 +191,8 @@ class DirectoryPath(str):
         if other.endswith("/"): return DirectoryPath(self.path + other)
         else:                   return FilePath(self.path + other)
 
+    def __iter__(self): return self.flat_contents
+
     @property
     def p(self):
         if not hasattr(self, 'all_paths'):
@@ -246,7 +252,6 @@ class DirectoryPath(str):
     def flat_files(self):
         """The files in this directory non-recursively, and sorted.
         #TODO: check for permission denied in directory."""
-        result = []
         for root, dirs, files in os.walk(self.path):
             result = [FilePath(os.path.join(root, f)) for f in files]
             break
@@ -256,7 +261,6 @@ class DirectoryPath(str):
     @property
     def flat_directories(self):
         """The directories in this directory non-recursively, and sorted."""
-        result = []
         for root, dirs, files in os.walk(self.path):
             result = [DirectoryPath(os.path.join(root, d)) for d in dirs]
             break
@@ -293,6 +297,12 @@ class DirectoryPath(str):
     def size(self):
         """The total size in bytes of all file contents."""
         return Filesize(sum(f.count_bytes for f in self.files))
+
+    #------------------------------- Methods ---------------------------------#
+    def must_exist(self):
+        """Raise an exception if the directory doesn't exist."""
+        if not os.path.isdir(self.path):
+            raise Exception("The directory path '%s' does not exist." % self.path)
 
     def remove(self):
         if not self.exists: return False
@@ -493,6 +503,16 @@ class FilePath(str):
     def relative_path(self):
         """The relative path when compared with current directory."""
         return FilePath(os.path.relpath(self.physical_path))
+
+    @property
+    def mdate(self):
+        """Return the modification date."""
+        return os.path.getmtime(self.path)
+
+    @property
+    def cdate(self):
+        """Return the modification date."""
+        return os.path.getctime(self.path)
 
     @property
     def md5(self):
