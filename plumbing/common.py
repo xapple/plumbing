@@ -6,6 +6,7 @@ from __future__ import division
 # Built-in modules #
 import sys, os, time, re, random, math, json
 import getpass, hashlib, datetime, collections
+import unicodedata
 from itertools import compress, product
 
 # Third party modules #
@@ -17,14 +18,22 @@ flatter = lambda x: [item for sublist in x for item in sublist]
 ################################################################################
 def ascii(text):
     """Make a safe, ASCII version a string. For instance for use on the web."""
-    import unicodedata
     return unicodedata.normalize('NFKD', unicode(text)).encode('ASCII', 'ignore')
 
-################################################################################
-def sanitize(text):
+def alphanumeric(text):
     """Make an ultra-safe, ASCII version a string.
-    For instance for use as a filename."""
+    For instance for use as a filename.
+    \w matches any alphanumeric character and the underscore."""
     return "".join([c for c in text if re.match(r'\w', c)])
+
+def sanitize_text(text):
+    """Make a safe representation of a string.
+    \s matches any whitespace character.
+    This is equivalent to the set [ \t\n\r\f\v]."""
+    text = re.sub("(\s)", lambda m: repr(m.group(0)).strip("'"), text)
+    text = text.decode('utf-8')
+    text = unicodedata.normalize('NFC', text)
+    return text
 
 ################################################################################
 def bool_to_unicode(b):
@@ -507,3 +516,26 @@ def which(cmd, safe=False):
             candidate = os.path.join(path, cmd)
             if is_executable(candidate): return FilePath(candidate)
     if not safe: raise Exception('which failed to locate a proper command path "%s"' % cmd)
+
+###############################################################################
+def query_yes_no(question, default="no"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True, "no": False, "n": False}
+    if default is None:    prompt = " [y/n] "
+    elif default == "yes": prompt = " [Y/n] "
+    elif default == "no":  prompt = " [y/N] "
+    else: raise ValueError("invalid default answer: '%s'" % default)
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == '': return valid[default]
+        elif choice in valid:                    return valid[choice]
+        else: sys.stdout.write("Please respond with 'yes' or 'no'\n")

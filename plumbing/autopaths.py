@@ -601,8 +601,22 @@ class FilePath(str):
 
     def move_to(self, path):
         """Move the file."""
+        # Special directory case, keep the same name (put it inside) #
+        if path.endswith('/'): path = path + self.filename
+        # Normal case #
         assert not os.path.exists(path)
         shutil.move(self.path, path)
+        # Update the internal link #
+        self.path = path
+
+    def rename(self, new_name):
+        """Rename the file but leave it in the same directory."""
+        assert '/' not in new_name
+        path = self.directory + new_name
+        assert not os.path.exists(path)
+        shutil.move(self.path, path)
+        # Update the internal link #
+        self.path = path
 
     def link_from(self, path, safe=False):
         """Make a link here pointing to another file somewhere else.
@@ -624,7 +638,7 @@ class FilePath(str):
     def link_to(self, path, safe=False, absolute=True):
         """Create a link somewhere else pointing to this file.
         The destination is hence *path* and the source is self.path."""
-        # If source is a file and destination a dir, put it inside #
+        # If source is a file and the destination is a dir, put it inside #
         if path.endswith('/'): path = path + self.filename
         # Get source and destination #
         if absolute: source = self.absolute_path
