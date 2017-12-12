@@ -663,11 +663,11 @@ class FilePath(str):
                 new_file.writelines(orig_file)
         return FilePath(path)
 
-    def ungzip_to(self, path=None):
+    def ungzip_to(self, path=None, mode='w'):
         """Make an unzipped version of the file at a given path."""
         if path is None: path = self.path[:3]
         with gzip.open(self, 'rb') as orig_file:
-            with open(path, 'wb') as new_file:
+            with open(path, mode) as new_file:
                 new_file.writelines(orig_file)
         return FilePath(path)
 
