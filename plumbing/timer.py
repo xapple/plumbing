@@ -30,7 +30,8 @@ class Timer(object):
         print self.prefix + "Start at: %s" % (self.start_time) + self.suffix
 
     def print_end(self):
-        print self.prefix + "End at: %s" % (datetime.now()) + self.suffix
+        self.end_time = datetime.now()
+        print self.prefix + "End at: %s" % (self.end_time) + self.suffix
 
     def print_elapsed(self, reset=True):
         print self.prefix + "Elapsed time: %s" % (datetime.now() - self.last_mark) + self.suffix
@@ -42,7 +43,7 @@ class Timer(object):
 
     @property
     def color(self):
-        """Should we use color or not ? If we are not in a shell like ipython then not"""
+        """Should we use color or not ? If we are not in a shell like ipython then not."""
         import __main__ as main
         if not hasattr(main, '__file__'): return True
         return False
@@ -53,11 +54,12 @@ class Timer(object):
     def suffix(self): return "" if not self.color else Color.end
 
     def __enter__(self):
-        """Set the start time"""
+        """Start the timer and print."""
         self.start_time = datetime.now()
         self.print_start()
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
+        """Stop the timer and print."""
         self.print_end()
         self.print_total_elapsed()

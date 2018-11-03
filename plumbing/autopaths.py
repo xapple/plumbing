@@ -374,11 +374,15 @@ class FilePath(str):
     Such as: path.make_executable() etc etc."""
 
     def __repr__(self):    return '<%s object "%s">' % (self.__class__.__name__, self.path)
+
     def __nonzero__(self): return self.path != None and self.count_bytes != 0
+
     def __list__(self):    return self.count
+
     def __iter__(self):
         with open(self.path, 'r') as handle:
             for line in handle: yield line
+
     def __len__(self):
         if self.path is None: return 0
         return self.count
@@ -689,7 +693,7 @@ class FilePath(str):
             tmpdir = tempfile.mkdtemp() + '/'
             z.extract(member, tmpdir)
             z.close()
-            if inplace: shutil.move(tmpdir + member.filename, source)
+            if inplace: shutil.move(tmpdir + member.filename, self.directory + member.filename)
             else:       shutil.move(tmpdir + member.filename, destination)
         # Multifile - no security, dangerous - Will use CWD if dest is None!! #
         # If a file starts with an absolute path, will overwrite your files anywhere #
@@ -727,15 +731,20 @@ class Filesize(object):
         '117.4 MiB'
     """
 
-    chunk      = 1000 # Could be 1024 if you like old-style sizes
-    units      = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
     precisions = [0, 0, 1, 2, 2, 2]
 
-    def __init__(self, size):
+    def __init__(self, size, system='decimal'):
+        # Record the size #
         self.size = size
-
-    def __int__(self):
-        return self.size
+        # Pick the system used #
+        if system is 'binary':
+            self.chunk = 1024
+            self.units = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
+        elif system is 'decimal':
+            self.chunk = 1000
+            self.units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
+        else:
+            raise Exception("Unrecognized file size system '%s'" % system)
 
     def __eq__(self, other):
         return self.size == other
@@ -748,7 +757,7 @@ class Filesize(object):
 
     def format(self, unit):
         # Input checking #
-        if unit not in self.units: raise Exception("Not a valid file size unit: %s" % unit)
+        if unit not in self.units: raise Exception("Not a valid file size unit: '%s'" % unit)
         # Special no plural case #
         if self.size == 1 and unit == 'bytes': return '1 byte'
         # Compute #
@@ -761,19 +770,19 @@ class Filesize(object):
 
 ################################################################################
 class FilePermissions(object):
-    """Container for reading and setting a files permissions"""
+    """Container for reading and setting a files permissions."""
 
     def __init__(self, path):
         self.path = path
 
     @property
     def number(self):
-        """The permission bits as an octal integer"""
-        return os.stat(self.path).st_mode & 0777
+        """The permission bits as an octal integer."""
+        return os.stat(self.path).st_mode & 0o0777
 
     def make_executable(self):
         return os.chmod(self.path, os.stat(self.path).st_mode | stat.S_IEXEC)
 
     def only_readable(self):
-        """Remove all writing privileges"""
+        """Remove all writing privileges."""
         return os.chmod(self.path, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)

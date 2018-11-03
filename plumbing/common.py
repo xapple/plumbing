@@ -26,12 +26,17 @@ def alphanumeric(text):
     \w matches any alphanumeric character and the underscore."""
     return "".join([c for c in text if re.match(r'\w', c)])
 
+################################################################################
 def sanitize_text(text):
     """Make a safe representation of a string.
-    \s matches any whitespace character.
-    This is equivalent to the set [ \t\n\r\f\v]."""
+    Note: the `\s` special character matches any whitespace character.
+    This is equivalent to the set [\t\n\r\f\v] as well as ` ` (whitespace)."""
+    # First replace characters that have specific effects with their repr #
     text = re.sub("(\s)", lambda m: repr(m.group(0)).strip("'"), text)
-    text = text.decode('utf-8')
+    # Make it a unicode string (the try supports python 2 and 3) #
+    try: text = text.decode('utf-8')
+    except AttributeError: pass
+    # Normalize it “
     text = unicodedata.normalize('NFC', text)
     return text
 
@@ -42,6 +47,23 @@ def bool_to_unicode(b):
     if not isinstance(b, bool): b = bool(b)
     if b is True:  return u"✅"
     if b is False: return u"❎"
+
+###############################################################################
+def access_dict_like_obj(obj, prop, new_value=None):
+    """
+    Access a dictionary like if it was an object with properties.
+    If no "new_value", then it's a getter, otherwise it's a setter.
+    >>> {'characters': {'cast': 'Jean-Luc Picard', 'feturing': 'Deanna Troi'}}
+    >>> access_dict_like_obj(startrek, 'characters.cast', 'Pierce Brosnan')
+    """
+    props = prop.split('.')
+    if new_value:
+        if props[0] not in obj: obj[props[0]] = {}
+        if len(props)==1: obj[prop] = new_value
+        else: return access_dict_like_obj(obj[props[0]], '.'.join(props[1:]), new_value)
+    else:
+        if len(props)==1: return obj[prop]
+        else: return access_dict_like_obj(obj[props[0]], '.'.join(props[1:]))
 
 ################################################################################
 def all_combinations(items):
@@ -227,24 +249,21 @@ def wait(predicate, interval=1, message=lambda: "Waiting..."):
         next_ball = ball[(ball.index(next_ball) + 1) % len(ball)]
         sys.stdout.write("\r " + str(message()) + " " + next_ball + " \033[K")
         sys.stdout.flush()
-    print "\r Done. \033[K"
+    print("\r Done. \033[K")
     sys.stdout.flush()
 
 ###############################################################################
 def natural_sort(item):
     """
-    Sort strings that contain numbers correctly.
+    Sort strings that contain numbers correctly. Works in Python 2 and 3.
 
     >>> l = ['v1.3.12', 'v1.3.3', 'v1.2.5', 'v1.2.15', 'v1.2.3', 'v1.2.1']
     >>> l.sort(key=natural_sort)
     >>> l.__repr__()
     "['v1.2.1', 'v1.2.3', 'v1.2.5', 'v1.2.15', 'v1.3.3', 'v1.3.12']"
     """
-    if item is None: return 0
-    def try_int(s):
-        try: return int(s)
-        except ValueError: return s
-    return map(try_int, re.findall(r'(\d+|\D+)', item))
+    dre = re.compile(r'(\d+)')
+    return [int(s) if s.isdigit() else s.lower() for s in re.split(dre, item)]
 
 ###############################################################################
 def split_thousands(s):
@@ -360,13 +379,13 @@ class SuppressAllOutput(object):
         sys.stdout = self.old_stdout
 
     def test():
-        print >>sys.stdout, "printing to stdout before suppression"
-        print >>sys.stderr, "printing to stderr before suppression"
+        print("printing to stdout before suppression", file=sys.stdout, flush=True)
+        print("printing to stderr before suppression", file=sys.stderr, flush=True)
         with SuppressAllOutput():
-            print >>sys.stdout, "printing to stdout during suppression"
-            print >>sys.stderr, "printing to stderr during suppression"
-        print >>sys.stdout, "printing to stdout after suppression"
-        print >>sys.stderr, "printing to stderr after suppression"
+            print("printing to stdout during suppression", file=sys.stdout, flush=True)
+            print("printing to stderr during suppression", file=sys.stderr, flush=True)
+        print("printing to stdout after suppression", file=sys.stdout, flush=True)
+        print("printing to stderr after suppression", file=sys.stderr, flush=True)
 
 ################################################################################
 def load_json_path(path):
@@ -396,10 +415,11 @@ def md5sum(file_path, blocksize=65536):
     return md5.hexdigest()
 
 ################################################################################
-def download_from_url(source, destination, progress=False, uncompress=True):
+def download_from_url(source, destination, progress=False, uncompress=False):
     """Download a file from an URL and place it somewhere. Like wget.
     Uses requests and tqdm to display progress if you want.
-    By default it will uncompress files."""
+    By default it will uncompress files.
+    #TODO: handle case where destination is a directory"""
     # Modules #
     from tqdm import tqdm
     import requests
@@ -410,7 +430,7 @@ def download_from_url(source, destination, progress=False, uncompress=True):
     # Over HTTP #
     response = requests.get(source, stream=True)
     total_size = int(response.headers.get('content-length'))
-    block_size = total_size/1024
+    block_size = int(total_size/1024)
     # Do it #
     with open(destination, "wb") as handle:
         if progress:

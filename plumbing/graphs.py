@@ -1,5 +1,5 @@
 # Built-in modules #
-import os, time, getpass
+import os, time, inspect, getpass
 from collections import OrderedDict
 
 # Internal modules #
@@ -23,6 +23,23 @@ cool_colors += brewer2mpl.get_map('Greys',   'sequential',  8).mpl_colors
 
 ################################################################################
 class Graph(object):
+    """ A nice class to make graphs with matplotlib. Example usage:
+
+            class RegressionGraph(Graph):
+                def plot(self, **kwargs):
+                    fig = pyplot.figure()
+                    seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
+                    axes = pyplot.gca()
+                    self.save_plot(fig, axes, **kwargs)
+                    pyplot.close(fig)
+            for x_name in x_names:
+                graph            = PearsonGraph(short_name = x_name)
+                graph.title      = "Regression between y and '%s'" % (x_name)
+                graph.x_data     = x_data[x_name]
+                graph.y_data     = y_data
+                graph.plot()
+    """
+
     default_params = OrderedDict((
         ('width'  , 12.0),
         ('height' , 7.0),
@@ -47,6 +64,10 @@ class Graph(object):
         # Save parent #
         self.parent = parent
         # Base dir #
+        if base_dir is None and parent is None:
+            file_name = os.path.abspath((inspect.stack()[1])[1])
+            base_dir  = os.path.dirname(os.path.abspath(file_name)) + '/'
+            self.base_dir = DirectoryPath(base_dir)
         if base_dir is None:
             self.base_dir = self.parent.p.graphs_dir
         else:
@@ -80,8 +101,8 @@ class Graph(object):
         # Axis limits #
         if 'x_min' in self.params: axes.set_xlim(self.params['x_min'], axes.get_xlim()[1])
         if 'x_max' in self.params: axes.set_xlim(axes.get_xlim()[0], self.params['x_max'])
-        if 'y_min' in self.params: axes.set_xlim(self.params['y_min'], axes.get_ylim()[1])
-        if 'y_max' in self.params: axes.set_xlim(axes.get_ylim()[0], self.params['y_max'])
+        if 'y_min' in self.params: axes.set_ylim(self.params['y_min'], axes.get_ylim()[1])
+        if 'y_max' in self.params: axes.set_ylim(axes.get_ylim()[0], self.params['y_max'])
         # Title #
         title = self.params.get('title', False)
         if title: axes.set_title(title)

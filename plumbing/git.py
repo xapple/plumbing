@@ -10,7 +10,7 @@ import sh
 ###############################################################################
 class GitRepo(DirectoryPath):
     """A git repository with some convenience methods.
-    Requires at least git 2.7 (release January 5th, 2015)."""
+    Requires at least git 2.7 (released January 5th, 2015)."""
 
     def __nonzero__(self):
         return os.path.exists(self.git_dir)
