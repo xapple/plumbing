@@ -3,11 +3,13 @@ import os, shutil, csv
 from itertools import izip
 
 # Internal modules #
-from autopaths import FilePath
+from autopaths.file_path import FilePath
 from tmpstuff import TmpFile
 
 # Third party modules #
-import sh, pandas
+import pandas
+if os.name == "posix": import sh
+if os.name == "nt":    import pbs
 
 ################################################################################
 class CSVTable(FilePath):

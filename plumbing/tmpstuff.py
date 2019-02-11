@@ -2,7 +2,8 @@
 import tempfile
 
 # Internal modules #
-from plumbing.autopaths import FilePath, DirectoryPath
+from autopaths.file_path import FilePath
+from autopaths.dir_path  import DirectoryPath
 
 ################################################################################
 def new_temp_path(**kwargs):

@@ -3,7 +3,7 @@ import os, time, inspect
 import cPickle as pickle
 
 # Internal modules #
-from plumbing.autopaths import FilePath
+from autopaths.file_path import FilePath
 
 # Third party modules #
 from decorator import decorator
@@ -31,6 +31,7 @@ def property_cached(f):
                 return time.time()
         bob = Employee()
         print bob.salary
+        time.sleep(3)
         print bob.salary
         bob.salary = "10000$"
         print bob.salary

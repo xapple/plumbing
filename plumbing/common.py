@@ -53,7 +53,7 @@ def access_dict_like_obj(obj, prop, new_value=None):
     """
     Access a dictionary like if it was an object with properties.
     If no "new_value", then it's a getter, otherwise it's a setter.
-    >>> {'characters': {'cast': 'Jean-Luc Picard', 'feturing': 'Deanna Troi'}}
+    >>> {'characters': {'cast': 'Jean-Luc Picard', 'featuring': 'Deanna Troi'}}
     >>> access_dict_like_obj(startrek, 'characters.cast', 'Pierce Brosnan')
     """
     props = prop.split('.')
@@ -423,7 +423,7 @@ def download_from_url(source, destination, progress=False, uncompress=False):
     # Modules #
     from tqdm import tqdm
     import requests
-    from autopaths import FilePath
+    from autopaths.file_path import FilePath
     # Check destination exists #
     destination = FilePath(destination)
     destination.directory.create_if_not_exists()
@@ -471,6 +471,10 @@ def reversed_blocks(handle, blocksize=4096):
 
 ################################################################################
 def prepend_to_file(path, data, bufsize=1<<15):
+    """TODO:
+    * Add a random string to the backup file.
+    * Restore permissions after copy.
+    """
     # Backup the file #
     backupname = path + os.extsep + 'bak'
     # Remove previous backup if it exists #
@@ -525,7 +529,7 @@ def head(path, lines=20):
 ###############################################################################
 def which(cmd, safe=False):
     """https://github.com/jc0n/python-which"""
-    from plumbing.autopaths import FilePath
+    from autopaths.file_path import FilePath
     def is_executable(path):
         return os.path.exists(path) and os.access(path, os.X_OK) and not os.path.isdir(path)
     path, name = os.path.split(cmd)

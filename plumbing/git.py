@@ -2,7 +2,7 @@
 import os, sys
 
 # Internal modules #
-from plumbing.autopaths import DirectoryPath
+from autopaths.dir_path import DirectoryPath
 
 # Third party modules #
 import sh

@@ -3,9 +3,9 @@ import os, sqlite3
 
 # Internal modules #
 from color     import Color
-from autopaths import FilePath
 from cache     import property_cached
 from common    import download_from_url, md5sum
+from autopaths.file_path import FilePath
 
 ################################################################################
 class Database(FilePath):

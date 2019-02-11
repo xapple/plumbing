@@ -3,8 +3,9 @@ import os, time, inspect, getpass
 from collections import OrderedDict
 
 # Internal modules #
-from plumbing.common      import split_thousands
-from plumbing.autopaths   import FilePath, DirectoryPath
+from plumbing.common     import split_thousands
+from autopaths.file_path import FilePath
+from autopaths.dir_path  import DirectoryPath
 
 # Third party modules #
 import numpy
