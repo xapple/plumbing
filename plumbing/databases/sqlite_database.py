@@ -8,7 +8,8 @@ from common    import download_from_url, md5sum
 from autopaths.file_path import FilePath
 
 ################################################################################
-class Database(FilePath):
+class SQLiteDatabase(FilePath):
+    """A wrapper for an SQLite3 database."""
 
     def __init__(self, path,
                        factory   = None,

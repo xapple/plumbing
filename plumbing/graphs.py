@@ -4,6 +4,7 @@ from collections import OrderedDict
 
 # Internal modules #
 from plumbing.common     import split_thousands
+from plumbing.cache      import property_cached
 from autopaths.file_path import FilePath
 from autopaths.dir_path  import DirectoryPath
 
@@ -25,7 +26,7 @@ cool_colors += brewer2mpl.get_map('Greys',   'sequential',  8).mpl_colors
 ################################################################################
 class Graph(object):
     """ A nice class to make graphs with matplotlib. Example usage:
-
+            from plumbing.graphs import Graph
             class RegressionGraph(Graph):
                 def plot(self, **kwargs):
                     fig = pyplot.figure()
@@ -77,8 +78,10 @@ class Graph(object):
         # Short name #
         if short_name: self.short_name = short_name
         if not hasattr(self, 'short_name'): self.short_name = 'graph'
-        # Paths #
-        self.path = FilePath(self.base_dir + self.short_name + '.pdf')
+
+    @property_cached
+    def path(self):
+        return FilePath(self.base_dir + self.short_name + '.pdf')
 
     def __call__(self, *args, **kwargs):
         """Plot the graph if it doesn't exist. Then return the path to it.
@@ -140,6 +143,15 @@ class Graph(object):
         else:                       path = FilePath(self.short_name + '.pdf')
         # Save it as different formats #
         for ext in self.params['formats']: fig.savefig(path.replace_extension(ext))
+
+    def plot_and_save(self, **kwargs):
+        """Used when the plot method defined does not create a figure nor calls save_plot
+        Then the plot method has to use self.fig"""
+        self.fig = pyplot.figure()
+        self.plot()
+        self.axes = pyplot.gca()
+        self.save_plot(self.fig, self.axes, **kwargs)
+        pyplot.close(self.fig)
 
     def plot(self, bins=250, **kwargs):
         """An example plot function. You have to subclass this method."""

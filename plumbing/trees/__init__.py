@@ -1,5 +1,7 @@
 """Who doesn't need his own k-ary tree data strucutre ?"""
 
+from collections import OrderedDict
+
 ###############################################################################
 class Node(object):
     """Generic n-ary tree node object."""
@@ -29,14 +31,14 @@ class Node(object):
         return self.parent.root
 
     def __iter__(self):
-        """Iterate over all children nodes and one self"""
+        """Iterate over all children nodes and one-self."""
         yield self
         for child in self.children.values():
             for node in child: yield node
 
     @property
     def path(self):
-        """Iterate over all parent nodes and one self"""
+        """Iterate over all parent nodes and one-self."""
         yield self
         if not self.parent: return
         for node in self.parent.path: yield node
@@ -52,14 +54,14 @@ class Node(object):
         for node in self.parent.others: yield node
 
     def get_children(self, depth=1):
-        """Iterate over all children (until a certain level) and one self"""
+        """Iterate over all children (until a certain level) and one-self."""
         yield self
         if depth == 0: return
         for child in self.children.values():
             for node in child.get_children(depth-1): yield node
 
     def get_level(self, level=2):
-        """Get all nodes that are exactly this far away"""
+        """Get all nodes that are exactly this far away."""
         if level == 1:
             for child in self.children.values(): yield child
         else:
@@ -84,7 +86,7 @@ class Node(object):
 
     #------------------------- Modify topology -------------------------------#
     def trim(self, length):
-        """Cut all branches over a certain length making new leaves at *length*"""
+        """Cut all branches over a certain length making new leaves at *length*."""
         if length > 0:
             for child in self.children.values(): child.trim(length-1)
         else:
