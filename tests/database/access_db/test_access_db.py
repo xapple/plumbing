@@ -26,7 +26,7 @@ db = AccessDatabase(db_path)
 print db.conn_string
 print db.tables
 print db['tblClassifiers']
-#db.close()
+db.close()
 
 # Drop tables #
 #for table in db.tables:

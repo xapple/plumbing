@@ -145,8 +145,10 @@ def get_next_item(iterable):
 
 ################################################################################
 def pretty_now():
-    """Returns some thing like '2014-07-24 11:12:45 CEST+0200'"""
-    now = datetime.datetime.now(dateutil.tz.tzlocal())
+    """Returns some thing like '2019-02-15 15:58:22 CET+0100'"""
+    import datetime, tzlocal
+    time_zone = tzlocal.get_localzone()
+    now       = datetime.datetime.now(time_zone)
     return now.strftime("%Y-%m-%d %H:%M:%S %Z%z")
 
 ################################################################################
