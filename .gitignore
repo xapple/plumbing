@@ -11,6 +11,14 @@
 # IDE files #
 /.idea
 
+# Distribution #
+/build/
+/dist/
+/plumbing.egg-info/
+
+# Testing #
+/.pytest_cache/
+
 # Automatic documentation #
 documentation/automatic
 documentation/html
