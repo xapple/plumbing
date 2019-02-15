@@ -71,7 +71,13 @@ class Graph(object):
             base_dir  = os.path.dirname(os.path.abspath(file_name)) + '/'
             self.base_dir = DirectoryPath(base_dir)
         if base_dir is None:
-            self.base_dir = self.parent.p.graphs_dir
+            if hasattr(self.parent, 'p'):
+                self.base_dir = self.parent.p.graphs_dir
+            else:
+                self.base_dir = self.parent.paths.graphs_dir
+        if isinstance(base_dir, FilePath):
+            self.base_dir = base_dir.directory
+            short_name = base_dir.short_prefix
         else:
             self.base_dir = DirectoryPath(base_dir)
             self.base_dir.create_if_not_exists()
