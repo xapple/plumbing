@@ -68,7 +68,7 @@ class AccessDatabase(FilePath):
     @property
     def tables(self):
         """The complete list of tables."""
-        return [table[2] for table in self.own_cursor.tables() if table[2].startswith('tbl')]
+        return [table[2] for table in self.own_cursor.tables() if not table[2].startswith('MSys')]
 
     # ------------------------------- Methods ------------------------------- #
     def __getitem__(self, key):
@@ -85,12 +85,32 @@ class AccessDatabase(FilePath):
         self.own_cursor.close()
         self.own_conn.close()
 
-    def table_as_df(self, table_name):
+    def table_must_exist(self, table_name):
         """Return a table as a dataframe."""
         if table_name not in self.tables:
             raise Exception("The table '%s' does not seem to exist." % table_name)
-        query = "SELECT * FROM %s" % table_name
+
+    def table_as_df(self, table_name):
+        """Return a table as a dataframe."""
+        self.table_must_exist(table_name)
+        query = "SELECT * FROM `%s`" % table_name
         return pandas.read_sql(query, self.own_conn)
+
+    def count_rows(self, table_name):
+        """Return the number of entries in a table by reallying counting them."""
+        self.table_must_exist(table_name)
+        query = "SELECT COUNT (*) FROM `%s`" % table_name
+        self.own_cursor.execute(query)
+        return int(self.own_cursor.fetchone()[0])
+
+    def count_rows_fast(self, table_name):
+        """Return the number of entries in a table by using the quick inaccurate method."""
+        pass
+
+    def tables_with_counts(self):
+        """Return the number of entries in all table."""
+        table_to_count = lambda t: self.count_rows(t)
+        return zip(self.tables, map(table_to_count, self.tables))
 
     def drop_table(self, table_name):
         if table_name not in self.tables:
