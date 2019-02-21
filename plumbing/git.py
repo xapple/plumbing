@@ -92,7 +92,9 @@ class GitRepo(DirectoryPath):
         return self.git(self.default + ['add', what])
 
     def commit(self, message):
-        return self.git(self.default + ['commit', '-m', '"' + message + '"'])
+        if not message.startswith('"'): message = '"' + message
+        if not message.endswith('"'):   message = message + '"'
+        return self.git(self.default + ['commit', '-m', message])
 
     def push(self, source=None, destination=None, tags=False, shell=False):
         # Command #
