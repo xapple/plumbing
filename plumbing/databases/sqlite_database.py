@@ -306,6 +306,10 @@ class SQLiteDatabase(FilePath):
         self.own_cursor.close()
         self.own_connection.close()
 
+    def insert_df(self, table_name, df):
+        """Create a table and populate it with data from a dataframe."""
+        df.to_sql(table_name, con=self.own_connection)
+
     # ----------------------------- Unfinished ------------------------------ #
     def add_column(self, name, kind=None, table=None):
         """Add add a new column to a table."""

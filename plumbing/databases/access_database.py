@@ -1,5 +1,5 @@
 # Built-in modules #
-import os
+import os, platform
 
 # Internal modules #
 from autopaths.file_path import FilePath
@@ -38,9 +38,16 @@ class AccessDatabase(FilePath):
     # ------------------------------ Properties ----------------------------- #
     @property_cached
     def conn_string(self):
+        system = platform.system()
+        # macOS #
+        if system == "Darwin":
+            string = "Driver={Microsoft Access Driver (*.mdb)};User Id='%s';DBQ=%s"
+            return string % (self.username, self.path)
+        # Linux #
         if os.name == "posix":
             string = "Driver=MDBTools;User Id='%s';DBQ=%s"
             return string % (self.username, self.path)
+        # Windows #
         if os.name == "nt":
             string = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};User Id='%s';DBQ=%s"
             return string % (self.username, self.path)
@@ -101,6 +108,10 @@ class AccessDatabase(FilePath):
         self.table_must_exist(table_name)
         query = "SELECT * FROM `%s`" % table_name.lower()
         return pandas.read_sql(query, self.own_conn)
+
+    def insert_df(self, table_name, df):
+        """Create a table and populate it with data from a dataframe."""
+        df.to_sql(table_name, con=self.own_conn)
 
     def count_rows(self, table_name):
         """Return the number of entries in a table by reallying counting them."""
