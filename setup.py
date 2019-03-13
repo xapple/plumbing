@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name             = 'plumbing',
@@ -8,7 +8,7 @@ setup(
     url              = 'http://github.com/xapple/plumbing/',
     author           = 'Lucas Sinclair',
     author_email     = 'lucas.sinclair@me.com',
-    packages         = ['plumbing', 'plumbing.trees', 'plumbing.slurm', 'plumbing.databases'],
+    packages         = find_packages(),
     install_requires = ['autopaths', 'sh', 'biopython', 'matplotlib', 'brewer2mpl'],
     long_description = open('README.md').read(),
 )
