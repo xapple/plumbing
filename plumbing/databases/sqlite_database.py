@@ -2,9 +2,9 @@
 import os, sqlite3
 
 # Internal modules #
-from color     import Color
-from cache     import property_cached
-from common    import download_from_url, md5sum
+from plumbing.color     import Color
+from plumbing.cache     import property_cached
+from plumbing.common    import download_from_url, md5sum
 from autopaths.file_path import FilePath
 
 ################################################################################
@@ -16,7 +16,7 @@ class SQLiteDatabase(FilePath):
                        text_fact = None,
                        isolation = None,
                        retrieve  = None,
-                       md5       = None):
+                       known_md5 = None):
         """
         * The path of the database comes first.
         * The factory option enables you to change how results are returned.
@@ -31,7 +31,7 @@ class SQLiteDatabase(FilePath):
         self.factory   = factory
         self.isolation = isolation
         self.retrieve  = retrieve
-        self.md5       = md5
+        self.known_md5 = known_md5
         self.prepared  = False
 
     def __repr__(self):
@@ -146,7 +146,7 @@ class SQLiteDatabase(FilePath):
                 download_from_url(self.retrieve, self.path, progress=True)
             else: raise Exception("The file '" + self.path + "' does not exist.")
         self.check_format()
-        if self.md5: assert self.md5 == md5sum(self.path)
+        if self.known_md5: assert self.known_md5 == self.md5
         self.prepared = True
 
     def check_format(self):
@@ -155,14 +155,18 @@ class SQLiteDatabase(FilePath):
         if header != 'SQLite format 3':
             raise Exception("The file '" + self.path + "' is not an SQLite database.")
 
-    def create(self, columns, type_map=None, overwrite=False):
+    def create(self, columns=None, type_map=None, overwrite=False):
         """Create a new database with a certain schema."""
         # Check already exists #
         if self.count_bytes > 0:
             if overwrite: self.remove()
             else: raise Exception("File exists already at '%s'" % self)
+        # If we want it empty #
+        if columns is None:
+            self.touch()
         # Make the table #
-        self.add_table(self.main_table, columns=columns, type_map=type_map)
+        else:
+            self.add_table(self.main_table, columns=columns, type_map=type_map)
 
     def add_table(self, name, columns, type_map=None, if_not_exists=False):
         """Add add a new table to the database.  For instance you could do this:

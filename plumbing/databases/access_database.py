@@ -4,9 +4,13 @@ import os, platform
 # Internal modules #
 from autopaths.file_path import FilePath
 from plumbing.cache      import property_cached
+from plumbing.tmpstuff    import new_temp_file
+from plumbing.databases.sqlite_database import SQLiteDatabase
 
 # Third party modules #
 import pyodbc, pandas
+if os.name == "posix": import sh
+if os.name == "nt":    import pbs as sh
 
 ################################################################################
 class AccessDatabase(FilePath):
@@ -77,6 +81,10 @@ class AccessDatabase(FilePath):
     @property
     def tables(self):
         """The complete list of tables."""
+        # If we are on unix use mdbtools instead #
+        mdb_tables = sh.Command("mdb-tables")
+        return [t for t in mdb_tables('-1', self.path).split('\n') if t]
+        # Default case #
         return [table[2].lower() for table in self.own_cursor.tables() if not table[2].startswith('MSys')]
 
     # ------------------------------- Methods ------------------------------- #
@@ -134,3 +142,37 @@ class AccessDatabase(FilePath):
             raise Exception("The table '%s' does not seem to exist." % table_name)
         query = "DROP TABLE %s" % table_name
         self.own_conn.execute(query)
+
+    # ------------------------------- Convert ------------------------------- #
+    def sqlite_dump(self):
+        """Generate a text dump compatible with SQLite."""
+        # First the schema #
+        mdb_schema = sh.Command("mdb-schema")
+        yield mdb_schema(self.path, "sqlite").encode('utf8')
+        # Start a transaction, speeds things up when importing #
+        yield "BEGIN;\n"
+        # Then export every table #
+        mdb_export = sh.Command("mdb-export")
+        for table in self.tables:
+            yield mdb_export('-I', 'sqlite', self.path, table).encode('utf8')
+        # End the transaction
+        yield "COMMIT;\n"
+
+    def convert_to_sqlite(self, destination=None):
+        """Who wants to use Access when you can deal with SQLite databases instead?"""
+        # Default path #
+        if destination is None: destination = self.replace_extension('sqlite')
+        # Delete if it exists #
+        destination.remove()
+        # Put the script somewhere #
+        script = new_temp_file()
+        script.writelines(self.sqlite_dump())
+        # New database #
+        sqlite = sh.Command("sqlite3")
+        sqlite('-bail', '-init', script, destination, '.quit')
+        return
+        # This can work only for small databases (avoid) #
+        db = SQLiteDatabase(destination)
+        db.create()
+        db.cursor.executescript(''.join(self.sqlite_dump()))
+        db.close()

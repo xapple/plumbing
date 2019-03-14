@@ -4,7 +4,11 @@
 """
 Typically you would run this file from a command line like this:
 
-     ipython.exe -i -- /deploy/plumbing/tests/database/access_db/test_access_db.py
+     ipython.exe -i -- /deploy/plumbing/tests/database/access_db/test_conversion.py
+
+Or in the Ubuntu WSL:
+
+    ipython -i -- ~/deploy/plumbing/tests/database/access_db/test_conversion.py
 """
 
 # Built-in module #
@@ -29,19 +33,5 @@ orig_db.copy(testing_db)
 # The database #
 db = AccessDatabase(testing_db)
 
-# Test #
-print db.tables
-print db['tblClassifierSets']
-
-# Create df #
-df = pandas.DataFrame({'A': ['A0', 'A1', 'A2', 'A3'],
-                       'B': ['B0', 'B1', 'B2', 'B3'],
-                       'C': ['C0', 'C1', 'C2', 'C3'],
-                       'D': ['D0', 'D1', 'D2', 'D3']},
-                       index=[0, 1, 2, 3])
-
-# Insert table #
-db.insert_df('dataframe', df)
-
-# Close #
-db.close()
+# Convert #
+db.convert_to_sqlite()
