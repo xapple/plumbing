@@ -11,6 +11,7 @@ from plumbing.databases.sqlite_database import SQLiteDatabase
 import pyodbc, pandas
 if os.name == "posix": import sh
 if os.name == "nt":    import pbs as sh
+from shell_command import shell_output
 
 ################################################################################
 class AccessDatabase(FilePath):
@@ -144,19 +145,20 @@ class AccessDatabase(FilePath):
         self.own_conn.execute(query)
 
     # ------------------------------- Convert ------------------------------- #
-    def sqlite_dump(self):
+    def sqlite_dump(self, script_path):
         """Generate a text dump compatible with SQLite."""
         # First the schema #
-        mdb_schema = sh.Command("mdb-schema")
-        yield mdb_schema(self.path, "sqlite").encode('utf8')
+        shell_output('mdb-schema "%s" sqlite >> "%s"' % (self.path, script_path))
         # Start a transaction, speeds things up when importing #
-        yield "BEGIN;\n"
+        shell_output('echo "BEGIN;" >> %s' % self.path)
+        shell_output('echo "" >> %s' % self.path)
         # Then export every table #
-        mdb_export = sh.Command("mdb-export")
         for table in self.tables:
-            yield mdb_export('-I', 'sqlite', self.path, table).encode('utf8')
+            command = 'mdb-export -I sqlite "%s" "%s" >> "%s"'
+            shell_output(command % (self.path, table, script_path))
         # End the transaction
-        yield "COMMIT;\n"
+        shell_output('echo "COMMIT;" >> "%s"' % self.path)
+        shell_output('echo "" >> "%s"' % self.path)
 
     def convert_to_sqlite(self, destination=None):
         """Who wants to use Access when you can deal with SQLite databases instead?"""
@@ -166,13 +168,8 @@ class AccessDatabase(FilePath):
         destination.remove()
         # Put the script somewhere #
         script = new_temp_file()
-        script.writelines(self.sqlite_dump())
+        self.sqlite_dump(script)
         # New database #
         sqlite = sh.Command("sqlite3")
         sqlite('-bail', '-init', script, destination, '.quit')
-        return
-        # This can work only for small databases (avoid) #
-        db = SQLiteDatabase(destination)
-        db.create()
-        db.cursor.executescript(''.join(self.sqlite_dump()))
-        db.close()
+        script.remove()
