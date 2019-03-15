@@ -8,7 +8,7 @@ from plumbing.tmpstuff    import new_temp_file
 from plumbing.databases.sqlite_database import SQLiteDatabase
 
 # Third party modules #
-import pyodbc, pandas
+import pyodbc, pandas, tqdm
 if os.name == "posix": import sh
 if os.name == "nt":    import pbs as sh
 from shell_command import shell_output
@@ -83,10 +83,16 @@ class AccessDatabase(FilePath):
     def tables(self):
         """The complete list of tables."""
         # If we are on unix use mdbtools instead #
-        mdb_tables = sh.Command("mdb-tables")
-        return [t for t in mdb_tables('-1', self.path).split('\n') if t]
+        if os.name == "posix":
+            mdb_tables = sh.Command("mdb-tables")
+            return [t for t in mdb_tables('-1', self.path).split('\n') if t and not t.startswith('MSys')]
         # Default case #
         return [table[2].lower() for table in self.own_cursor.tables() if not table[2].startswith('MSys')]
+
+    @property
+    def real_tables(self):
+        """The complete list of tables excluding views and query tables."""
+        return [table for table in self.tables if self.test_table(table)]
 
     # ------------------------------- Methods ------------------------------- #
     def __getitem__(self, key):
@@ -96,6 +102,16 @@ class AccessDatabase(FilePath):
     def __contains__(self, key):
         """Called when evaluating ``'students' in database``."""
         return key.lower() in self.tables
+
+    def test_table(self, table_name):
+        """Can the table be read from?"""
+        try:
+            query = "SELECT COUNT (*) FROM `%s`" % table_name.lower()
+            self.own_cursor.execute(query)
+            self.own_cursor.fetchone()
+        except pyodbc.Error:
+            return False
+        return True
 
     def new_conn(self):
         """Make a new connection."""
@@ -123,7 +139,7 @@ class AccessDatabase(FilePath):
         df.to_sql(table_name, con=self.own_conn)
 
     def count_rows(self, table_name):
-        """Return the number of entries in a table by reallying counting them."""
+        """Return the number of entries in a table by counting them."""
         self.table_must_exist(table_name)
         query = "SELECT COUNT (*) FROM `%s`" % table_name.lower()
         self.own_cursor.execute(query)
@@ -145,31 +161,70 @@ class AccessDatabase(FilePath):
         self.own_conn.execute(query)
 
     # ------------------------------- Convert ------------------------------- #
-    def sqlite_dump(self, script_path):
-        """Generate a text dump compatible with SQLite."""
+    def convert_to_sqlite(self, destination=None, method="shell", progress=False):
+        """Who wants to use Access when you can deal with SQLite databases instead?"""
+        # Display progress bar #
+        if progress: progress = tqdm.tqdm
+        else:        progress = lambda x:x
+        # Default path #
+        if destination is None: destination = self.replace_extension('sqlite')
+        # Delete if it exists #
+        destination.remove()
+        # Method with shell and a temp file #
+        if method == 'shell':     return self.sqlite_by_shell(destination)
+        # Method without a temp file #
+        if method == 'object':    return self.sqlite_by_object(destination, progress)
+        # Method with dataframe #
+        if method == 'dataframe': return self.sqlite_by_df(destination, progress)
+
+    def sqlite_by_shell(self, destination):
+        """Method with shell and a temp file. This is hopefully fast."""
+        script = new_temp_file()
+        print("Dump MDB")
+        self.sqlite_dump_shell(script)
+        print("Import dump")
+        shell_output('sqlite3 -bail -init "%s" "%s" .quit' % (script, destination))
+        script.remove()
+
+    def sqlite_by_object(self, destination, progress):
+        """This is probably not very fast."""
+        db = SQLiteDatabase(destination)
+        db.create()
+        for script in self.sqlite_dump_string(progress): db.cursor.executescript(script)
+        db.close()
+
+    def sqlite_by_df(self, destination, progress):
+        """Is this fast?"""
+        db = SQLiteDatabase(destination)
+        db.create()
+        for table in progress(self.real_tables): self[table].to_sql(table, con=db.connection)
+        db.close()
+
+    def sqlite_dump_shell(self, script_path):
+        """Generate a text dump compatible with SQLite by using
+        shell commands. Place this script at *script_path*."""
         # First the schema #
         shell_output('mdb-schema "%s" sqlite >> "%s"' % (self.path, script_path))
         # Start a transaction, speeds things up when importing #
-        shell_output('echo "BEGIN;" >> %s' % self.path)
-        shell_output('echo "" >> %s' % self.path)
+        script_path.append("\n\n\nBEGIN TRANSACTION;\n")
         # Then export every table #
         for table in self.tables:
             command = 'mdb-export -I sqlite "%s" "%s" >> "%s"'
             shell_output(command % (self.path, table, script_path))
         # End the transaction
-        shell_output('echo "COMMIT;" >> "%s"' % self.path)
-        shell_output('echo "" >> "%s"' % self.path)
+        script_path.append("\n\n\nEND TRANSACTION;\n")
 
-    def convert_to_sqlite(self, destination=None):
-        """Who wants to use Access when you can deal with SQLite databases instead?"""
-        # Default path #
-        if destination is None: destination = self.replace_extension('sqlite')
-        # Delete if it exists #
-        destination.remove()
-        # Put the script somewhere #
-        script = new_temp_file()
-        self.sqlite_dump(script)
-        # New database #
-        sqlite = sh.Command("sqlite3")
-        sqlite('-bail', '-init', script, destination, '.quit')
-        script.remove()
+    def sqlite_dump_string(self, progress):
+        """Generate a text dump compatible with SQLite.
+        By yielding every table one by one as a byte string."""
+        # First the schema #
+        mdb_schema = sh.Command("mdb-schema")
+        yield mdb_schema(self.path, "sqlite").encode('utf8')
+        # Start a transaction, speeds things up when importing #
+        yield "BEGIN TRANSACTION;\n"
+        # Then export every table #
+        mdb_export = sh.Command("mdb-export")
+        for table in progress(self.tables):
+            yield mdb_export('-I', 'sqlite', self.path, table).encode('utf8')
+        # End the transaction
+        yield "END TRANSACTION;\n"

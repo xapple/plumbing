@@ -7,6 +7,9 @@ from plumbing.cache     import property_cached
 from plumbing.common    import download_from_url, md5sum
 from autopaths.file_path import FilePath
 
+# Third party modules #
+import pandas
+
 ################################################################################
 class SQLiteDatabase(FilePath):
     """A wrapper for an SQLite3 database."""
@@ -284,7 +287,7 @@ class SQLiteDatabase(FilePath):
         return self.own_cursor.execute(query).fetchone()
 
     def get_number(self, num, table=None):
-        """Get a specific entry by it's number."""
+        """Get a specific entry by its number."""
         if table is None: table = self.main_table
         self.own_cursor.execute('SELECT * from "%s" LIMIT 1 OFFSET %i;' % (self.main_table, num))
         return self.own_cursor.fetchone()
@@ -342,3 +345,10 @@ class SQLiteDatabase(FilePath):
         command = command % (ordered, rowids)
         # This could have worked but sqlite3 was too old on the server
         # ORDER BY instr(',%s,', ',' || id || ',')
+
+    # ---------------------------- Multidatabase ---------------------------- #
+    def import_table(self, source, table_name):
+        """Copy a table from another SQLite db to this one."""
+        query = "SELECT * FROM `%s`" % table_name.lower()
+        df = pandas.read_sql(query, source.connection)
+        df.to_sql(table_name, con=self.own_connection)
