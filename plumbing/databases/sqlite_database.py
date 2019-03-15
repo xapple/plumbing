@@ -348,7 +348,7 @@ class SQLiteDatabase(FilePath):
 
     # ---------------------------- Multidatabase ---------------------------- #
     def import_table(self, source, table_name):
-        """Copy a table from another SQLite db to this one."""
+        """Copy a table from another SQLite database to this one."""
         query = "SELECT * FROM `%s`" % table_name.lower()
         df = pandas.read_sql(query, source.connection)
         df.to_sql(table_name, con=self.own_connection)

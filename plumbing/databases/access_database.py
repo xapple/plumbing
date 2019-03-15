@@ -1,5 +1,5 @@
 # Built-in modules #
-import os, platform
+import os, platform, base64, StringIO, shutil, gzip
 
 # Internal modules #
 from autopaths.file_path import FilePath
@@ -230,3 +230,71 @@ class AccessDatabase(FilePath):
             yield mdb_export('-I', 'sqlite', self.path, table).encode('utf8')
         # End the transaction
         yield "END TRANSACTION;\n"
+
+    # ---------------------------- Multidatabase ---------------------------- #
+    def import_table(self, source, table_name):
+        """Copy a table from another Access database to this one.
+        Requires that you have mdbtools command line executables installed
+        in a Windows Subsystem for Linux environment."""
+        # Run commands #
+        wsl = sh.Command("wsl.exe")
+        table_schema   = wsl("-e", "mdb-schema", "-T", table_name, source.wsl_style, "access")
+        table_contents = wsl("-e", "mdb-export", "-I", "access", source.wsl_style, table_name)
+        # Filter #
+        table_schema = ' '.join(l for l in table_schema.split('\n') if not l.startswith("--"))
+        # Execute statements #
+        self.cursor.execute(str(table_schema))
+        self.cursor.execute(str(table_contents))
+
+    # -------------------------------- Create ------------------------------- #
+    @classmethod
+    def create(cls, destination):
+        """Create a new empty MDB at destination."""
+        mdb_gz_b64 = """\
+        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
+        """
+        pristine = StringIO.StringIO()
+        pristine.write(base64.b64decode(mdb_gz_b64))
+        pristine.seek(0)
+        pristine = gzip.GzipFile(fileobj=pristine, mode='rb')
+        with open(destination, 'wb') as handle: shutil.copyfileobj(pristine, handle)
+        return cls(destination)
