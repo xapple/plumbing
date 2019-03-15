@@ -41,6 +41,6 @@ big_sql = big_mdb.replace_extension('sqlite')
 big_sql.remove()
 
 # Convert #
-with Timer(): big_mdb.convert_to_sqlite(method="shell", progress=True)
+#with Timer(): big_mdb.convert_to_sqlite(method="shell", progress=True)
 #with Timer(): big_mdb.convert_to_sqlite(method="dataframe", progress=True)
 #with Timer(): big_mdb.convert_to_sqlite(method="object", progress=True)

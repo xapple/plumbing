@@ -50,7 +50,7 @@ class AccessDatabase(FilePath):
             return string % (self.username, self.path)
         # Linux #
         if os.name == "posix":
-            string = "Driver=MDBTools;User Id='%s';DBQ=%s"
+            string = "Driver={MDBTools};User Id='%s';DBQ=%s"
             return string % (self.username, self.path)
         # Windows #
         if os.name == "nt":
@@ -84,8 +84,10 @@ class AccessDatabase(FilePath):
         """The complete list of tables."""
         # If we are on unix use mdbtools instead #
         if os.name == "posix":
-            mdb_tables = sh.Command("mdb-tables")
-            return [t for t in mdb_tables('-1', self.path).split('\n') if t and not t.startswith('MSys')]
+            mdb_tables  = sh.Command("mdb-tables")
+            tables_list = mdb_tables('-1', self.path).split('\n')
+            condition   = lambda t: t and not t.startswith('MSys')
+            return [t.lower() for t in tables_list if condition(t)]
         # Default case #
         return [table[2].lower() for table in self.own_cursor.tables() if not table[2].startswith('MSys')]
 
