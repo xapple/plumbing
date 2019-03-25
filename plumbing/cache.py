@@ -167,3 +167,97 @@ class class_property(property):
     def __get__(self, cls, owner):
         return self.fget.__get__(None, owner)()
 
+###############################################################################
+class cached_property(object):
+    """
+    New implementation of the property cached decorator.
+
+    It converts a method with a single self argument
+    into a property cached on the instance.
+
+        from plumbing.cache import cached_property
+        class Square(object):
+            def __init__(self, size):
+                self.size = size
+
+            @cached_property
+            def area(self):
+                print "Evaluating..."
+                return self.size * self.size
+
+        shape = Square(5)
+        print shape.size
+        print shape.area
+        shape.area = 99
+        print shape.area
+        del shape.area
+        print shape.area
+    """
+
+    def __init__(self, func):
+        self.func    = func
+        self.__doc__ = getattr(func, '__doc__')
+        self.name    = self.func.__name__
+
+    def __get__(self, instance, owner):
+        # If called from a class #
+        if instance is None: return self
+        # Does a cache exist for this instance? #
+        self.check_cache(instance)
+        # Is the answer in the cache? #
+        if self.name in instance.__cache__: return instance.__cache__[self.name]
+        # If not we will compute it #
+        if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+        else:                                      result = self.func(instance)
+        instance.__cache__[self.name] = result
+        return result
+
+    def __set__(self, instance, value):
+        # Does a cache exist for this instance? #
+        self.check_cache(instance)
+        # Overwrite the value #
+        instance.__cache__[self.name] = value
+
+    def __delete__(self, instance):
+        # Does a cache exist for this instance? #
+        self.check_cache(instance)
+        # Overwrite the value #
+        instance.__cache__.pop(self.name, None)
+
+    def check_cache(self, instance):
+        if '__cache__' not in instance.__dict__: instance.__cache__ = {}
+
+###############################################################################
+class invalidate_cache(object):
+    """
+    Adds a hook to allow for another property setter to
+    invalidated a part of the cache.
+
+        class Square(object):
+            def __init__(self, size):
+                self._size = size
+
+            @property
+            def size(self):
+                return self._size
+
+            @cached_property
+            def area(self):
+                print "Evaluating..."
+                return self.size * self.size
+
+            @size.setter
+            @invalidate_cache("area")
+            def size(self, size):
+                self._size = size
+
+    shape = Square(5)
+    print shape.size
+    print shape.area
+    shape.size = 6
+    print shape.area
+    """
+
+    def __init__(self, func):
+        self.func    = func
+        self.__doc__ = getattr(func, '__doc__')
