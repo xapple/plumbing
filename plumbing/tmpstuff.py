@@ -24,27 +24,14 @@ def new_temp_dir(**kwargs):
 
 ################################################################################
 class TmpFile(FilePath):
-    def __repr__(self): return self.path
-
-    @classmethod
-    def empty(cls, **kwargs): return cls(**kwargs)
-
-    @classmethod
-    def from_string(cls, string, **kwargs): return cls(content=string, **kwargs)
-
-    def __enter__(self):
-        self.handle = open(self.path, 'w')
-        return self
-
-    def __exit__(self, *exc_info):
-        self.handle.close()
-
     def __new__(cls, path=None, content=None, **kwargs):
-        handle = open(path, 'w') if path else tempfile.NamedTemporaryFile(delete=False, **kwargs)
-        if content: handle.write(content)
+        # Was the path specified? #
+        if path is not None: handle = open(path, 'w')
+        else:                handle = new_temp_handle(**kwargs)
+        # Was the content specified? #
+        if content is not None: handle.write(content)
+        # Return #
         handle.close()
-        return FilePath.__new__(cls, handle.name)
-
-    def __init__(self, path=None, content=None, **kwargs):
-        if not path: path = str(self)
-        self.path = path
+        path = handle.name
+        # Super #
+        return FilePath.__new__(cls, path)

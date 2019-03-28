@@ -23,9 +23,6 @@ class CSVTable(FilePath):
     def remove_first_line(self):
         sh.sed('-i', '1d', self.path)
 
-    def remove_last_line(self):
-        sh.sed('-i', '1d', self.path)
-
     def replace_title(self, before, after):
         sh.sed('-i', '1s/%s/%s/' % (before, after), self.path)
 

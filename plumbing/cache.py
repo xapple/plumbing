@@ -221,7 +221,7 @@ class cached_property(object):
     def __delete__(self, instance):
         # Does a cache exist for this instance? #
         self.check_cache(instance)
-        # Overwrite the value #
+        # Remove the key #
         instance.__cache__.pop(self.name, None)
 
     def check_cache(self, instance):
