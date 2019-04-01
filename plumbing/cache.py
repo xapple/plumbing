@@ -27,14 +27,14 @@ def property_cached(f):
         class Employee(object):
             @property_cached
             def salary(self):
-                print "Evaluating..."
+                print("Evaluating...")
                 return time.time()
         bob = Employee()
-        print bob.salary
+        print(bob.salary)
         time.sleep(3)
-        print bob.salary
+        print(bob.salary)
         bob.salary = "10000$"
-        print bob.salary
+        print(bob.salary)
     """
     # Called when you access the property #
     def retrieve_from_cache(self):
@@ -46,7 +46,7 @@ def property_cached(f):
         return self.__cache__[f.__name__]
     # Called when you set the property #
     def overwrite_cache(self, value, verbose=False):
-        if verbose: print "Overwriting '%s' with '%s' on '%s'" % (self, value, f.__name__)
+        if verbose: print("Overwriting '%s' with '%s' on '%s'" % (self, value, f.__name__))
         if '__cache__' not in self.__dict__: self.__cache__ = {}
         self.__cache__[f.__name__] = value
     # Return a wrapper #
@@ -182,16 +182,16 @@ class cached_property(object):
 
             @cached_property
             def area(self):
-                print "Evaluating..."
+                print("Evaluating...")
                 return self.size * self.size
 
         shape = Square(5)
-        print shape.size
-        print shape.area
+        print(shape.size)
+        print(shape.area)
         shape.area = 99
-        print shape.area
+        print(shape.area)
         del shape.area
-        print shape.area
+        print(shape.area)
     """
 
     def __init__(self, func):
@@ -243,7 +243,7 @@ class invalidate_cache(object):
 
             @cached_property
             def area(self):
-                print "Evaluating..."
+                print("Evaluating...")
                 return self.size * self.size
 
             @size.setter
@@ -252,10 +252,10 @@ class invalidate_cache(object):
                 self._size = size
 
     shape = Square(5)
-    print shape.size
-    print shape.area
+    print(shape.size)
+    print(shape.area)
     shape.size = 6
-    print shape.area
+    print(shape.area)
     """
 
     def __init__(self, func):
