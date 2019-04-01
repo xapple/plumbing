@@ -1,6 +1,6 @@
 # Built-in modules #
-import os, time, inspect
-import cPickle as pickle
+import time, inspect
+import pickle
 
 # Internal modules #
 from autopaths.file_path import FilePath
