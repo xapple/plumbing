@@ -1,10 +1,10 @@
 # Built-in modules #
 import os, shutil, csv
-from itertools import izip
+from six.moves import zip
 
 # Internal modules #
 from autopaths.file_path import FilePath
-from tmpstuff import TmpFile
+from autopaths.tmp_path  import new_temp_file
 
 # Third party modules #
 import pandas
@@ -28,9 +28,10 @@ class CSVTable(FilePath):
 
     def rewrite_lines(self, lines, path=None):
         if path is None:
-            with TmpFile() as tmpfile: tmpfile.handle.writelines(lines)
+            tmp_file = new_temp_file()
+            tmp_file.writelines(lines)
             os.remove(self.path)
-            shutil.move(tmpfile.path, self.path)
+            shutil.move(tmp_file.path, self.path)
         else:
             with open(path, 'w') as handle: handle.writelines(lines)
 
@@ -52,7 +53,7 @@ class CSVTable(FilePath):
         self.rewrite_lines(self.min_sum_lines(minimum), path)
 
     def transposed_lines(self, d):
-        rows = izip(*csv.reader(open(self.path), delimiter=self.d))
+        rows = zip(*csv.reader(open(self.path), delimiter=self.d))
         for row in rows: yield d.join(row) + '\n'
     def transpose(self, path=None, d=None):
         self.rewrite_lines(self.transposed_lines(self.d if d is None else d), path)
