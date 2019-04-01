@@ -1,10 +1,11 @@
 # Built-in modules #
-import os, platform, base64, StringIO, shutil, gzip
+import os, platform, base64, shutil, gzip
+from six import StringIO
 
 # Internal modules #
 from autopaths.file_path import FilePath
 from plumbing.cache      import property_cached
-from plumbing.tmpstuff    import new_temp_file
+from autopaths.tmp_path  import new_temp_path
 from plumbing.databases.sqlite_database import SQLiteDatabase
 
 # Third party modules #
@@ -181,10 +182,8 @@ class AccessDatabase(FilePath):
 
     def sqlite_by_shell(self, destination):
         """Method with shell and a temp file. This is hopefully fast."""
-        script = new_temp_file()
-        print("Dump MDB")
-        self.sqlite_dump_shell(script)
-        print("Import dump")
+        script_path = new_temp_path()
+        self.sqlite_dump_shell(script_path)
         shell_output('sqlite3 -bail -init "%s" "%s" .quit' % (script, destination))
         script.remove()
 
@@ -292,7 +291,7 @@ class AccessDatabase(FilePath):
         vzSUvSHjVys1Rv5CSUv8pEvcEqkbV/KX35JaQ+npikmRS9o4rtYIt8RYnJa4Ou6SV6stTm+l7rcX
         q9qSy+23pCVIcgV/SZKuJj5CSRc4Y/PpkiesLJcI53J37NvFuQzv4peGL0/SypP+C+45xVAAMAEA
         """
-        pristine = StringIO.StringIO()
+        pristine = StringIO()
         pristine.write(base64.b64decode(mdb_gz_b64))
         pristine.seek(0)
         pristine = gzip.GzipFile(fileobj=pristine, mode='rb')

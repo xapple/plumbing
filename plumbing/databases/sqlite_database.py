@@ -38,7 +38,7 @@ class SQLiteDatabase(FilePath):
         self.prepared  = False
 
     def __repr__(self):
-        """Called when evaluating ``print database``."""
+        """Called when evaluating ``print(database)``."""
         return '<%s object on "%s">' % (self.__class__.__name__, self.path)
 
     def __enter__(self):
@@ -145,7 +145,7 @@ class SQLiteDatabase(FilePath):
         Optionally check the MD5."""
         if not os.path.exists(self.path):
             if self.retrieve:
-                print "Downloading SQLite3 database..."
+                print("Downloading SQLite3 database...")
                 download_from_url(self.retrieve, self.path, progress=True)
             else: raise Exception("The file '" + self.path + "' does not exist.")
         self.check_format()
@@ -222,8 +222,8 @@ class SQLiteDatabase(FilePath):
         except errors as err:
             raise Exception(self.detailed_error(sql_command, columns, entries, err))
         except KeyboardInterrupt as err:
-            print "You interrupted the data insertion."
-            print "Committing everything done up to this point."
+            print("You interrupted the data insertion.")
+            print("Committing everything done up to this point.")
             self.own_connection.commit()
             raise err
 
@@ -271,7 +271,7 @@ class SQLiteDatabase(FilePath):
             command = command % (index_name, table, column)
             self.own_cursor.execute(command)
         except KeyboardInterrupt as err:
-            print "You interrupted the creation of the index. Not committing."
+            print("You interrupted the creation of the index. Not committing.")
             raise err
 
     def get_first(self, table=None):
