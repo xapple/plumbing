@@ -19,39 +19,67 @@ def cached(f):
         return result
     return memoized
 
-################################################################################
-def property_cached(f):
-    """Decorator for properties evaluated only once.
-    It can be used to created a cached property like this:
-
-        class Employee(object):
-            @property_cached
-            def salary(self):
-                print("Evaluating...")
-                return time.time()
-        bob = Employee()
-        print(bob.salary)
-        time.sleep(3)
-        print(bob.salary)
-        bob.salary = "10000$"
-        print(bob.salary)
+###############################################################################
+class property_cached(object):
     """
-    # Called when you access the property #
-    def retrieve_from_cache(self):
-        if '__cache__' not in self.__dict__: self.__cache__ = {}
-        if f.__name__ not in self.__cache__:
-            if inspect.isgeneratorfunction(f): result = tuple(f(self))
-            else: result = f(self)
-            self.__cache__[f.__name__] = result
-        return self.__cache__[f.__name__]
-    # Called when you set the property #
-    def overwrite_cache(self, value, verbose=False):
-        if verbose: print("Overwriting '%s' with '%s' on '%s'" % (self, value, f.__name__))
-        if '__cache__' not in self.__dict__: self.__cache__ = {}
-        self.__cache__[f.__name__] = value
-    # Return a wrapper #
-    retrieve_from_cache.__doc__ = f.__doc__
-    return property(retrieve_from_cache, overwrite_cache)
+    New implementation of the property cached decorator.
+
+    It converts a method with a single self argument
+    into a property cached on the instance.
+
+    In other words, it's like @property but memoized.
+
+        from plumbing.cache import cached_property
+        class Square(object):
+            def __init__(self, size):
+                self.size = size
+
+            @cached_property
+            def area(self):
+                print("Evaluating...")
+                return self.size * self.size
+
+        shape = Square(5)
+        print(shape.size)
+        print(shape.area)
+        shape.area = 99
+        print(shape.area)
+        del shape.area
+        print(shape.area)
+    """
+
+    def __init__(self, func):
+        self.func    = func
+        self.__doc__ = getattr(func, '__doc__')
+        self.name    = self.func.__name__
+
+    def __get__(self, instance, owner):
+        # If called from a class #
+        if instance is None: return self
+        # Does a cache exist for this instance? #
+        self.check_cache(instance)
+        # Is the answer in the cache? #
+        if self.name in instance.__cache__: return instance.__cache__[self.name]
+        # If not we will compute it #
+        if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+        else:                                      result = self.func(instance)
+        instance.__cache__[self.name] = result
+        return result
+
+    def __set__(self, instance, value):
+        # Does a cache exist for this instance? #
+        self.check_cache(instance)
+        # Overwrite the value #
+        instance.__cache__[self.name] = value
+
+    def __delete__(self, instance):
+        # Does a cache exist for this instance? #
+        self.check_cache(instance)
+        # Remove the key #
+        instance.__cache__.pop(self.name, None)
+
+    def check_cache(self, instance):
+        if '__cache__' not in instance.__dict__: instance.__cache__ = {}
 
 ################################################################################
 def property_pickled(f):
@@ -166,66 +194,6 @@ class class_property(property):
     """
     def __get__(self, cls, owner):
         return self.fget.__get__(None, owner)()
-
-###############################################################################
-class cached_property(object):
-    """
-    New implementation of the property cached decorator.
-
-    It converts a method with a single self argument
-    into a property cached on the instance.
-
-        from plumbing.cache import cached_property
-        class Square(object):
-            def __init__(self, size):
-                self.size = size
-
-            @cached_property
-            def area(self):
-                print("Evaluating...")
-                return self.size * self.size
-
-        shape = Square(5)
-        print(shape.size)
-        print(shape.area)
-        shape.area = 99
-        print(shape.area)
-        del shape.area
-        print(shape.area)
-    """
-
-    def __init__(self, func):
-        self.func    = func
-        self.__doc__ = getattr(func, '__doc__')
-        self.name    = self.func.__name__
-
-    def __get__(self, instance, owner):
-        # If called from a class #
-        if instance is None: return self
-        # Does a cache exist for this instance? #
-        self.check_cache(instance)
-        # Is the answer in the cache? #
-        if self.name in instance.__cache__: return instance.__cache__[self.name]
-        # If not we will compute it #
-        if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
-        else:                                      result = self.func(instance)
-        instance.__cache__[self.name] = result
-        return result
-
-    def __set__(self, instance, value):
-        # Does a cache exist for this instance? #
-        self.check_cache(instance)
-        # Overwrite the value #
-        instance.__cache__[self.name] = value
-
-    def __delete__(self, instance):
-        # Does a cache exist for this instance? #
-        self.check_cache(instance)
-        # Remove the key #
-        instance.__cache__.pop(self.name, None)
-
-    def check_cache(self, instance):
-        if '__cache__' not in instance.__dict__: instance.__cache__ = {}
 
 ###############################################################################
 class invalidate_cache(object):
