@@ -10,6 +10,6 @@ setup(
     author_email     = 'lucas.sinclair@me.com',
     packages         = find_packages(),
     install_requires = ['six', 'autopaths', 'sh', 'biopython', 'matplotlib', 'brewer2mpl', 'decorator',
-                        'shell_command', 'pandas', 'pyodbc', 'tqdm', 'brewer2mpl', 'boto3', 'sshconf'],
+                        'shell_command', 'pandas', 'tqdm', 'brewer2mpl', 'boto3', 'sshconf'],
     long_description = open('README.md').read(),
 )
