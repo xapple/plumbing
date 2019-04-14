@@ -70,4 +70,4 @@ def test():
         return x**2
     objs    = range(20)
     squares = prll_map(slow_square, objs, 4, verbose=True)
-    print "Result: %s" % squares
+    print("Result: %s" % squares)
