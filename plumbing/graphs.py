@@ -3,10 +3,10 @@ import os, time, inspect, getpass
 from collections import OrderedDict
 
 # Internal modules #
-from plumbing.common     import split_thousands
-from plumbing.cache      import property_cached
+from plumbing.common import split_thousands, camel_to_snake
+from plumbing.cache  import property_cached
+from autopaths       import Path
 from autopaths.file_path import FilePath
-from autopaths.dir_path  import DirectoryPath
 
 # Third party modules #
 import numpy
@@ -31,9 +31,7 @@ class Graph(object):
                 def plot(self, **kwargs):
                     fig = pyplot.figure()
                     seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
-                    axes = pyplot.gca()
-                    self.save_plot(fig, axes, **kwargs)
-                    pyplot.close(fig)
+                    self.save_plot(fig, **kwargs)
             for x_name in x_names:
                 graph            = PearsonGraph(short_name = x_name)
                 graph.title      = "Regression between y and '%s'" % (x_name)
@@ -55,39 +53,44 @@ class Graph(object):
         ('y_scale', None),
         ('x_label', None),
         ('y_label', None),
-        ('title',   None),
+        ('title'  , None),
         ('sep'    , ()),
         ('formats', ('pdf',)),
     ))
 
-    def __nonzero__(self): return self.path.__nonzero__()
+    def __bool__(self): return bool(self.path)
+    __nonzero__ = __bool__
 
     def __init__(self, parent=None, base_dir=None, short_name=None):
         # Save parent #
         self.parent = parent
-        # Base dir #
+        # If we got a file #
+        if isinstance(base_dir, FilePath):
+            self.base_dir = base_dir.directory
+            short_name    = base_dir.short_prefix
+        # If no parent and no directory #
         if base_dir is None and parent is None:
-            file_name = os.path.abspath((inspect.stack()[1])[1])
-            base_dir  = os.path.dirname(os.path.abspath(file_name)) + '/'
-            self.base_dir = DirectoryPath(base_dir)
+            file_name     = os.path.abspath((inspect.stack()[1])[1])
+            self.base_dir = os.path.dirname(os.path.abspath(file_name)) + '/'
+            self.base_dir = Path(self.base_dir)
+        # If no directory but a parent is present #
         if base_dir is None:
             if hasattr(self.parent, 'p'):
                 self.base_dir = self.parent.p.graphs_dir
-            else:
+            if hasattr(self.parent, 'paths'):
                 self.base_dir = self.parent.paths.graphs_dir
-        if isinstance(base_dir, FilePath):
-            self.base_dir = base_dir.directory
-            short_name = base_dir.short_prefix
         else:
-            self.base_dir = DirectoryPath(base_dir)
-            self.base_dir.create_if_not_exists()
+            self.base_dir = Path(self.base_dir)
+        self.base_dir.create_if_not_exists()
         # Short name #
         if short_name: self.short_name = short_name
-        if not hasattr(self, 'short_name'): self.short_name = 'graph'
+        # Use the base class name #
+        if not hasattr(self, 'short_name'):
+            self.short_name = camel_to_snake(self.__class__.__name__)
 
     @property_cached
     def path(self):
-        return FilePath(self.base_dir + self.short_name + '.pdf')
+        return Path(self.base_dir + self.short_name + '.pdf')
 
     def __call__(self, *args, **kwargs):
         """Plot the graph if it doesn't exist. Then return the path to it.
@@ -95,7 +98,11 @@ class Graph(object):
         if not self or kwargs.get('rerun'): self.plot(*args, **kwargs)
         return self.path
 
-    def save_plot(self, fig, axes, **kwargs):
+    def save_plot(self, fig=None, axes=None, **kwargs):
+        # Missing figure #
+        if fig is None:   fig = pyplot.gcf()
+        # Missing axes #
+        if axes is None: axes = pyplot.gca()
         # Parameters #
         self.params = {}
         for key in self.default_params:
@@ -149,6 +156,8 @@ class Graph(object):
         else:                       path = FilePath(self.short_name + '.pdf')
         # Save it as different formats #
         for ext in self.params['formats']: fig.savefig(path.replace_extension(ext))
+        # Close it #
+        pyplot.close(fig)
 
     def plot_and_save(self, **kwargs):
         """Used when the plot method defined does not create a figure nor calls save_plot

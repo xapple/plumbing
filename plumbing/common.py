@@ -41,6 +41,29 @@ def sanitize_text(text):
     return text
 
 ################################################################################
+def camel_to_snake(text):
+    """
+    Will convert CamelCaseStrings to snake_case_strings.
+    >>> camel_to_snake('CamelCase')
+    'camel_case'
+    >>> camel_to_snake('CamelCamelCase')
+    'camel_camel_case'
+    >>> camel_to_snake('Camel2Camel2Case')
+    'camel2_camel2_case'
+    >>> camel_to_snake('getHTTPResponseCode')
+    'get_http_response_code'
+    >>> camel_to_snake('get2HTTPResponseCode')
+    'get2_http_response_code'
+    >>> camel_to_snake('HTTPResponseCode')
+    'http_response_code'
+    >>> camel_to_snake('HTTPResponseCodeXYZ')
+    'http_response_code_xyz'
+    """
+    step_one = re.sub('(.)([A-Z][a-z]+)',  r'\1_\2', text)
+    step_two = re.sub('([a-z0-9])([A-Z])', r'\1_\2', step_one)
+    return step_two.lower()
+
+################################################################################
 def bool_to_unicode(b):
     """Different possibilities for True: ☑️✔︎✓✅👍
        Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎"""

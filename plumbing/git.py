@@ -14,8 +14,9 @@ class GitRepo(DirectoryPath):
     Requires at least git 2.7 (released January 5th, 2015)
     for all methods to work correctly."""
 
-    def __nonzero__(self):
+    def __bool__(self):
         return os.path.exists(self.git_dir)
+    __nonzero__ = __bool__
 
     def __init__(self, path, empty=False):
         # Super #

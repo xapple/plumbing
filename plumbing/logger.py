@@ -16,7 +16,7 @@ def create_file_logger(name, path, file_level='debug', console_level='error'):
     c_handler.setLevel(getattr(logging, console_level.upper()))
     f_handler.setLevel(getattr(logging, file_level.upper()))
     # Set the level of the logger itself to the lowest common denominator #
-    #TODO: what if the console has a higher level?
+    #TODO: what if the console has a higher level than the file?
     logger.setLevel(getattr(logging, file_level.upper()))
     # Choose the format of each #
     c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
