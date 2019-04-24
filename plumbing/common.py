@@ -65,9 +65,9 @@ def camel_to_snake(text):
 
 ################################################################################
 def bool_to_unicode(b):
-    """Different possibilities for True: ☑️✔︎✓✅👍
-       Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎"""
-    if not isinstance(b, bool): b = bool(b)
+    """Different possibilities for True: ☑️✔︎✓✅👍✔️
+       Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴"""
+    b = bool(b)
     if b is True:  return u"✅"
     if b is False: return u"❎"
 
