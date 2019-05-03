@@ -41,12 +41,12 @@ class Graph(object):
     """
 
     default_params = OrderedDict((
-        ('width'  , 12.0),
-        ('height' , 7.0),
-        ('bottom' , 0.14),
-        ('top'    , 0.93),
-        ('left'   , 0.09),
-        ('right'  , 0.98),
+        ('width'  , None),
+        ('height' , None),
+        ('bottom' , None),
+        ('top'    , None),
+        ('left'   , None),
+        ('right'  , None),
         ('x_grid' , None), # Vertical lines
         ('y_grid' , None), # Horizontal lines
         ('x_scale', None),
@@ -126,11 +126,13 @@ class Graph(object):
         # Axes labels  #
         if self.params.get('x_label'): axes.set_xlabel(self.params['x_label'])
         if self.params.get('y_label'): axes.set_ylabel(self.params['y_label'])
+        # Set height and width #
+        if self.params.get('width'):  fig.set_figwidth(self.params['width'])
+        if self.params.get('height'): fig.set_figheight(self.params['height'])
         # Adjust #
-        fig.set_figwidth(self.params['width'])
-        fig.set_figheight(self.params['height'])
-        fig.subplots_adjust(hspace=0.0, bottom = self.params['bottom'], top   = self.params['top'],
-                                        left   = self.params['left'],   right = self.params['right'])
+        if self.params.get('bottom'):
+            fig.subplots_adjust(hspace=0.0, bottom = self.params['bottom'], top   = self.params['top'],
+                                            left   = self.params['left'],   right = self.params['right'])
         # Grid #
         if 'x_grid' in self.params: axes.xaxis.grid(self.params['x_grid'])
         if 'y_grid' in self.params: axes.yaxis.grid(self.params['y_grid'])

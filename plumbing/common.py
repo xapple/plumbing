@@ -5,12 +5,12 @@ from __future__ import division
 
 # Built-in modules #
 import sys, os, time, re, random, math, json
-import getpass, hashlib, datetime, collections
+import getpass, hashlib, collections
 import unicodedata
 from itertools import compress, product
 
 # Third party modules #
-import numpy, dateutil
+from six import string_types
 
 # One liners #
 flatter = lambda x: [item for sublist in x for item in sublist]
@@ -244,6 +244,7 @@ def moving_average(interval, windowsize, borders=None):
     # The window size in half #
     half = int(math.floor(windowsize/2.0))
     # The normalized rectangular signal #
+    import numpy
     window = numpy.ones(int(windowsize))/float(windowsize)
     # How do we deal with borders #
     if borders == None:
@@ -306,7 +307,7 @@ def split_thousands(s):
     # Check input #
     if s is None: return "0"
     # If it's a string #
-    if isinstance(s, basestring): s = float(s)
+    if isinstance(s, string_types): s = float(s)
     # If it's a float that should be an int #
     if isinstance(s, float) and s.is_integer(): s = int(s)
     # Use python built-in #
