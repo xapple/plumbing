@@ -9,9 +9,7 @@ from autopaths.tmp_path  import new_temp_path
 from plumbing.databases.sqlite_database import SQLiteDatabase
 
 # Third party modules #
-import pyodbc, pandas, tqdm
-if os.name == "posix": import sh
-if os.name == "nt":    import pbs as sh
+import pyodbc, pandas, tqdm, pbs3
 from shell_command import shell_output
 
 ################################################################################
@@ -85,7 +83,7 @@ class AccessDatabase(FilePath):
         """The complete list of tables."""
         # If we are on unix use mdbtools instead #
         if os.name == "posix":
-            mdb_tables  = sh.Command("mdb-tables")
+            mdb_tables  = pbs3.Command("mdb-tables")
             tables_list = mdb_tables('-1', self.path).split('\n')
             condition   = lambda t: t and not t.startswith('MSys')
             return [t.lower() for t in tables_list if condition(t)]
@@ -219,12 +217,12 @@ class AccessDatabase(FilePath):
         """Generate a text dump compatible with SQLite.
         By yielding every table one by one as a byte string."""
         # First the schema #
-        mdb_schema = sh.Command("mdb-schema")
+        mdb_schema = pbs3.Command("mdb-schema")
         yield mdb_schema(self.path, "sqlite").encode('utf8')
         # Start a transaction, speeds things up when importing #
         yield "BEGIN TRANSACTION;\n"
         # Then export every table #
-        mdb_export = sh.Command("mdb-export")
+        mdb_export = pbs3.Command("mdb-export")
         for table in progress(self.tables):
             yield mdb_export('-I', 'sqlite', self.path, table).encode('utf8')
         # End the transaction
@@ -236,7 +234,7 @@ class AccessDatabase(FilePath):
         Requires that you have mdbtools command line executables installed
         in a Windows Subsystem for Linux environment."""
         # Run commands #
-        wsl = sh.Command("wsl.exe")
+        wsl = pbs3.Command("wsl.exe")
         table_schema   = wsl("-e", "mdb-schema", "-T", table_name, source.wsl_style, "access")
         table_contents = wsl("-e", "mdb-export", "-I", "access", source.wsl_style, table_name)
         # Filter #
