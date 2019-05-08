@@ -42,6 +42,7 @@ class AccessDatabase(FilePath):
     # ------------------------------ Properties ----------------------------- #
     @property_cached
     def conn_string(self):
+        # Get current system #
         system = platform.system()
         # macOS #
         if system == "Darwin":
@@ -130,10 +131,32 @@ class AccessDatabase(FilePath):
             raise Exception("The table '%s' does not seem to exist." % table_name)
 
     def table_as_df(self, table_name):
-        """Return a table as a dataframe."""
+        """Return a table as a dataframe.
+        There is a library that can do this, but it has a bug.
+        See https://github.com/jbn/pandas_access/issues/3
+
+            import pandas_access
+            return pandas_access.read_table(self.path, table_name)
+
+        This is also a possiblity https://github.com/gilesc/mdbread
+        but it is not in PyPI.
+        """
+        # Check #
         self.table_must_exist(table_name)
+        # Method via mdbtools #
+        return self.table_as_df_via_mdbtools(table_name)
+
+    def table_as_df_via_query(self, table_name):
+        """Use an SQL query to create the dataframe."""
         query = "SELECT * FROM `%s`" % table_name.lower()
         return pandas.read_sql(query, self.own_conn)
+
+    def table_as_df_via_mdbtools(self, table_name, *args, **kwargs):
+        """Use an mdbtools executable to create the dataframe."""
+        import subprocess
+        cmd = ['mdb-export', self.path, table_name]
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        return pandas.read_csv(proc.stdout, *args, **kwargs)
 
     def insert_df(self, table_name, df):
         """Create a table and populate it with data from a dataframe."""
