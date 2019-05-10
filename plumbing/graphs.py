@@ -1,3 +1,6 @@
+# Futures #
+from __future__ import division
+
 # Built-in modules #
 import os, time, inspect, getpass
 from collections import OrderedDict
@@ -54,6 +57,8 @@ class Graph(object):
         ('x_label', None),
         ('y_label', None),
         ('title'  , None),
+        ('y_lim_min', None), # Minium (ymax - ymin) after autoscale
+        ('x_lim_min', None), # Minium (xmax - xmin) after autoscale
         ('sep'    , ()),
         ('formats', ('pdf',)),
     ))
@@ -120,6 +125,14 @@ class Graph(object):
         if 'x_max' in self.params: axes.set_xlim(axes.get_xlim()[0], self.params['x_max'])
         if 'y_min' in self.params: axes.set_ylim(self.params['y_min'], axes.get_ylim()[1])
         if 'y_max' in self.params: axes.set_ylim(axes.get_ylim()[0], self.params['y_max'])
+        # Minimum delta on axis limits #
+        if 'y_lim_min' in self.params:
+            top, bottom = axes.get_ylim()
+            minimum     = self.params['y_lim_min']
+            delta       = top - bottom
+            if delta < minimum:
+                center = bottom + delta/2
+                axes.set_ylim(center - minimum/2, center + minimum/2)
         # Title #
         title = self.params.get('title', False)
         if title: axes.set_title(title)
