@@ -21,14 +21,14 @@ def ascii(text):
     return unicodedata.normalize('NFKD', unicode(text)).encode('ASCII', 'ignore')
 
 def alphanumeric(text):
-    """Make an ultra-safe, ASCII version a string.
+    r"""Make an ultra-safe, ASCII version a string.
     For instance for use as a filename.
     \w matches any alphanumeric character and the underscore."""
     return "".join([c for c in text if re.match(r'\w', c)])
 
 ################################################################################
 def sanitize_text(text):
-    """Make a safe representation of a string.
+    r"""Make a safe representation of a string.
     Note: the `\s` special character matches any whitespace character.
     This is equivalent to the set [\t\n\r\f\v] as well as ` ` (whitespace)."""
     # First replace characters that have specific effects with their repr #
@@ -161,6 +161,20 @@ def average(iterator):
         count += 1
         total += num
     return float(total)/count
+
+################################################################################
+def round_to_halves(number):
+    """Round a number to the closest half integer.
+    >>> round_to_halves(1.3)
+    1.5
+    >>> round_to_halves(2.6)
+    2.5
+    >>> round_to_halves(3.0)
+    3.0
+    >>> round_to_halves(4.1)
+    4.0
+    """
+    return round(number * 2) / 2
 
 ################################################################################
 def get_next_item(iterable):
