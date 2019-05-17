@@ -61,6 +61,7 @@ class Graph(object):
         ('x_lim_min', None), # Minium (xmax - xmin) after autoscale
         ('sep'    , ()),
         ('formats', ('pdf',)),
+        ('close'  , False),
     ))
 
     def __bool__(self): return bool(self.path)
@@ -172,7 +173,7 @@ class Graph(object):
         # Save it as different formats #
         for ext in self.params['formats']: fig.savefig(path.replace_extension(ext))
         # Close it #
-        pyplot.close(fig)
+        if self.params['close']: pyplot.close(fig)
 
     def plot_and_save(self, **kwargs):
         """Used when the plot method defined does not create a figure nor calls save_plot
