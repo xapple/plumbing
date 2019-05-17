@@ -238,7 +238,7 @@ def isubsample(full_sample, k, full_sample_len=None):
     assert picked == k
 
 ###############################################################################
-def sum_vectors_with_padding_1(vectors):
+def sum_vectors_with_padding(vectors):
     """Given an arbitrary amount of NumPy one-dimensional vectors of floats,
     do an element-wise sum, padding with 0 any that are shorter than the
     longest array (see https://stackoverflow.com/questions/56166217).
@@ -255,26 +255,6 @@ def sum_vectors_with_padding_1(vectors):
     out         = numpy.zeros(max_length)
     for l,v in zip(all_lengths, vectors): out[:l] += v
     return out
-
-###############################################################################
-def sum_vectors_with_padding_2(vectors):
-    """Given an arbitrary amount of NumPy one-dimensional vectors of floats,
-    do an element-wise sum, padding with 0 any that are shorter than the
-    longest array (see https://stackoverflow.com/questions/56166217).
-
-    >>> v1 = numpy.array([0, 0, 5, 5, 1, 1, 1, 1, 0, 0])
-    >>> v2 = numpy.array([4, 4, 4, 5, 5, 0, 0])
-    >>> v3 = numpy.array([1, 1, 1])
-    >>> sum_vectors_with_padding([v1, v2, v3])
-    array([ 5,  5, 10, 10,  6,  1,  1,  1,  0,  0])
-    """
-    import numpy
-    all_lengths = numpy.array([len(item) for item in vectors])
-    mask        = all_lengths[:,None] > numpy.arange(all_lengths.max())
-    out_dtype   = numpy.result_type(*[i.dtype for i in vectors])
-    out         = numpy.zeros(mask.shape, dtype=out_dtype)
-    out[mask]   = numpy.concatenate(vectors)
-    return out.sum(axis=0)
 
 ###############################################################################
 def moving_average(interval, windowsize, borders=None):
