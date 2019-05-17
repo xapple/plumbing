@@ -238,22 +238,71 @@ def isubsample(full_sample, k, full_sample_len=None):
     assert picked == k
 
 ###############################################################################
+def sum_vectors_with_padding_1(vectors):
+    """Given an arbitrary amount of NumPy one-dimensional vectors of floats,
+    do an element-wise sum, padding with 0 any that are shorter than the
+    longest array (see https://stackoverflow.com/questions/56166217).
+
+    >>> v1 = numpy.array([0, 0, 5, 5, 1, 1, 1, 1, 0, 0])
+    >>> v2 = numpy.array([4, 4, 4, 5, 5, 0, 0])
+    >>> v3 = numpy.array([1, 1, 1])
+    >>> sum_vectors_with_padding([v1, v2, v3])
+    array([ 5,  5, 10, 10,  6,  1,  1,  1,  0,  0])
+    """
+    import numpy
+    all_lengths = [len(i) for i in vectors]
+    max_length  = max(all_lengths)
+    out         = numpy.zeros(max_length)
+    for l,v in zip(all_lengths, vectors): out[:l] += v
+    return out
+
+###############################################################################
+def sum_vectors_with_padding_2(vectors):
+    """Given an arbitrary amount of NumPy one-dimensional vectors of floats,
+    do an element-wise sum, padding with 0 any that are shorter than the
+    longest array (see https://stackoverflow.com/questions/56166217).
+
+    >>> v1 = numpy.array([0, 0, 5, 5, 1, 1, 1, 1, 0, 0])
+    >>> v2 = numpy.array([4, 4, 4, 5, 5, 0, 0])
+    >>> v3 = numpy.array([1, 1, 1])
+    >>> sum_vectors_with_padding([v1, v2, v3])
+    array([ 5,  5, 10, 10,  6,  1,  1,  1,  0,  0])
+    """
+    import numpy
+    all_lengths = numpy.array([len(item) for item in vectors])
+    mask        = all_lengths[:,None] > numpy.arange(all_lengths.max())
+    out_dtype   = numpy.result_type(*[i.dtype for i in vectors])
+    out         = numpy.zeros(mask.shape, dtype=out_dtype)
+    out[mask]   = numpy.concatenate(vectors)
+    return out.sum(axis=0)
+
+###############################################################################
 def moving_average(interval, windowsize, borders=None):
-    """This is essentially a convolving operation. Several option exist for dealing with the border cases.
+    """This is essentially a convolution operation
+     Several option exist for dealing with the border cases.
 
         * None: Here the returned signal will be smaller than the inputted interval.
 
-        * zero_padding: Here the returned signal will be larger than the inputted interval and we will add zeros to the original interval before operating the convolution.
+        * zero_padding: Here the returned signal will be larger than the inputted
+        interval and we will add zeros to the original interval before operating
+         the convolution.
 
-        * zero_padding_and_cut: Same as above only the result is truncated to be the same size as the original input.
+        * zero_padding_and_cut: Same as above only the result is truncated to be
+         the same size as the original input.
 
-        * copy_padding: Here the returned signal will be larger than the inputted interval and we will use the right and leftmost values for padding before operating the convolution.
+        * copy_padding: Here the returned signal will be larger than the inputted
+         interval and we will use the right and leftmost values for padding before
+          operating the convolution.
 
-        * copy_padding_and_cut: Same as above only the result is truncated to be the same size as the original input.
+        * copy_padding_and_cut: Same as above only the result is truncated to be
+         the same size as the original input.
 
-        * zero_stretching: Here we will compute the convolution only in the valid domain, then add zeros to the result so that the output is the same size as the input.
+        * zero_stretching: Here we will compute the convolution only in the valid domain,
+         then add zeros to the result so that the output is the same size as the input.
 
-        * copy_stretching: Here we will compute the convolution only in the valid domain, then copy the right and leftmost values so that the output is the same size as the input.
+        * copy_stretching: Here we will compute the convolution only in the valid domain,
+         then copy the right and leftmost values so that the output is the same
+          size as the input.
         """
     # The window size in half #
     half = int(math.floor(windowsize/2.0))
