@@ -61,7 +61,7 @@ class Graph(object):
         ('x_lim_min', None), # Minium (xmax - xmin) after autoscale
         ('sep'    , ()),
         ('formats', ('pdf',)),
-        ('close'  , False),
+        ('close'  , True),
     ))
 
     def __bool__(self): return bool(self.path)
