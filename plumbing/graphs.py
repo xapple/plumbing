@@ -57,8 +57,8 @@ class Graph(object):
         ('x_label', None),
         ('y_label', None),
         ('title'  , None),
-        ('y_lim_min', None), # Minium (ymax - ymin) after autoscale
-        ('x_lim_min', None), # Minium (xmax - xmin) after autoscale
+        ('y_lim_min', None), # Minimum (ymax - ymin) after autoscale
+        ('x_lim_min', None), # Minimum (xmax - xmin) after autoscale
         ('sep'    , ()),
         ('formats', ('pdf',)),
         ('close'  , True),
