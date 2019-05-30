@@ -56,6 +56,9 @@ class Graph(object):
         ('y_scale', None),
         ('x_label', None),
         ('y_label', None),
+        ('x_labels_rot', None),
+        ('x_labels_size', None),
+        ('y_labels_size', None),
         ('title'  , None),
         ('y_lim_min', None), # Minimum (ymax - ymin) after autoscale
         ('x_lim_min', None), # Minimum (xmax - xmin) after autoscale
@@ -165,7 +168,13 @@ class Graph(object):
             axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
         # Add custom labels #
         if 'x_labels' in self.params: axes.set_xticklabels(self.params['x_labels'])
-        if 'x_labels_rot' in self.params: pyplot.setp(axes.xaxis.get_majorticklabels(), rotation=self.params['x_labels_rot'])
+        if 'x_labels_rot' in self.params:
+            pyplot.setp(axes.xaxis.get_majorticklabels(), rotation=self.params['x_labels_rot'])
+        # Adjust font size #
+        if 'x_labels_size' in self.params:
+            pyplot.setp(axes.xaxis.get_majorticklabels(), fontsize=self.params['x_labels_size'])
+        if 'y_labels_size' in self.params:
+            pyplot.setp(axes.yaxis.get_majorticklabels(), fontsize=self.params['y_labels_size'])
         # Possibility to overwrite path #
         if 'path' in self.params:   path = FilePath(self.params['path'])
         elif hasattr(self, 'path'): path = FilePath(self.path)
