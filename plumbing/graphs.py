@@ -65,6 +65,7 @@ class Graph(object):
         ('sep'    , ()),
         ('formats', ('pdf',)),
         ('close'  , True),
+        ('dpi'    , None),
     ))
 
     def __bool__(self): return bool(self.path)
@@ -180,7 +181,11 @@ class Graph(object):
         elif hasattr(self, 'path'): path = FilePath(self.path)
         else:                       path = FilePath(self.short_name + '.pdf')
         # Save it as different formats #
-        for ext in self.params['formats']: fig.savefig(path.replace_extension(ext))
+        for ext in self.params['formats']:
+            if 'dpi' in self.params:
+                fig.savefig(path.replace_extension(ext), dpi=self.dpi)
+            else:
+                fig.savefig(path.replace_extension(ext))
         # Close it #
         if self.params['close']: pyplot.close(fig)
 
