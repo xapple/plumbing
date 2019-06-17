@@ -89,7 +89,7 @@ class Graph(object):
             if hasattr(self.parent, 'paths'):
                 self.base_dir = self.parent.paths.graphs_dir
         else:
-            self.base_dir = Path(self.base_dir)
+            self.base_dir = Path(base_dir)
         self.base_dir.create_if_not_exists()
         # Short name #
         if short_name: self.short_name = short_name
