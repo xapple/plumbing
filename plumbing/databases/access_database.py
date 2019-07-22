@@ -138,13 +138,16 @@ class AccessDatabase(FilePath):
             import pandas_access
             return pandas_access.read_table(self.path, table_name)
 
-        This is also a possiblity https://github.com/gilesc/mdbread
+        This is also a possibility https://github.com/gilesc/mdbread
         but it is not in PyPI.
         """
         # Check #
         self.table_must_exist(table_name)
-        # Method via mdbtools #
-        return self.table_as_df_via_mdbtools(table_name)
+        # If we are on unix use mdb-tools instead #
+        if os.name == "posix":
+            return self.table_as_df_via_mdbtools(table_name)
+        # Default case #
+        return self.table_as_df_via_query(table_name)
 
     def table_as_df_via_query(self, table_name):
         """Use an SQL query to create the dataframe."""
@@ -251,7 +254,7 @@ class AccessDatabase(FilePath):
         # End the transaction
         yield "END TRANSACTION;\n"
 
-    # ---------------------------- Multidatabase ---------------------------- #
+    # --------------------------- Multi-database ---------------------------- #
     def import_table(self, source, table_name):
         """Copy a table from another Access database to this one.
         Requires that you have mdbtools command line executables installed

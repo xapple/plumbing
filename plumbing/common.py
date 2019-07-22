@@ -59,9 +59,17 @@ def camel_to_snake(text):
     >>> camel_to_snake('HTTPResponseCodeXYZ')
     'http_response_code_xyz'
     """
-    step_one = re.sub('(.)([A-Z][a-z]+)',  r'\1_\2', text)
-    step_two = re.sub('([a-z0-9])([A-Z])', r'\1_\2', step_one)
-    return step_two.lower()
+    # Two step process #
+    result = re.sub('(.)([A-Z][a-z]+)',  r'\1_\2', text)
+    result = re.sub('([a-z0-9])([A-Z])', r'\1_\2', result)
+    result = result.lower()
+    # Eliminate spaces #
+    result = result.replace(' ', '')
+    # Elimintate other characters #
+    result = result.replace('"', '')
+    result = result.replace("'", '')
+    # Return #
+    return result
 
 ################################################################################
 def bool_to_unicode(b):
