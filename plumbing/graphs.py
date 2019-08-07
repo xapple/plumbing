@@ -68,6 +68,8 @@ class Graph(object):
         ('dpi'    , None),
     ))
 
+    def __repr__(self): return '<%s graph "%s">' % (self.__class__.__name__, self.short_name)
+
     def __bool__(self): return bool(self.path)
     __nonzero__ = __bool__
 
@@ -94,9 +96,12 @@ class Graph(object):
         self.base_dir.create_if_not_exists()
         # Short name #
         if short_name: self.short_name = short_name
-        # Use the base class name #
+        # Use the parents name or the base class name #
         if not hasattr(self, 'short_name'):
-            self.short_name = camel_to_snake(self.__class__.__name__)
+            if hasattr(self.parent, 'short_name'):
+                self.short_name = self.parent.short_name
+            else:
+                self.short_name = camel_to_snake(self.__class__.__name__)
 
     @property_cached
     def path(self):
