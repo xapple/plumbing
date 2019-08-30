@@ -58,6 +58,10 @@ def camel_to_snake(text):
     'http_response_code'
     >>> camel_to_snake('HTTPResponseCodeXYZ')
     'http_response_code_xyz'
+    >>> camel_to_snake('Double_Case')
+    'double_case'
+    >>> camel_to_snake('Odd/Characters')
+    'odd_characters'
     """
     # Two step process #
     result = re.sub('(.)([A-Z][a-z]+)',  r'\1_\2', text)
@@ -65,9 +69,13 @@ def camel_to_snake(text):
     result = result.lower()
     # Eliminate spaces #
     result = result.replace(' ', '')
-    # Elimintate other characters #
+    # Eliminate quote characters #
     result = result.replace('"', '')
     result = result.replace("'", '')
+    # Eliminate special characters #
+    result = result.replace('/', '_')
+    # Eliminate double underscore #
+    result = result.replace('__', '_')
     # Return #
     return result
 

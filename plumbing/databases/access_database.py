@@ -3,10 +3,13 @@ import os, platform, base64, shutil, gzip
 from six import StringIO
 
 # Internal modules #
-from autopaths.file_path import FilePath
-from plumbing.cache      import property_cached
-from autopaths.tmp_path  import new_temp_path
+from plumbing.common import camel_to_snake
+from plumbing.cache import property_cached
 from plumbing.databases.sqlite_database import SQLiteDatabase
+
+# First party modules #
+from autopaths.file_path import FilePath
+from autopaths.tmp_path  import new_temp_path
 
 # Third party modules #
 import pyodbc, pandas, tqdm, pbs3
@@ -15,12 +18,15 @@ from shell_command import shell_output
 ################################################################################
 class AccessDatabase(FilePath):
     """A wrapper for a Microsoft Access database via pyodbc.
-    On Ubuntu 18 you would install like this:
+    On Ubuntu 18 you would install the dependencies like this:
 
         $ sudo apt install python3-pip
         $ sudo apt install unixodbc-dev
         $ pip install --user pyodbc
     """
+
+    # Enable this to change ThisName to this_name on all columns #
+    convert_col_names_to_snake = False
 
     # ------------------------------ Constructor ---------------------------- #
     def __init__(self, path,
@@ -144,10 +150,13 @@ class AccessDatabase(FilePath):
         # Check #
         self.table_must_exist(table_name)
         # If we are on unix use mdb-tools instead #
-        if os.name == "posix":
-            return self.table_as_df_via_mdbtools(table_name)
+        if os.name == "posix": df = self.table_as_df_via_mdbtools(table_name)
         # Default case #
-        return self.table_as_df_via_query(table_name)
+        else: df = self.table_as_df_via_query(table_name)
+        # Optionally rename columns #
+        if self.convert_col_names_to_snake: df = df.rename(columns=camel_to_snake)
+        # Return #
+        return df
 
     def table_as_df_via_query(self, table_name):
         """Use an SQL query to create the dataframe."""
