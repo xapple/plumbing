@@ -61,7 +61,7 @@ def camel_to_snake(text):
     >>> camel_to_snake('Double_Case')
     'double_case'
     >>> camel_to_snake('SW_Merch')
-    'double_case'
+    'sw_merch'
     >>> camel_to_snake('Odd/Characters')
     'odd_characters'
     """
