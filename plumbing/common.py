@@ -60,6 +60,8 @@ def camel_to_snake(text):
     'http_response_code_xyz'
     >>> camel_to_snake('Double_Case')
     'double_case'
+    >>> camel_to_snake('SW_Merch')
+    'double_case'
     >>> camel_to_snake('Odd/Characters')
     'odd_characters'
     """
@@ -75,7 +77,7 @@ def camel_to_snake(text):
     # Eliminate special characters #
     result = result.replace('/', '_')
     # Eliminate double underscore #
-    result = result.replace('__', '_')
+    while '__' in result: result = result.replace('__', '_')
     # Return #
     return result
 
