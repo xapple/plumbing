@@ -28,13 +28,16 @@ cool_colors += brewer2mpl.get_map('Greys',   'sequential',  8).mpl_colors
 
 ################################################################################
 class Graph(object):
-    """ A nice class to make graphs with matplotlib. Example usage:
+    """A nice class to make graphs with matplotlib. Example usage:
+
             from plumbing.graphs import Graph
+
             class RegressionGraph(Graph):
                 def plot(self, **kwargs):
                     fig = pyplot.figure()
                     seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
                     self.save_plot(fig, **kwargs)
+
             for x_name in x_names:
                 graph            = PearsonGraph(short_name = x_name)
                 graph.title      = "Regression between y and '%s'" % (x_name)
@@ -68,7 +71,8 @@ class Graph(object):
         ('dpi'    , None),
     ))
 
-    def __repr__(self): return '<%s graph "%s">' % (self.__class__.__name__, self.short_name)
+    def __repr__(self):
+        return '<%s graph "%s">' % (self.__class__.__name__, self.short_name)
 
     def __bool__(self): return bool(self.path)
     __nonzero__ = __bool__
