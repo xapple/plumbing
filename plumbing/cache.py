@@ -5,9 +5,6 @@ import pickle
 # Internal modules #
 from autopaths.file_path import FilePath
 
-# Third party modules #
-from decorator import decorator
-
 ################################################################################
 def cached(f):
     """Decorator for functions evaluated only once."""
@@ -137,6 +134,7 @@ def expiry_every(seconds=0):
         cache[0] = (result, time.time())
         # Return #
         return result
+    from decorator import decorator
     return decorator(memoize_with_expiry)
 
 ###############################################################################
