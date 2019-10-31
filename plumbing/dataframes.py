@@ -46,9 +46,22 @@ def count_unique_index(df, by):
     This function enables you to quickly see how many unique combinations of
     column values exist in a data frame. Here are two examples:
 
+        >>> df = ''' i   | A  | B | C
+        >>>          For | 3  | 1 | x
+        >>>          For | 3  | 2 | x
+        >>>          For | 3  | 3 | y '''
+        >>> from plumbing.dataframes import string_to_df
+        >>> df = string_to_df(df)
+        >>> count_unique_index(df, by=['A', 'C'])
+
+           A  C  count
+        0  3  x      2
+        1  3  y      1
+
         >>> import seaborn
         >>> tips = seaborn.load_dataset("tips")
-        >>> print(count_unique_index(df, ['sex', 'smoker']))
+        >>> print(count_unique_index(tips, ['sex', 'smoker']))
+
               sex smoker  count
         0    Male    Yes     60
         1    Male     No     97
@@ -56,7 +69,8 @@ def count_unique_index(df, by):
         3  Female     No     54
 
         >>> tips = seaborn.load_dataset("tips")
-        >>> print(count_unique_index(df, ['sex', 'smoker', 'day']))
+        >>> print(count_unique_index(tips, ['sex', 'smoker', 'day']))
+
               sex smoker    time  count
         0    Male    Yes   Lunch     13
         1    Male    Yes  Dinner     47
