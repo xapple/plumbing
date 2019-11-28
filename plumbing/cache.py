@@ -1,9 +1,8 @@
 # Built-in modules #
-import time, inspect
-import pickle
+import os, time, inspect, tempfile, pickle, hashlib, base64
 
 # Internal modules #
-from autopaths.file_path import FilePath
+from autopaths import Path
 
 ################################################################################
 def cached(f):
@@ -19,19 +18,20 @@ def cached(f):
 ###############################################################################
 class property_cached(object):
     """
-    New implementation of the property cached decorator.
+    New implementation of the property_cached decorator.
 
     It converts a method with a single self argument
     into a property cached on the instance.
 
     In other words, it's like @property but memoized.
 
-        from plumbing.cache import cached_property
-        class Square(object):
+        from plumbing.cache import property_cached
+
+        class Square:
             def __init__(self, size):
                 self.size = size
 
-            @cached_property
+            @property_cached
             def area(self):
                 print("Evaluating...")
                 return self.size * self.size
@@ -60,7 +60,9 @@ class property_cached(object):
         # If not we will compute it #
         if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
         else:                                      result = self.func(instance)
+        # Let's store the answer for later #
         instance.__cache__[self.name] = result
+        # Return #
         return result
 
     def __set__(self, instance, value):
@@ -78,45 +80,91 @@ class property_cached(object):
     def check_cache(self, instance):
         if '__cache__' not in instance.__dict__: instance.__cache__ = {}
 
-################################################################################
-def property_pickled(f):
-    """Same thing as above but the result will be stored on disk
+###############################################################################
+class property_pickled(object):
+    """
+    Same thing as above but the cache will be stored on disk with the
+    `pickle` module. So you should check that the return value of the
+    function you decorate can be pickled.
+
     The path of the pickle file will be determined by looking for the
-    `cache_dir` attribute of the instance containing the cached property.
-    If no `cache_dir` attribute exists the `p` attribute will be accessed with
-    the name of the property being cached."""
-    # Called when you access the property #
-    def retrieve_from_cache(self):
-        # Is it in the cache ? #
-        if '__cache__' not in self.__dict__: self.__cache__ = {}
-        if f.__name__ in self.__cache__: return self.__cache__[f.__name__]
+    `cache_dir` attribute of the instance containing the cached property
+    and adding the function name with a '.pickle' at the end.
+
+    If no `cache_dir` attribute exists it, a default location will be
+    chosen. But this will have for effect that all instances of the class
+    will have the same cached value (works well for singletons).
+
+    The location will default to the temporary directory plus a
+    hash of the function path.
+    """
+
+    def __init__(self, func):
+        self.func    = func
+        self.__doc__ = getattr(func, '__doc__')
+        self.name    = self.func.__name__
+
+    def __get__(self, instance, owner):
+        # If called from a class #
+        if instance is None: return self
+        # Does a cache exist for this instance? #
+        self.check_cache(instance)
+        # Is the answer in the cache? #
+        if self.name in instance.__cache__: return instance.__cache__[self.name]
         # Where should we look in the file system ? #
-        if 'cache_dir' in self.__dict__:
-            path = FilePath(self.__dict__['cache_dir'] + f.func_name + '.pickle')
-        else:
-            path = getattr(self.p, f.func_name)
-        # Is it on disk ? #
+        path = self.get_pickle_path(instance)
+        # Is the answer on the file system? #
         if path.exists:
-            with open(path) as handle: result = pickle.load(handle)
-            self.__cache__[f.__name__] = result
+            with open(path, 'rb') as handle: result = pickle.load(handle)
+            instance.__cache__[self.name] = result
             return result
-        # Otherwise let's compute it #
-        result = f(self)
-        with open(path, 'w') as handle: pickle.dump(result, handle)
-        self.__cache__[f.__name__] = result
+        # If not we will compute it #
+        if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+        else:                                      result = self.func(instance)
+        # Let's store the answer for later in the cache #
+        instance.__cache__[self.name] = result
+        # And also store it on the disk #
+        with open(path, 'wb') as handle: pickle.dump(result, handle)
+        # Return #
         return result
-    # Called when you set the property #
-    def overwrite_cache(self, value):
-        # Where should we look in the file system ? #
-        if 'cache_dir' in self.__dict__:
-            path = FilePath(self.__dict__['cache_dir'] + f.func_name + '.pickle')
-        else:
-            path = getattr(self.p, f.func_name)
-        if value is None: path.remove()
-        else: raise Exception("You can't set a pickled property, you can only delete it")
-    # Return a wrapper #
-    retrieve_from_cache.__doc__ = f.__doc__
-    return property(retrieve_from_cache, overwrite_cache)
+
+    def __set__(self, instance, value):
+        # Does a cache exist for this instance? #
+        self.check_cache(instance)
+        # Overwrite the value in memory #
+        instance.__cache__[self.name] = value
+        # And also overwrite it on the disk #
+        path = self.get_pickle_path(instance)
+        with open(path, 'wb') as handle: pickle.dump(value, handle)
+
+    def __delete__(self, instance):
+        # Does a cache exist for this instance? #
+        self.check_cache(instance)
+        # Remove the key #
+        instance.__cache__.pop(self.name, None)
+        # And remove the file on disk #
+        path = self.get_pickle_path(instance)
+        path.remove()
+
+    def check_cache(self, instance):
+        if '__cache__' not in instance.__dict__: instance.__cache__ = {}
+
+    def get_pickle_path(self, instance):
+        # First check if the instance has a cache_dir #
+        if 'cache_dir' in instance.__dict__:
+            return Path(instance.cache_dir + self.name + '.pickle')
+        # Otherwise pick the temporary directory #
+        path = tempfile.gettempdir() + '/pickled_properties/'
+        # Create that directory if it doesn't exist #
+        os.makedirs(path, exist_ok=True)
+        # Find the function path in the package namespace #
+        func_loc = self.func.__module__ + '.' + self.name
+        # Make a short safe name from the location #
+        short_name = hashlib.md5(func_loc.encode()).digest()[:8]
+        short_name = base64.urlsafe_b64encode(short_name).decode()
+        short_name = short_name.replace('=','')
+        # Return #
+        return Path(path + short_name)
 
 ################################################################################
 def expiry_every(seconds=0):

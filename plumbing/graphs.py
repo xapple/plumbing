@@ -33,6 +33,7 @@ class Graph(object):
             from plumbing.graphs import Graph
 
             class RegressionGraph(Graph):
+                formats = ('pdf', 'svg')
                 def plot(self, **kwargs):
                     fig = pyplot.figure()
                     seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
