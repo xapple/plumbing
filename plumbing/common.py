@@ -475,37 +475,6 @@ def md5sum(file_path, blocksize=65536):
             md5.update(block)
     return md5.hexdigest()
 
-################################################################################
-def download_from_url(source, destination, progress=False, uncompress=False):
-    """Download a file from an URL and place it somewhere. Like wget.
-    Uses requests and tqdm to display progress if you want.
-    By default it will uncompress files.
-    #TODO: handle case where destination is a directory"""
-    # Modules #
-    from tqdm import tqdm
-    import requests
-    from autopaths.file_path import FilePath
-    # Check destination exists #
-    destination = FilePath(destination)
-    destination.directory.create_if_not_exists()
-    # Over HTTP #
-    response = requests.get(source, stream=True)
-    total_size = int(response.headers.get('content-length'))
-    block_size = int(total_size/1024)
-    # Do it #
-    with open(destination, "wb") as handle:
-        if progress:
-            for data in tqdm(response.iter_content(chunk_size=block_size), total=1024): handle.write(data)
-        else:
-            for data in response.iter_content(chunk_size=block_size): handle.write(data)
-    # Uncompress #
-    if uncompress:
-        with open(destination) as f: header = f.read(4)
-        if header == "PK\x03\x04": unzip(destination, inplace=True)
-        # Add other compression formats here
-    # Return #
-    return destination
-
 ###############################################################################
 def reversed_lines(path):
     """Generate the lines of file in reverse order."""
