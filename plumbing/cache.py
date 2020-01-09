@@ -18,12 +18,10 @@ def cached(f):
 ###############################################################################
 class property_cached(object):
     """
-    New implementation of the property_cached decorator.
-
-    It converts a method with a single self argument
+    This decorator converts a method with a single self argument
     into a property cached on the instance.
 
-    In other words, it's like @property but memoized.
+    In other words, it's like `@property` but memoized.
 
         from plumbing.cache import property_cached
 
@@ -38,11 +36,11 @@ class property_cached(object):
 
         shape = Square(5)
         print(shape.size)
-        print(shape.area)
-        shape.area = 99
-        print(shape.area)
-        del shape.area
-        print(shape.area)
+        print(shape.area)  # Area computed the first time
+        shape.area = 99    # Now update an attribute
+        print(shape.area)  # Same result returned, not recomputed
+        del shape.area     # This will purge the cache
+        print(shape.area)  # Updated result, it's computed again
     """
 
     def __init__(self, func):
@@ -83,20 +81,22 @@ class property_cached(object):
 ###############################################################################
 class property_pickled(object):
     """
-    Same thing as above but the cache will be stored on disk with the
-    `pickle` module. So you should check that the return value of the
-    function you decorate can be pickled.
+    Same thing as `property_cached` but the cache will be stored on disk
+    with the `pickle` module. So you should check that the return value of the
+    function you decorate can be pickled. Otherwise checkout the `dill` module.
 
     The path of the pickle file will be determined by looking for the
     `cache_dir` attribute of the instance containing the cached property
     and adding the function name with a '.pickle' at the end.
 
     If no `cache_dir` attribute exists it, a default location will be
-    chosen. But this will have for effect that all instances of the class
-    will have the same cached value (works well for singletons).
+    chosen (tmpdir). But this will have for effect that all instances of the
+    class will have the same cached value (works well for singletons only).
 
-    The location will default to the temporary directory plus a
-    hash of the function path.
+    The location will default to the temporary directory plus a very short
+    hash of the function path, so you could get something like this:
+
+        /var/temporary/pickled_properties/EfEZTAubgXI
     """
 
     def __init__(self, func):
@@ -150,10 +150,16 @@ class property_pickled(object):
         if '__cache__' not in instance.__dict__: instance.__cache__ = {}
 
     def get_pickle_path(self, instance):
-        # First check if the instance has a cache_dir #
+        # First check if the instance has a cache_dir specified #
         if 'cache_dir' in instance.__dict__:
-            return Path(instance.cache_dir + self.name + '.pickle')
-        # Otherwise pick the temporary directory #
+            path = Path(instance.cache_dir + self.name + '.pickle')
+            path.make_directory()
+            return path
+        # Otherwise we go the default route (no instance passed) #
+        else: return self.get_default_path()
+
+    def get_default_path(self):
+        # Get the temporary directory (platform dependant) #
         path = tempfile.gettempdir() + '/pickled_properties/'
         # Create that directory if it doesn't exist #
         os.makedirs(path, exist_ok=True)
