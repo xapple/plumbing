@@ -16,8 +16,9 @@ class CSVTable(FilePath):
     d = ','
 
     def __init__(self, path, d=None):
-        if isinstance(path, FilePath): path = path.path
-        self.path = path
+        # Call parent #
+        super(CSVTable, self).__init__(path)
+        # Variable delimiter #
         if d is not None: self.d = d
 
     def remove_first_line(self):
@@ -41,6 +42,7 @@ class CSVTable(FilePath):
         for line in handle:
             line = line.split()
             yield line[0] + self.d + self.d.join(map(str, map(int, map(float, line[1:])))) + '\n'
+
     def to_integer(self, path=None):
         self.rewrite_lines(self.integer_lines(), path)
 
@@ -49,18 +51,20 @@ class CSVTable(FilePath):
         yield handle.next()
         for line in handle:
             if sum(map(int, line.split()[1:])) >= minimum: yield line
+
     def filter_line_sum(self, minimum, path=None):
         self.rewrite_lines(self.min_sum_lines(minimum), path)
 
     def transposed_lines(self, d):
         rows = zip(*csv.reader(open(self.path), delimiter=self.d))
         for row in rows: yield d.join(row) + '\n'
+
     def transpose(self, path=None, d=None):
         self.rewrite_lines(self.transposed_lines(self.d if d is None else d), path)
 
     def to_dataframe(self, **kwargs):
-        """Load up the CSV file as a pandas dataframe"""
-        return pandas.io.parsers.read_csv(self.path, sep=self.d, **kwargs)
+        """Load up the CSV file as a pandas data frame."""
+        return pandas.read_csv(str(self.path), sep=self.d, **kwargs)
 
 ################################################################################
 class TSVTable(CSVTable):
