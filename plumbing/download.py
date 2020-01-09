@@ -23,8 +23,8 @@ def download_from_url(url,
     a file to disk however, then you should specify *destination* as a file
     path and the contents will be placed there instead.
 
-    By default will retry if an HTTP error arises.
-    By default will uncompress files that are saved to disk if they are zipped.
+    By default we will retry if an HTTP error arises.
+    By default we will uncompress a downloaded file if it is zipped.
 
     TODO: case where destination is a directory.
     """
