@@ -557,19 +557,30 @@ def head(path, lines=20):
         return ''.join(handle.next() for line in xrange(lines))
 
 ###############################################################################
-def which(cmd, safe=False):
-    """https://github.com/jc0n/python-which"""
+def which(cmd_name, safe=False):
+    """
+    Portable Python implementation of the unix `which` command.
+    Will return the full path of a given executable if it is found
+    somewhere in the `$PATH`.
+    Otherwise we return `None` or alternatively we raise an exception when
+    `safe` is set to False.
+    Note: Python 3.3 and above also offers `shutil.which()`.
+    Based on the package at: https://github.com/jc0n/python-which
+    And the answers at: http://stackoverflow.com/questions/377017
+    """
+    # The name of the command cannot contain separators #
+    assert os.sep not in cmd_name
+    # We will use our own first party package #
     from autopaths.file_path import FilePath
-    def is_executable(path):
-        return os.path.exists(path) and os.access(path, os.X_OK) and not os.path.isdir(path)
-    path, name = os.path.split(cmd)
-    if path:
-        if is_executable(cmd): return FilePath(cmd)
-    else:
-        for path in os.environ['PATH'].split(os.pathsep):
-            candidate = os.path.join(path, cmd)
-            if is_executable(candidate): return FilePath(candidate)
-    if not safe: raise Exception('which failed to locate a proper command path "%s"' % cmd)
+    # Loop over every path in the environment variable #
+    for path in os.environ['PATH'].split(os.pathsep):
+        candidate = os.path.join(path, cmd_name)
+        if not os.path.isfile(candidate):     continue
+        if not os.access(candidate, os.X_OK): continue
+        return FilePath(candidate)
+    # Raise an exception optionally #
+    msg = 'which() failed to locate a proper command path for "%s"' % cmd_name
+    if not safe: raise Exception(msg)
 
 ###############################################################################
 def query_yes_no(question, default="no"):
