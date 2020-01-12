@@ -79,8 +79,8 @@ def download_from_url(url,
             handle.write(content)
     # Uncompress #
     if uncompress:
-        with open(destination) as f: header = f.read(4)
-        if header == "PK\x03\x04": destination.unzip_to(inplace=True)
+        with open(destination, 'rb') as f: header = f.read(4)
+        if header == b"PK\x03\x04": destination.unzip_to(inplace=True)
     # Return #
     return destination
 

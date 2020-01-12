@@ -24,7 +24,7 @@ def check_blocked_request(tree):
     """
     # Did we get a filepath? #
     if isinstance(tree, FilePath):
-        if tree.count_bytes > 100000: return
+        if tree.count_bytes > 1000000: return
         tree = tree.contents
     # Did we get a tree or raw text? #
     if isinstance(tree, str): tree = etree.HTML(tree)

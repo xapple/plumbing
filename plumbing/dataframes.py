@@ -27,6 +27,7 @@ def string_to_df(string):
     """
     Parse a string as a dataframe. Example:
 
+        >>> from plumbing.dataframes import string_to_df
         >>> a = '''  i  | x | y | z
         >>>         AR  | v | 5 | 1
         >>>         For | w | 3 | 3

@@ -15,8 +15,10 @@ Call it like this:
 from plumbing.scraping.browser import download_via_browser
 
 # Constants #
-url = "http://ipv4.download.thinkbroadband.com/5MB.zip"
+url = "http://speedtest.tele2.net/1MB.zip"
 destination = '~/test2/'
 
 ###############################################################################
 download_via_browser(url, destination)
+
+url = "http://example.com/"
