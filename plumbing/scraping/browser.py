@@ -28,9 +28,9 @@ def make_driver():
     Create a headless webdriver with selenium.
     """
     # Paths #
-    chromedriver_path = shutil.which('chromedriver')
+    chrome_driver_path = shutil.which('chromedriver')
     # Start a service #
-    service = webdriver.chrome.service.Service(chromedriver_path)
+    service = webdriver.chrome.service.Service(chrome_driver_path)
     service.start()
     # Add options #
     options = webdriver.ChromeOptions()
@@ -38,7 +38,7 @@ def make_driver():
     options = options.to_capabilities()
     # Create the driver #
     driver = webdriver.Remote(service.service_url, options)
-    # #TODO Change the download dir #
+    # #TODO Change the download dir to a temp dir #
     dl_dir = Path(os.getcwd() + '/')
     # Return #
     return driver, dl_dir
@@ -56,8 +56,7 @@ def download_via_browser(url,
     # Choose the right option for destination #
     destination = handle_destination(url, destination)
     # Make a driver if we don't already have one #
-    global driver, download_dir
-    if driver is None: driver, download_dir = make_driver()
+    driver, download_dir = make_driver()
     # Get resource #
     driver.get(url)
     # It should land in the downloads directory #
@@ -68,7 +67,7 @@ def download_via_browser(url,
         time.sleep(0.1)
         if result.exists: break
     # Let's move it #
-    result.move_to(destination)
+    result.move_to(destination, overwrite=True)
     # Uncompress #
     if uncompress:
         with open(destination, 'rb') as f: header = f.read(4)
