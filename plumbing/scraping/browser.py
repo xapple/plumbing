@@ -8,6 +8,7 @@ MIT Licenced.
 
 # Built-in modules #
 import os, shutil, time
+import urllib.parse
 
 # Internal modules #
 from plumbing.scraping import handle_destination
@@ -46,7 +47,8 @@ def make_driver():
 ###############################################################################
 def download_via_browser(url,
                          destination = None,
-                         uncompress  = True):
+                         uncompress  = True,
+                         timeout     = 120):
     """
     Save the resource as a file on disk by running a full browser to avoid
     being blocked by the server.
@@ -59,13 +61,20 @@ def download_via_browser(url,
     driver, download_dir = make_driver()
     # Get resource #
     driver.get(url)
-    # It should land in the downloads directory #
+    # This should remove the query part of the URL #
     predicted_name = url.split("/")[-1].split("?")[0]
+    # But we need to convert things like %20 to a space #
+    predicted_name = urllib.parse.unquote(predicted_name)
+    # It should land in the downloads directory #
     result = download_dir + predicted_name
     # We have no way to know when it finishes #
+    start_time = time.time()
     while True:
-        time.sleep(0.1)
+        time.sleep(0.5)
         if result.exists: break
+        if time.time() - start_time > timeout:
+            msg = "The file should have been at '%s'." % result
+            raise Exception("The timeout was exceeded. " + msg)
     # Let's move it #
     result.move_to(destination, overwrite=True)
     # Uncompress #
