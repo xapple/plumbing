@@ -12,8 +12,11 @@ Call it like this:
 """
 
 # Internal modules #
-from plumbing.scraping import retrieve_from_url
-
 ###############################################################################
 url = "http://example.com/index.html"
-print(retrieve_from_url(url, user_agent=1))
+
+#from plumbing.scraping import retrieve_from_url
+#print(retrieve_from_url(url, user_agent=1))
+
+from plumbing.scraping import download_from_url
+print(download_from_url(url, '~/test/example.com/extra_level/'))

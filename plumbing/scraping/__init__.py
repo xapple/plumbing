@@ -11,6 +11,7 @@ MIT Licenced.
 # Internal modules #
 
 # First party modules #
+import autopaths
 from autopaths import Path
 
 # Third party modules #
@@ -54,7 +55,6 @@ def download_from_url(url,
                       **kwargs):
     """
     Save the resource as a file on disk.
-    TODO: case where destination is a directory.
     """
     # Custom user agent if needed #
     headers = make_headers(user_agent)
@@ -65,8 +65,16 @@ def download_from_url(url,
     if stream:
         total_size = int(response.headers.get('content-length'))
         block_size = int(total_size/1024)
-    # Destination #
-    if destination is not None:
+    # Choose a default for destination #
+    if destination is None:
+        destination = autopaths.tmp_path.new_temp_file()
+    # Directory case - choose a filename #
+    elif destination.endswith('/'):
+        filename    = url.split("/")[-1].split("?")[0]
+        destination = Path(destination + filename)
+        destination.directory.create_if_not_exists()
+    # Normal case #
+    else:
         destination = Path(destination)
         destination.directory.create_if_not_exists()
     # Write streaming #
