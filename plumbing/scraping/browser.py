@@ -19,14 +19,14 @@ from autopaths import Path
 # Third party modules #
 from selenium import webdriver
 
-# Constants #
-driver = None
-download_dir = None
-
 ###############################################################################
 def make_driver():
     """
     Create a headless webdriver with selenium.
+
+    Note: #TODO Change the download dir to a temp dir #
+    Otherwise it will append (1) and (2) etc. to the filename before the
+    extension e.g. 'data.zip (1).crdownload'
     """
     # Paths #
     chrome_driver_path = shutil.which('chromedriver')

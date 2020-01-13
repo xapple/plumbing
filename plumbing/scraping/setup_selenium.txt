@@ -28,7 +28,6 @@ sudo chmod +x /usr/local/bin/chromedriver
 python3 -m pip install --user selenium
 
 # In python #
-
 from selenium import webdriver
 service = webdriver.chrome.service.Service('/usr/local/bin/chromedriver')
 service.start()
