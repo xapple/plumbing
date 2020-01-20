@@ -6,16 +6,17 @@ from autopaths.dir_path import DirectoryPath
 
 # Third party modules #
 if os.name == "posix": import sh
-if os.name == "nt":    import pbs
+if os.name == "nt":    import pbs3
 
 ###############################################################################
 class GitRepo(DirectoryPath):
-    """A git repository with some convenience methods.
+    """
+    A git repository with some convenience methods.
     Requires at least git 2.7 (released January 5th, 2015)
-    for all methods to work correctly."""
+    for all methods to work correctly.
+    """
 
-    def __bool__(self):
-        return os.path.exists(self.git_dir)
+    def __bool__(self): return os.path.exists(self.git_dir)
     __nonzero__ = __bool__
 
     def __init__(self, path, empty=False):
@@ -25,7 +26,7 @@ class GitRepo(DirectoryPath):
         self.git_dir = self.path + '.git'
         # Check exists #
         if not empty and not self:
-            raise Exception("No git repository at '%s'" % (self.git_dir))
+            raise Exception("No git repository at '%s'" % self.git_dir)
         # Default arguments #
         self.default = ["--git-dir=" + self.git_dir, "--work-tree=" + self.path]
 
@@ -33,7 +34,7 @@ class GitRepo(DirectoryPath):
         if os.name == "posix":
             return sh.git(*args, **kwargs)
         if os.name == "nt":
-            return pbs.Command("git")(*args, **kwargs)
+            return pbs3.Command("git")(*args, **kwargs)
 
     #------------------------------- Properties ------------------------------#
     @property
@@ -85,7 +86,7 @@ class GitRepo(DirectoryPath):
         self.git('clone', remote_url, self.path)
 
     def re_clone(self, repo_dir):
-        """Clone again, somewhere else"""
+        """Clone again, somewhere else."""
         self.git('clone', self.remote_url, repo_dir)
         return GitRepo(repo_dir)
 
@@ -109,3 +110,10 @@ class GitRepo(DirectoryPath):
 
     def tag_head(self, tag):
         return self.git(self.default + ['tag', tag, 'HEAD'])
+
+    def pull(self, shell=False, thread=False):
+        # Command #
+        command = self.default + ['pull']
+        # Show on shell #
+        if shell: return self.git(command, _out=sys.stdout, _err=sys.stderr)
+        else:     return self.git(command)
