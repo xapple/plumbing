@@ -16,7 +16,7 @@ class GitRepo(DirectoryPath):
     for all methods to work correctly.
     """
 
-    def __bool__(self): return os.path.exists(self.git_dir)
+    def __bool__(self): return self.is_a_repos
     __nonzero__ = __bool__
 
     def __init__(self, path, empty=False):
@@ -37,6 +37,11 @@ class GitRepo(DirectoryPath):
             return pbs3.Command("git")(*args, **kwargs)
 
     #------------------------------- Properties ------------------------------#
+    @property
+    def is_a_repos(self):
+        """Check there is a `.git` directory and this is in fact a repository.'"""
+        return os.path.exists(self.git_dir)
+
     @property
     def tag(self):
         """For instance: u'1.0.3-69-gf0c796d-dirty'"""
@@ -80,10 +85,15 @@ class GitRepo(DirectoryPath):
         return result.strip('\n')
 
     #--------------------------------- Methods -------------------------------#
-    def clone_from(self, remote_url):
+    def clone_from(self, remote_url, shell=False):
         """Clone it when it doesn't exist yet."""
-        assert not self
-        self.git('clone', remote_url, self.path)
+        # Check empty #
+        assert not self.is_a_repos
+        # Command #
+        command = ['clone', remote_url, self.path]
+        # Show on shell #
+        if shell: return self.git(command, _out=sys.stdout, _err=sys.stderr)
+        else:     return self.git(command)
 
     def re_clone(self, repo_dir):
         """Clone again, somewhere else."""
@@ -115,5 +125,5 @@ class GitRepo(DirectoryPath):
         # Command #
         command = self.default + ['pull']
         # Show on shell #
-        if shell: return self.git(command, _out=sys.stdout, _err=sys.stderr)
-        else:     return self.git(command)
+        if shell: return self.git(command, _out=sys.stdout, _err=sys.stderr, _bg=thread)
+        else:     return self.git(command, _bg=thread)
