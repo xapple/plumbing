@@ -87,22 +87,27 @@ class property_pickled(object):
 
     The path of the pickle file will be determined by looking for the
     `cache_dir` attribute of the instance containing the cached property
-    and adding the function name with a '.pickle' at the end.
+    and combining the function name with a '.pickle' at the end.
 
     If no `cache_dir` attribute exists it, a default location will be
     chosen (tmpdir). But this will have for effect that all instances of the
     class will have the same cached value (works well for singletons only).
 
     The location will default to the temporary directory plus a very short
-    hash of the function path, so you could get something like this:
+    hash of the function's import path, so you could get something like this:
 
         /var/temporary/pickled_properties/EfEZTAubgXI
     """
 
-    def __init__(self, func):
+    def __init__(self, func, at=None):
+        # Record the function that we are decorating #
         self.func    = func
+        # Set the documentation string of the underlying function here #
         self.__doc__ = getattr(func, '__doc__')
+        # Get the plain name of the function #
         self.name    = self.func.__name__
+        # Optionally specify the location at which we should pickle #
+        self.at      = at
 
     def __get__(self, instance, owner):
         # If called from a class #
@@ -113,7 +118,7 @@ class property_pickled(object):
         if self.name in instance.__cache__: return instance.__cache__[self.name]
         # Where should we look in the file system ? #
         path = self.get_pickle_path(instance)
-        # Is the answer on the file system? #
+        # Is the answer already on the file system? #
         if path.exists:
             with open(path, 'rb') as handle: result = pickle.load(handle)
             instance.__cache__[self.name] = result
@@ -133,8 +138,9 @@ class property_pickled(object):
         self.check_cache(instance)
         # Overwrite the value in memory #
         instance.__cache__[self.name] = value
-        # And also overwrite it on the disk #
+        # Where should we look in the file system ? #
         path = self.get_pickle_path(instance)
+        # And also overwrite it on the disk #
         with open(path, 'wb') as handle: pickle.dump(value, handle)
 
     def __delete__(self, instance):
@@ -150,27 +156,41 @@ class property_pickled(object):
         if '__cache__' not in instance.__dict__: instance.__cache__ = {}
 
     def get_pickle_path(self, instance):
-        # First check if the instance has a cache_dir specified #
-        if 'cache_dir' in instance.__dict__:
+        # First check if an `at` parameter was specified #
+        if self.at is not None: path = Path(getattr(instance, self.at))
+        # Secondly check if the instance has a cache_dir specified #
+        elif 'cache_dir' in instance.__dict__:
             path = Path(instance.cache_dir + self.name + '.pickle')
-            path.make_directory()
-            return path
         # Otherwise we go the default route (no instance passed) #
-        else: return self.get_default_path()
+        else: path = Path(self.get_default_path())
+        # Make the directory #
+        path.make_directory()
+        return path
 
     def get_default_path(self):
         # Get the temporary directory (platform dependant) #
         path = tempfile.gettempdir() + '/pickled_properties/'
         # Create that directory if it doesn't exist #
         os.makedirs(path, exist_ok=True)
-        # Find the function path in the package namespace #
+        # Find the function's import path in the package namespace #
         func_loc = self.func.__module__ + '.' + self.name
-        # Make a short safe name from the location #
+        # Make a short safe name from the import path #
         short_name = hashlib.md5(func_loc.encode()).digest()[:8]
         short_name = base64.urlsafe_b64encode(short_name).decode()
         short_name = short_name.replace('=','')
         # Return #
-        return Path(path + short_name)
+        return path + short_name
+
+################################################################################
+def property_pickled_at(at):
+    """
+    Same thing as above, but you can specify the name of a property as
+    a string, that will be called on the instance once to determine the
+    path at which to write and load the pickle file from. This property should
+    hence return the same path for every equivalent instance.
+    """
+    def wrapper(function): return property_pickled(function, at=at)
+    return wrapper
 
 ################################################################################
 def expiry_every(seconds=0):
