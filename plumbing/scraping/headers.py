@@ -41,7 +41,7 @@ def make_headers(user_agent = None):
         global popular_agents
         if popular_agents is None:
             from .run_get_user_agents import destin
-            popular_agents = list(destin)
+            popular_agents = destin.lines
         # Remove forbidden characters #
         string = popular_agents[user_agent-1]
         string = string.strip('\n')
