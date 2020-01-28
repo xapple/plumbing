@@ -61,8 +61,12 @@ def download_from_url(url,
     else:      content  = request(url, header, content=True, **kwargs)
     # Get total size #
     if stream:
-        total_size = int(response.headers.get('content-length'))
+        total_size = int(response.headers.get('content-length', -1))
         block_size = int(total_size/1024)
+    # Sometimes we don't get content-length #
+    if stream and total_size < 0:
+        return download_from_url(url, destination, uncompress, user_agent,
+                                 False, False, **kwargs)
     # Choose the right option for destination #
     destination = handle_destination(url, destination)
     # Write streaming #
