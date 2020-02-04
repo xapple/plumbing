@@ -11,7 +11,7 @@ import pandas
 # Internal modules #
 
 ###############################################################################
-def flexible_join(first, other, on, how=None, lsuffix='', rsuffix=''):
+def flexible_join(first, other, on, how=None, lsuffix=None, rsuffix=None):
     """
     Implement a common join pattern with pandas set_index()
     on both data frames followed by a reset_index() at the end.
