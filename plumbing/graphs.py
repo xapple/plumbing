@@ -96,6 +96,7 @@ class Graph(object):
                 self.base_dir = self.parent.p.graphs_dir
             if hasattr(self.parent, 'paths'):
                 self.base_dir = self.parent.paths.graphs_dir
+            raise Excpetion("Please specify a base_dir for this graph.")
         else:
             self.base_dir = Path(base_dir)
         self.base_dir.create_if_not_exists()
