@@ -65,11 +65,21 @@ def camel_to_snake(text):
     >>> camel_to_snake('Odd/Characters')
     'odd_characters'
     """
-    # Two step process #
-    result = re.sub('(.)([A-Z][a-z]+)',  r'\1_\2', text)
+    # Load #
+    result = text
+    # Eliminate trailing spaces #
+    result = result.strip(' ')
+    # First step #
+    try:
+        result = re.sub('(.)([A-Z][a-z]+)',  r'\1_\2', result)
+    except TypeError:
+        print("The text received was '%s'" % result)
+        raise
+    # Second step #
     result = re.sub('([a-z0-9])([A-Z])', r'\1_\2', result)
+    # Lower case the rest #
     result = result.lower()
-    # Eliminate spaces #
+    # Eliminate remaining spaces #
     result = result.replace(' ', '')
     # Eliminate quote characters #
     result = result.replace('"', '')
