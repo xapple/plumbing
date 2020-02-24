@@ -70,6 +70,7 @@ class Graph(object):
         ('formats', ('pdf',)),
         ('close'  , True),
         ('dpi'    , None),
+        ('bbox'   , None),
     ))
 
     def __repr__(self):
@@ -191,12 +192,13 @@ class Graph(object):
         if 'path' in self.params:   path = FilePath(self.params['path'])
         elif hasattr(self, 'path'): path = FilePath(self.path)
         else:                       path = FilePath(self.short_name + '.pdf')
+        # The arguments to save #
+        save_args = {}
+        if 'dpi'  in self.params: save_args['dpi']  = self.params['dpi']
+        if 'bbox' in self.params: save_args['bbox_inches'] = self.params['bbox']
         # Save it as different formats #
         for ext in self.params['formats']:
-            if 'dpi' in self.params:
-                fig.savefig(path.replace_extension(ext), dpi=self.dpi)
-            else:
-                fig.savefig(path.replace_extension(ext))
+            fig.savefig(path.replace_extension(ext), **save_args)
         # Close it #
         if self.params['close']: pyplot.close(fig)
 
