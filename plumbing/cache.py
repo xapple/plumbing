@@ -184,7 +184,7 @@ class property_pickled(object):
 ################################################################################
 def property_pickled_at(at):
     """
-    Same thing as above, but you can specify the name of a property as
+    Same thing as above, but you can specify the name of another property as
     a string, that will be called on the instance once to determine the
     path at which to write and load the pickle file from. This property should
     hence return the same path for every equivalent instance.
