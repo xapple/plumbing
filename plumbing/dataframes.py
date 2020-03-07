@@ -27,13 +27,16 @@ def string_to_df(string):
     """
     Parse a string as a dataframe. Example:
 
-        >>> from plumbing.dataframes import string_to_df
+        >>> from plumbing.dataframes import df_to_latex
+        >>>
         >>> a = '''  i  | x | y | z
         >>>         AR  | v | 5 | 1
         >>>         For | w | 3 | 3
         >>>         For | w | 4 | 4 '''
+        >>>
         >>> df = string_to_df(a)
         >>> print(df)
+
              i  x  y  z
         0   AR  v  5  1
         1  For  w  3  3
