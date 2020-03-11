@@ -14,7 +14,6 @@ from autopaths.file_path import FilePath
 # Third party modules #
 import numpy
 import matplotlib, brewer2mpl
-matplotlib.use('Agg', warn=False)
 from matplotlib import pyplot
 
 # Constants #
@@ -115,8 +114,10 @@ class Graph(object):
         return Path(self.base_dir + self.short_name + '.pdf')
 
     def __call__(self, *args, **kwargs):
-        """Plot the graph if it doesn't exist. Then return the path to it.
-        Force the reruning with rerun=True"""
+        """
+        Plot the graph if it doesn't exist. Then return the path to it.
+        Force the reruning with rerun=True
+        """
         if not self or kwargs.get('rerun'): self.plot(*args, **kwargs)
         return self.path
 
@@ -203,8 +204,10 @@ class Graph(object):
         if self.params['close']: pyplot.close(fig)
 
     def plot_and_save(self, **kwargs):
-        """Used when the plot method defined does not create a figure nor calls save_plot
-        Then the plot method has to use self.fig"""
+        """
+        Used when the plot method defined does not create a figure nor calls save_plot
+        Then the plot method has to use self.fig
+        """
         self.fig = pyplot.figure()
         self.plot()
         self.axes = pyplot.gca()

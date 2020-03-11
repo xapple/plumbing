@@ -4,8 +4,10 @@ import dateutil.tz, datetime
 
 # Internal modules #
 from plumbing.slurm.job import JobSLURM
-from plumbing.autopaths import DirectoryPath
 from plumbing.git       import GitRepo
+
+# First party modules #
+from autopaths.dir_path import DirectoryPath
 
 # Third party modules #
 import sh
@@ -53,7 +55,7 @@ class LoggedJobSLURM(JobSLURM):
             static_module_dir = modules_dir + project_name + '/'
             module_version    = module.__version__ + ' ' + repos_dir.tag
             # Copy #
-            print "Making static copy of module '%s' for SLURM job..." % module_name
+            print("Making static copy of module '%s' for SLURM job..." % module_name)
             sh.cp('-R', repos_dir, static_module_dir)
             # Make script #
             script.insert(0, "sys.path.insert(0, '%s')" % static_module_dir)
