@@ -8,7 +8,9 @@ from collections import OrderedDict
 # Internal modules #
 from plumbing.common import split_thousands, camel_to_snake
 from plumbing.cache  import property_cached
-from autopaths       import Path
+
+# First party modules #
+from autopaths           import Path
 from autopaths.file_path import FilePath
 
 # Third party modules #
@@ -96,7 +98,7 @@ class Graph(object):
                 self.base_dir = self.parent.p.graphs_dir
             if hasattr(self.parent, 'paths'):
                 self.base_dir = self.parent.paths.graphs_dir
-            raise Excpetion("Please specify a base_dir for this graph.")
+            raise Exception("Please specify a base_dir for this graph.")
         else:
             self.base_dir = Path(base_dir)
         self.base_dir.create_if_not_exists()
