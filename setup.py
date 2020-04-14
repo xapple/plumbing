@@ -13,5 +13,5 @@ setup(
     packages         = find_packages(),
     install_requires = ['six', 'autopaths', 'sh', 'matplotlib', 'brewer2mpl', 'decorator',
                         'shell_command', 'pandas', 'tqdm', 'boto3', 'sshconf', 'retry',
-                        'selenium'],
+                        'selenium', 'pyodbc', 'tabulate'],
 )
