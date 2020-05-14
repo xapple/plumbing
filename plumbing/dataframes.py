@@ -23,11 +23,11 @@ def pandas_df_to_named_r_df(pandas_df, r_name):
     eval("return %s" % r_name)
 
 ################################################################################
-def string_to_df(string):
+def string_to_df(string, **kwargs):
     """
     Parse a string as a dataframe. Example:
 
-        >>> from plumbing.dataframes import df_to_latex
+        >>> from plumbing.dataframes import string_to_df
         >>>
         >>> a = '''  i  | x | y | z
         >>>         AR  | v | 5 | 1
@@ -42,7 +42,9 @@ def string_to_df(string):
         1  For  w  3  3
         2  For  w  4  4
     """
-    return pandas.read_csv(StringIO(string.replace(' ','')), sep="|", header=0)
+    handle = StringIO(string.replace(' ',''))
+    df     = pandas.read_csv(handle, sep="|", header=0, **kwargs)
+    return df
 
 ################################################################################
 def count_unique_index(df, by):
@@ -87,42 +89,60 @@ def count_unique_index(df, by):
     """
     return df.groupby(by).size().reset_index().rename(columns={0: 'count'})
 
-
-###############################################################################
-def multi_index_pivot(df, columns=None, values=None):
+################################################################################
+def multiply_propagate_nan(df, series):
     """
-    Pivot a pandas data frame from long to wide format on multiple index variables.
+    This function enables you to multiply a dataframe by a series with 'smart'
+    propagation of NaN values.
 
-    Copied from: https://github.com/pandas-dev/pandas/issues/23955
+    We implement a simple rule where:
 
-    Note: you can perform the opposite operation, i.e. unpivot a DataFrame from
-    wide format to long format with df.melt().
+        x * NaN = NaN | ∀x≠0
+        0 * NaN = 0
 
-    In contrast to `pivot`, `melt` does accept a multiple index specified
-    as the `id_vars` argument.
+    In essence, multipling a NaN with a zero will yield a zero and multipling
+    a NaN with anything else will yield a NaN.
+    This is usefull in some scenarios where NaN simply indicates a missing
+    value in a dataset, which is known to be a dataset of real numbers.
+    For instance, when a scientist knows that all values considered in a given
+    experiment are scalars but a few of the values were not recorded or were
+    lost.
+    This is done because, as it stands, NaN can represent anything even the
+    result of an operation yielding infinity. But there is no float named "IaN"
+    that would stand for "Is a Number", where we know that the number is
+    in R or N, but are missing its particular value.
 
-    Otherwise the error message is cryptic:
-    KeyError: "None of [Index([None], dtype='object')] are in the [columns]"
+    #TODO restore zeros from the series too not only the dataframe.
 
-    TODO: add warning when there is no index set.
+    An example follows:
 
-    Usage:
+        >>> one = '''    | W1   | W2   | W3
+        >>>           A  | 0.0  | 0.7  | NaN
+        >>>           B  | 0.1  | 1.0  | 1.0
+        >>>           C  | 0.2  | 0.8  | 0.49
+        >>>           D  | 0.0  | 0.0  | 1.0  '''
+        >>>
+        >>> two = '''    | Y
+        >>>           W3 | 8.0
+        >>>           W1 | NaN
+        >>>           W2 | 9.0  '''
+        >>>
+        >>> from plumbing.dataframes import string_to_df
+        >>> one = string_to_df(one, index_col=0)
+        >>> two = string_to_df(two, index_col=0)
+        >>>
+        >>> from plumbing.dataframes import multiply_propagate_nan
+        >>> print(multiply_propagate_nan(one, two['Y']))
 
-        >>> df.multiindex_pivot(index   = ['idx_column1', 'idx_column2'],
-        >>>                     columns = ['col_column1', 'col_column2'],
-        >>>                     values  = 'bar')
+                W1   W2    W3
+            A  0.0  6.3   NaN
+            B  NaN  9.0  8.00
+            C  NaN  7.2  3.92
+            D  0.0  0.0  8.00
     """
-    names        = list(df.index.names)
-    df           = df.reset_index()
-    list_index   = df[names].values
-    tuples_index = [tuple(i) for i in list_index] # hashable
-    df           = df.assign(tuples_index=tuples_index)
-    df           = df.pivot(index="tuples_index", columns=columns, values=values)
-    tuples_index = df.index  # reduced
-    index        = pandas.MultiIndex.from_tuples(tuples_index, names=names)
-    df.index     = index
-    # Remove confusing index column name #
-    df.columns.name = None
-    df = df.reset_index()
+    # Multiply #
+    result = df * series
+    # Restore the zeros where they should be #
+    result[df == 0.0] = 0.0
     # Return #
-    return df
+    return result
