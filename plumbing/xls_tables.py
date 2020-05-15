@@ -50,6 +50,8 @@ class MultiDataFrameXLS:
         """
         Write several dataframes, to several excel sheets.
         """
+        # Create path if not exists #
+        self.path.directory.create_if_not_exists()
         # Create a writer #
         self.writer = pandas.ExcelWriter(str(self.path), engine='xlsxwriter')
         # Create a sheet per every key #
