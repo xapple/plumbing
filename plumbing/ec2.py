@@ -5,7 +5,6 @@ import os
 from plumbing.cache import property_cached
 
 # Third party modules #
-import boto3
 
 ###############################################################################
 class InstanceEC2(object):
@@ -16,6 +15,7 @@ class InstanceEC2(object):
         self.instance_id  = instance_id
         self.profile      = profile
         # If we want a different profile set it in boto3 #
+        import boto3
         if self.profile: boto3.setup_default_session(profile_name=self.profile)
         # Make the object we will use for queries #
         self.ec2 = boto3.client('ec2')

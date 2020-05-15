@@ -1,5 +1,5 @@
 # Built-in modules #
-import os, sys
+import sys
 
 ################################################################################
 class RedirectStdStreams(object):

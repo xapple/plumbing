@@ -7,7 +7,6 @@ from plumbing.color import Color
 from plumbing.slurm.logged import LoggedJobSLURM
 
 # Third party modules #
-import threadpool
 
 # Constants #
 
@@ -91,6 +90,7 @@ class Runner(object):
         sys.stdout.flush()
         # Threads #
         if threads and len(list(fns)) > 1:
+            import threadpool
             self.thpool = threadpool.ThreadPool(8)
             for fn in fns: self.thpool.putRequest(threadpool.WorkRequest(fn))
             self.thpool.wait()

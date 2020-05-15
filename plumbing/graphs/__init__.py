@@ -1,6 +1,3 @@
-# Futures #
-from __future__ import division
-
 # Built-in modules #
 import os, time, inspect, getpass
 from collections import OrderedDict
@@ -14,18 +11,8 @@ from autopaths           import Path
 from autopaths.file_path import FilePath
 
 # Third party modules #
-import numpy
-import matplotlib, brewer2mpl
+import numpy, matplotlib
 from matplotlib import pyplot
-
-# Constants #
-cool_colors = brewer2mpl.get_map('Set1', 'qualitative', 8).mpl_colors
-cool_colors.reverse()
-cool_colors += brewer2mpl.get_map('Set2',    'qualitative', 8).mpl_colors
-cool_colors += brewer2mpl.get_map('Set3',    'qualitative', 8).mpl_colors
-cool_colors += brewer2mpl.get_map('Pastel1', 'qualitative', 8).mpl_colors
-cool_colors += brewer2mpl.get_map('Pastel2', 'qualitative', 8).mpl_colors
-cool_colors += brewer2mpl.get_map('Greys',   'sequential',  8).mpl_colors
 
 ################################################################################
 class Graph(object):
@@ -118,7 +105,7 @@ class Graph(object):
     def __call__(self, *args, **kwargs):
         """
         Plot the graph if it doesn't exist. Then return the path to it.
-        Force the reruning with rerun=True
+        Force the re-runing with rerun=True.
         """
         if not self or kwargs.get('rerun'): self.plot(*args, **kwargs)
         return self.path
@@ -208,7 +195,7 @@ class Graph(object):
     def plot_and_save(self, **kwargs):
         """
         Used when the plot method defined does not create a figure nor calls save_plot
-        Then the plot method has to use self.fig
+        Then the plot method has to use self.fig.
         """
         self.fig = pyplot.figure()
         self.plot()
@@ -241,7 +228,7 @@ class Graph(object):
         return self
 
     def save_anim(self, fig, animate, init, bitrate=10000, fps=30):
-        """Not functional -- TODO"""
+        """Not functional -- TODO."""
         from matplotlib import animation
         anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20)
         FFMpegWriter = animation.writers['ffmpeg']

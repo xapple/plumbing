@@ -1,10 +1,10 @@
 # Built-in modules #
+from six import StringIO
 
 # Internal modules #
 
 # Third party modules #
 import pandas, numpy
-from six import StringIO
 
 ################################################################################
 def r_matrix_to_dataframe(matrix):

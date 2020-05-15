@@ -11,7 +11,6 @@ setup(
     author           = 'Lucas Sinclair',
     author_email     = 'lucas.sinclair@me.com',
     packages         = find_packages(),
-    install_requires = ['six', 'autopaths', 'sh', 'matplotlib', 'brewer2mpl', 'decorator',
-                        'shell_command', 'pandas', 'tqdm', 'boto3', 'sshconf', 'retry',
-                        'selenium', 'pyodbc', 'tabulate'],
+    install_requires = ['autopaths', 'six', 'pandas', 'numpy', 'matplotlib',
+                        'retry'],
 )

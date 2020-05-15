@@ -1,5 +1,5 @@
 # Built-in modules #
-import subprocess, sys
+import sys
 
 # Constants #
 module_names = {

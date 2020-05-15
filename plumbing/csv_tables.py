@@ -8,8 +8,6 @@ from autopaths.tmp_path  import new_temp_file
 
 # Third party modules #
 import pandas
-if os.name == "posix": import sh
-if os.name == "nt":    import pbs
 
 ################################################################################
 class CSVTable(FilePath):
@@ -22,9 +20,11 @@ class CSVTable(FilePath):
         if d is not None: self.d = d
 
     def remove_first_line(self):
+        import sh
         sh.sed('-i', '1d', self.path)
 
     def replace_title(self, before, after):
+        import sh
         sh.sed('-i', '1s/%s/%s/' % (before, after), self.path)
 
     def rewrite_lines(self, lines, path=None):

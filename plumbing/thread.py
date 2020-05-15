@@ -7,7 +7,7 @@ The ``thread`` module provides some convenience functions
 for using threads in python.
 """
 
-# Modules #
+# Built-in modules #
 import threading
 
 ################################################################################

@@ -17,7 +17,6 @@ from autopaths import Path
 
 # Third party modules #
 import requests
-from tqdm import tqdm
 from retry import retry
 
 ###############################################################################
@@ -74,7 +73,8 @@ def download_from_url(url,
         if stream:
             generator = response.iter_content(chunk_size=block_size)
             if progress:
-                for data in tqdm(generator, total=1024):
+                import tqdm
+                for data in tqdm.tqdm(generator, total=1024):
                     handle.write(data)
             else:
                 for data in generator:

@@ -12,8 +12,7 @@ from autopaths.file_path import FilePath
 from autopaths.tmp_path  import new_temp_path
 
 # Third party modules #
-import pyodbc, pandas, tqdm, pbs3
-from shell_command import shell_output
+import pandas
 
 ################################################################################
 class AccessDatabase(FilePath):
@@ -90,12 +89,14 @@ class AccessDatabase(FilePath):
         """The complete list of tables."""
         # If we are on unix use mdbtools instead #
         if os.name == "posix":
+            import pbs3
             mdb_tables  = pbs3.Command("mdb-tables")
             tables_list = mdb_tables('-1', self.path).split('\n')
             condition   = lambda t: t and not t.startswith('MSys')
             return [t.lower() for t in tables_list if condition(t)]
         # Default case #
-        return [table[2].lower() for table in self.own_cursor.tables() if not table[2].startswith('MSys')]
+        return [table[2].lower() for table in self.own_cursor.tables()
+                if not table[2].startswith('MSys')]
 
     @property
     def real_tables(self):
@@ -113,6 +114,7 @@ class AccessDatabase(FilePath):
 
     def test_table(self, table_name):
         """Can the table be read from?"""
+        import pyodbc
         try:
             query = "SELECT COUNT (*) FROM `%s`" % table_name.lower()
             self.own_cursor.execute(query)
@@ -123,6 +125,7 @@ class AccessDatabase(FilePath):
 
     def new_conn(self):
         """Make a new connection."""
+        import pyodbc
         return pyodbc.connect(self.conn_string)
 
     def close(self):
@@ -200,8 +203,11 @@ class AccessDatabase(FilePath):
     def convert_to_sqlite(self, destination=None, method="shell", progress=False):
         """Who wants to use Access when you can deal with SQLite databases instead?"""
         # Display progress bar #
-        if progress: progress = tqdm.tqdm
-        else:        progress = lambda x:x
+        if progress:
+            import tqdm
+            progress = tqdm.tqdm
+        else:
+            progress = lambda x:x
         # Default path #
         if destination is None: destination = self.replace_extension('sqlite')
         # Delete if it exists #
@@ -217,6 +223,7 @@ class AccessDatabase(FilePath):
         """Method with shell and a temp file. This is hopefully fast."""
         script_path = new_temp_path()
         self.sqlite_dump_shell(script_path)
+        from shell_command import shell_output
         shell_output('sqlite3 -bail -init "%s" "%s" .quit' % (script, destination))
         script.remove()
 
@@ -238,6 +245,7 @@ class AccessDatabase(FilePath):
         """Generate a text dump compatible with SQLite by using
         shell commands. Place this script at *script_path*."""
         # First the schema #
+        from shell_command import shell_output
         shell_output('mdb-schema "%s" sqlite >> "%s"' % (self.path, script_path))
         # Start a transaction, speeds things up when importing #
         script_path.append("\n\n\nBEGIN TRANSACTION;\n")
@@ -252,6 +260,7 @@ class AccessDatabase(FilePath):
         """Generate a text dump compatible with SQLite.
         By yielding every table one by one as a byte string."""
         # First the schema #
+        import pbs3
         mdb_schema = pbs3.Command("mdb-schema")
         yield mdb_schema(self.path, "sqlite").encode('utf8')
         # Start a transaction, speeds things up when importing #
@@ -269,6 +278,7 @@ class AccessDatabase(FilePath):
         Requires that you have mdbtools command line executables installed
         in a Windows Subsystem for Linux environment."""
         # Run commands #
+        import pbs3
         wsl = pbs3.Command("wsl.exe")
         table_schema   = wsl("-e", "mdb-schema", "-T", table_name, source.wsl_style, "access")
         table_contents = wsl("-e", "mdb-export", "-I", "access", source.wsl_style, table_name)

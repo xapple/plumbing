@@ -5,8 +5,6 @@ import os, sys
 from autopaths.dir_path import DirectoryPath
 
 # Third party modules #
-if os.name == "posix": import sh
-if os.name == "nt":    import pbs3
 
 ###############################################################################
 class GitRepo(DirectoryPath):
@@ -32,8 +30,10 @@ class GitRepo(DirectoryPath):
 
     def git(self, *args, **kwargs):
         if os.name == "posix":
+            import sh
             return sh.git(*args, **kwargs)
         if os.name == "nt":
+            import pbs3
             return pbs3.Command("git")(*args, **kwargs)
 
     #------------------------------- Properties ------------------------------#

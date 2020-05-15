@@ -14,8 +14,8 @@ Example usage:
 Comments:
 
 "It spawns a predefined amount of workers and only iterates through the input list
- if there exists an idle worker. I also enabled the "daemon" mode for the workers so
- that KeyboardInterupt works as expected."
+ if there exists an idle worker. I also enabled the 'daemon' mode for the workers so
+ that KeyboardInterrupt works as expected."
 
 Pitfalls: all the stdouts are sent back to the parent stdout, intertwined.
 
@@ -23,9 +23,8 @@ Alternatively, use this fork of multiprocessing:
 https://github.com/uqfoundation/multiprocess
 """
 
-# Modules #
+# Built-in modules #
 import multiprocessing
-from tqdm import tqdm
 
 # Optionally switch to dill #
 #import multiprocess as multiprocessing
@@ -54,6 +53,7 @@ def prll_map(func_to_apply, items, cpus=None, verbose=True):
         proc.start()
     # Display progress bar or not #
     if verbose:
+        from tqdm import tqdm
         results = [q_out.get() for x in tqdm(range(len(sent)))]
     else:
         results = [q_out.get() for x in range(len(sent))]

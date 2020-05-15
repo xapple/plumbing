@@ -1,5 +1,6 @@
-"""Who doesn't need his own k-ary tree data strucutre ?"""
+"""Who doesn't need his own k-ary tree data structure ?"""
 
+# Built-in modules #
 from collections import OrderedDict
 
 ###############################################################################

@@ -4,7 +4,6 @@ import os, sqlite3
 # Internal modules #
 from plumbing.color      import Color
 from plumbing.cache      import property_cached
-from plumbing.common     import md5sum
 from plumbing.scraping   import download_from_url
 from autopaths.file_path import FilePath
 

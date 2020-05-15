@@ -1,6 +1,5 @@
 # Built-in modules #
-import os, time
-import dateutil.tz, datetime
+import os, time, datetime
 
 # Internal modules #
 from plumbing.slurm.job import JobSLURM
@@ -11,6 +10,7 @@ from autopaths.dir_path import DirectoryPath
 
 # Third party modules #
 import sh
+import dateutil.tz
 
 ################################################################################
 class LoggedJobSLURM(JobSLURM):

@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Futures #
-from __future__ import division
-
 # Built-in modules #
 import sys, os, time, re, random, math, json
 import getpass, hashlib, collections

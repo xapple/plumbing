@@ -1,10 +1,4 @@
 ################################################################################
-# Nice colors for plotting stacked bar charts #
-cool_colors = ["#9b59b6", "#3498db", "#95a5a6", "#e74c3c", "#34495e", "#2ecc71",
-               "#FCD124", "#5F0061", "#FBBEBA", "#AAC2F6", "#606925", "#469A55",
-               "#ABD8B2", "#B4B1ED", "#613162", "#76C3E5", "#F05575", "#48CBD1"]
-
-################################################################################
 class Color:
     """Shortcuts for the ANSI escape sequences to control
        formatting, color, etc. on text terminals. Use it like this:
