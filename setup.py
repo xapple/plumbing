@@ -13,4 +13,5 @@ setup(
     packages         = find_packages(),
     install_requires = ['autopaths', 'six', 'pandas', 'numpy', 'matplotlib',
                         'retry'],
+    include_package_data = True,
 )
