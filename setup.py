@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name             = 'plumbing',
-    version          = '2.7.7',
+    version          = '2.7.8',
     description      = 'Helps with plumbing-type programing in python.',
     long_description = open('README.md').read(),
     long_description_content_type = 'text/markdown',
