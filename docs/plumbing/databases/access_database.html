@@ -1,0 +1,1396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.3" />
+<title>plumbing.databases.access_database API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>plumbing.databases.access_database</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Built-in modules #
+import os, platform, base64, shutil, gzip
+from six import StringIO
+
+# Internal modules #
+from plumbing.common import camel_to_snake
+from plumbing.cache import property_cached
+from plumbing.databases.sqlite_database import SQLiteDatabase
+
+# First party modules #
+from autopaths.file_path import FilePath
+from autopaths.tmp_path  import new_temp_path
+
+# Third party modules #
+import pandas
+
+################################################################################
+class AccessDatabase(FilePath):
+    &#34;&#34;&#34;A wrapper for a Microsoft Access database via pyodbc.
+    On Ubuntu 18 you would install the dependencies like this:
+
+        $ sudo apt install python3-pip
+        $ sudo apt install unixodbc-dev
+        $ pip install --user pyodbc
+    &#34;&#34;&#34;
+
+    # Enable this to change ThisName to this_name on all columns #
+    convert_col_names_to_snake = False
+
+    # ------------------------------ Constructor ---------------------------- #
+    def __init__(self, path,
+                       username = &#39;admin&#39;,
+                       password = None):
+        &#34;&#34;&#34;
+        * The path of the database comes first.
+        * The username.
+        * The password.
+        &#34;&#34;&#34;
+        # Path attribute #
+        super(AccessDatabase, self).__init__(path)
+        # Attributes #
+        self.username = username
+        self.password = password
+        # Check the database exists #
+        self.must_exist()
+
+    # ------------------------------ Properties ----------------------------- #
+    @property_cached
+    def conn_string(self):
+        # Get current system #
+        system = platform.system()
+        # macOS #
+        if system == &#34;Darwin&#34;:
+            string = &#34;Driver={Microsoft Access Driver (*.mdb)};User Id=&#39;%s&#39;;DBQ=%s&#34;
+            return string % (self.username, self.path)
+        # Linux #
+        if os.name == &#34;posix&#34;:
+            string = &#34;Driver={MDBTools};User Id=&#39;%s&#39;;DBQ=%s&#34;
+            return string % (self.username, self.path)
+        # Windows #
+        if os.name == &#34;nt&#34;:
+            string = &#34;Driver={Microsoft Access Driver (*.mdb, *.accdb)};User Id=&#39;%s&#39;;DBQ=%s&#34;
+            return string % (self.username, self.path)
+        else:
+            raise Exception(&#34;Unrecognized platform.&#34;)
+
+    @property_cached
+    def conn(self):
+        &#34;&#34;&#34;To be used externally by the user.&#34;&#34;&#34;
+        return self.new_conn()
+
+    @property_cached
+    def own_conn(self):
+        &#34;&#34;&#34;To be used internally in this object.&#34;&#34;&#34;
+        return self.new_conn()
+
+    @property_cached
+    def cursor(self):
+        &#34;&#34;&#34;To be used externally by the user.&#34;&#34;&#34;
+        return self.conn.cursor()
+
+    @property_cached
+    def own_cursor(self):
+        &#34;&#34;&#34;To be used internally in this object.&#34;&#34;&#34;
+        return self.own_conn.cursor()
+
+    @property
+    def tables(self):
+        &#34;&#34;&#34;The complete list of tables.&#34;&#34;&#34;
+        # If we are on unix use mdbtools instead #
+        if os.name == &#34;posix&#34;:
+            import pbs3
+            mdb_tables  = pbs3.Command(&#34;mdb-tables&#34;)
+            tables_list = mdb_tables(&#39;-1&#39;, self.path).split(&#39;\n&#39;)
+            condition   = lambda t: t and not t.startswith(&#39;MSys&#39;)
+            return [t.lower() for t in tables_list if condition(t)]
+        # Default case #
+        return [table[2].lower() for table in self.own_cursor.tables()
+                if not table[2].startswith(&#39;MSys&#39;)]
+
+    @property
+    def real_tables(self):
+        &#34;&#34;&#34;The complete list of tables excluding views and query tables.&#34;&#34;&#34;
+        return [table for table in self.tables if self.test_table(table)]
+
+    # ------------------------------- Methods ------------------------------- #
+    def __getitem__(self, key):
+        &#34;&#34;&#34;Called when evaluating ``database[0] or database[&#39;P81239A&#39;]``.&#34;&#34;&#34;
+        return self.table_as_df(key)
+
+    def __contains__(self, key):
+        &#34;&#34;&#34;Called when evaluating ``&#39;students&#39; in database``.&#34;&#34;&#34;
+        return key.lower() in self.tables
+
+    def test_table(self, table_name):
+        &#34;&#34;&#34;Can the table be read from?&#34;&#34;&#34;
+        import pyodbc
+        try:
+            query = &#34;SELECT COUNT (*) FROM `%s`&#34; % table_name.lower()
+            self.own_cursor.execute(query)
+            self.own_cursor.fetchone()
+        except pyodbc.Error:
+            return False
+        return True
+
+    def new_conn(self):
+        &#34;&#34;&#34;Make a new connection.&#34;&#34;&#34;
+        import pyodbc
+        return pyodbc.connect(self.conn_string)
+
+    def close(self):
+        self.cursor.close()
+        self.conn.close()
+        self.own_cursor.close()
+        self.own_conn.close()
+
+    def table_must_exist(self, table_name):
+        &#34;&#34;&#34;Return a table as a dataframe.&#34;&#34;&#34;
+        if table_name.lower() not in self.tables:
+            raise Exception(&#34;The table &#39;%s&#39; does not seem to exist.&#34; % table_name)
+
+    def table_as_df(self, table_name):
+        &#34;&#34;&#34;Return a table as a dataframe.
+        There is a library that can do this, but it has a bug.
+        See https://github.com/jbn/pandas_access/issues/3
+
+            import pandas_access
+            return pandas_access.read_table(self.path, table_name)
+
+        This is also a possibility https://github.com/gilesc/mdbread
+        but it is not in PyPI.
+        &#34;&#34;&#34;
+        # Check #
+        self.table_must_exist(table_name)
+        # If we are on unix use mdb-tools instead #
+        if os.name == &#34;posix&#34;: df = self.table_as_df_via_mdbtools(table_name)
+        # Default case #
+        else: df = self.table_as_df_via_query(table_name)
+        # Optionally rename columns #
+        if self.convert_col_names_to_snake: df = df.rename(columns=camel_to_snake)
+        # Return #
+        return df
+
+    def table_as_df_via_query(self, table_name):
+        &#34;&#34;&#34;Use an SQL query to create the dataframe.&#34;&#34;&#34;
+        query = &#34;SELECT * FROM `%s`&#34; % table_name.lower()
+        return pandas.read_sql(query, self.own_conn)
+
+    def table_as_df_via_mdbtools(self, table_name, *args, **kwargs):
+        &#34;&#34;&#34;Use an mdbtools executable to create the dataframe.&#34;&#34;&#34;
+        import subprocess
+        cmd = [&#39;mdb-export&#39;, self.path, table_name]
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        return pandas.read_csv(proc.stdout, *args, **kwargs)
+
+    def insert_df(self, table_name, df):
+        &#34;&#34;&#34;Create a table and populate it with data from a dataframe.&#34;&#34;&#34;
+        df.to_sql(table_name, con=self.own_conn)
+
+    def count_rows(self, table_name):
+        &#34;&#34;&#34;Return the number of entries in a table by counting them.&#34;&#34;&#34;
+        self.table_must_exist(table_name)
+        query = &#34;SELECT COUNT (*) FROM `%s`&#34; % table_name.lower()
+        self.own_cursor.execute(query)
+        return int(self.own_cursor.fetchone()[0])
+
+    def count_rows_fast(self, table_name):
+        &#34;&#34;&#34;Return the number of entries in a table by using the quick inaccurate method.&#34;&#34;&#34;
+        pass
+
+    def tables_with_counts(self):
+        &#34;&#34;&#34;Return the number of entries in all table.&#34;&#34;&#34;
+        table_to_count = lambda t: self.count_rows(t)
+        return zip(self.tables, map(table_to_count, self.tables))
+
+    def drop_table(self, table_name):
+        if table_name not in self.tables:
+            raise Exception(&#34;The table &#39;%s&#39; does not seem to exist.&#34; % table_name)
+        query = &#34;DROP TABLE %s&#34; % table_name
+        self.own_conn.execute(query)
+
+    # ------------------------------- Convert ------------------------------- #
+    def convert_to_sqlite(self, destination=None, method=&#34;shell&#34;, progress=False):
+        &#34;&#34;&#34;Who wants to use Access when you can deal with SQLite databases instead?&#34;&#34;&#34;
+        # Display progress bar #
+        if progress:
+            import tqdm
+            progress = tqdm.tqdm
+        else:
+            progress = lambda x:x
+        # Default path #
+        if destination is None: destination = self.replace_extension(&#39;sqlite&#39;)
+        # Delete if it exists #
+        destination.remove()
+        # Method with shell and a temp file #
+        if method == &#39;shell&#39;:     return self.sqlite_by_shell(destination)
+        # Method without a temp file #
+        if method == &#39;object&#39;:    return self.sqlite_by_object(destination, progress)
+        # Method with dataframe #
+        if method == &#39;dataframe&#39;: return self.sqlite_by_df(destination, progress)
+
+    def sqlite_by_shell(self, destination):
+        &#34;&#34;&#34;Method with shell and a temp file. This is hopefully fast.&#34;&#34;&#34;
+        script_path = new_temp_path()
+        self.sqlite_dump_shell(script_path)
+        from shell_command import shell_output
+        shell_output(&#39;sqlite3 -bail -init &#34;%s&#34; &#34;%s&#34; .quit&#39; % (script, destination))
+        script.remove()
+
+    def sqlite_by_object(self, destination, progress):
+        &#34;&#34;&#34;This is probably not very fast.&#34;&#34;&#34;
+        db = SQLiteDatabase(destination)
+        db.create()
+        for script in self.sqlite_dump_string(progress): db.cursor.executescript(script)
+        db.close()
+
+    def sqlite_by_df(self, destination, progress):
+        &#34;&#34;&#34;Is this fast?&#34;&#34;&#34;
+        db = SQLiteDatabase(destination)
+        db.create()
+        for table in progress(self.real_tables): self[table].to_sql(table, con=db.connection)
+        db.close()
+
+    def sqlite_dump_shell(self, script_path):
+        &#34;&#34;&#34;Generate a text dump compatible with SQLite by using
+        shell commands. Place this script at *script_path*.&#34;&#34;&#34;
+        # First the schema #
+        from shell_command import shell_output
+        shell_output(&#39;mdb-schema &#34;%s&#34; sqlite &gt;&gt; &#34;%s&#34;&#39; % (self.path, script_path))
+        # Start a transaction, speeds things up when importing #
+        script_path.append(&#34;\n\n\nBEGIN TRANSACTION;\n&#34;)
+        # Then export every table #
+        for table in self.tables:
+            command = &#39;mdb-export -I sqlite &#34;%s&#34; &#34;%s&#34; &gt;&gt; &#34;%s&#34;&#39;
+            shell_output(command % (self.path, table, script_path))
+        # End the transaction
+        script_path.append(&#34;\n\n\nEND TRANSACTION;\n&#34;)
+
+    def sqlite_dump_string(self, progress):
+        &#34;&#34;&#34;Generate a text dump compatible with SQLite.
+        By yielding every table one by one as a byte string.&#34;&#34;&#34;
+        # First the schema #
+        import pbs3
+        mdb_schema = pbs3.Command(&#34;mdb-schema&#34;)
+        yield mdb_schema(self.path, &#34;sqlite&#34;).encode(&#39;utf8&#39;)
+        # Start a transaction, speeds things up when importing #
+        yield &#34;BEGIN TRANSACTION;\n&#34;
+        # Then export every table #
+        mdb_export = pbs3.Command(&#34;mdb-export&#34;)
+        for table in progress(self.tables):
+            yield mdb_export(&#39;-I&#39;, &#39;sqlite&#39;, self.path, table).encode(&#39;utf8&#39;)
+        # End the transaction
+        yield &#34;END TRANSACTION;\n&#34;
+
+    # --------------------------- Multi-database ---------------------------- #
+    def import_table(self, source, table_name):
+        &#34;&#34;&#34;Copy a table from another Access database to this one.
+        Requires that you have mdbtools command line executables installed
+        in a Windows Subsystem for Linux environment.&#34;&#34;&#34;
+        # Run commands #
+        import pbs3
+        wsl = pbs3.Command(&#34;wsl.exe&#34;)
+        table_schema   = wsl(&#34;-e&#34;, &#34;mdb-schema&#34;, &#34;-T&#34;, table_name, source.wsl_style, &#34;access&#34;)
+        table_contents = wsl(&#34;-e&#34;, &#34;mdb-export&#34;, &#34;-I&#34;, &#34;access&#34;, source.wsl_style, table_name)
+        # Filter #
+        table_schema = &#39; &#39;.join(l for l in table_schema.split(&#39;\n&#39;) if not l.startswith(&#34;--&#34;))
+        # Execute statements #
+        self.cursor.execute(str(table_schema))
+        self.cursor.execute(str(table_contents))
+
+    # -------------------------------- Create ------------------------------- #
+    @classmethod
+    def create(cls, destination):
+        &#34;&#34;&#34;Create a new empty MDB at destination.&#34;&#34;&#34;
+        mdb_gz_b64 = &#34;&#34;&#34;\
+        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
+        &#34;&#34;&#34;
+        pristine = StringIO()
+        pristine.write(base64.b64decode(mdb_gz_b64))
+        pristine.seek(0)
+        pristine = gzip.GzipFile(fileobj=pristine, mode=&#39;rb&#39;)
+        with open(destination, &#39;wb&#39;) as handle: shutil.copyfileobj(pristine, handle)
+        return cls(destination)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="plumbing.databases.access_database.AccessDatabase"><code class="flex name class">
+<span>class <span class="ident">AccessDatabase</span></span>
+<span>(</span><span>path, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A wrapper for a Microsoft Access database via pyodbc.
+On Ubuntu 18 you would install the dependencies like this:</p>
+<pre><code>$ sudo apt install python3-pip
+$ sudo apt install unixodbc-dev
+$ pip install --user pyodbc
+</code></pre>
+<ul>
+<li>The path of the database comes first.</li>
+<li>The username.</li>
+<li>The password.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AccessDatabase(FilePath):
+    &#34;&#34;&#34;A wrapper for a Microsoft Access database via pyodbc.
+    On Ubuntu 18 you would install the dependencies like this:
+
+        $ sudo apt install python3-pip
+        $ sudo apt install unixodbc-dev
+        $ pip install --user pyodbc
+    &#34;&#34;&#34;
+
+    # Enable this to change ThisName to this_name on all columns #
+    convert_col_names_to_snake = False
+
+    # ------------------------------ Constructor ---------------------------- #
+    def __init__(self, path,
+                       username = &#39;admin&#39;,
+                       password = None):
+        &#34;&#34;&#34;
+        * The path of the database comes first.
+        * The username.
+        * The password.
+        &#34;&#34;&#34;
+        # Path attribute #
+        super(AccessDatabase, self).__init__(path)
+        # Attributes #
+        self.username = username
+        self.password = password
+        # Check the database exists #
+        self.must_exist()
+
+    # ------------------------------ Properties ----------------------------- #
+    @property_cached
+    def conn_string(self):
+        # Get current system #
+        system = platform.system()
+        # macOS #
+        if system == &#34;Darwin&#34;:
+            string = &#34;Driver={Microsoft Access Driver (*.mdb)};User Id=&#39;%s&#39;;DBQ=%s&#34;
+            return string % (self.username, self.path)
+        # Linux #
+        if os.name == &#34;posix&#34;:
+            string = &#34;Driver={MDBTools};User Id=&#39;%s&#39;;DBQ=%s&#34;
+            return string % (self.username, self.path)
+        # Windows #
+        if os.name == &#34;nt&#34;:
+            string = &#34;Driver={Microsoft Access Driver (*.mdb, *.accdb)};User Id=&#39;%s&#39;;DBQ=%s&#34;
+            return string % (self.username, self.path)
+        else:
+            raise Exception(&#34;Unrecognized platform.&#34;)
+
+    @property_cached
+    def conn(self):
+        &#34;&#34;&#34;To be used externally by the user.&#34;&#34;&#34;
+        return self.new_conn()
+
+    @property_cached
+    def own_conn(self):
+        &#34;&#34;&#34;To be used internally in this object.&#34;&#34;&#34;
+        return self.new_conn()
+
+    @property_cached
+    def cursor(self):
+        &#34;&#34;&#34;To be used externally by the user.&#34;&#34;&#34;
+        return self.conn.cursor()
+
+    @property_cached
+    def own_cursor(self):
+        &#34;&#34;&#34;To be used internally in this object.&#34;&#34;&#34;
+        return self.own_conn.cursor()
+
+    @property
+    def tables(self):
+        &#34;&#34;&#34;The complete list of tables.&#34;&#34;&#34;
+        # If we are on unix use mdbtools instead #
+        if os.name == &#34;posix&#34;:
+            import pbs3
+            mdb_tables  = pbs3.Command(&#34;mdb-tables&#34;)
+            tables_list = mdb_tables(&#39;-1&#39;, self.path).split(&#39;\n&#39;)
+            condition   = lambda t: t and not t.startswith(&#39;MSys&#39;)
+            return [t.lower() for t in tables_list if condition(t)]
+        # Default case #
+        return [table[2].lower() for table in self.own_cursor.tables()
+                if not table[2].startswith(&#39;MSys&#39;)]
+
+    @property
+    def real_tables(self):
+        &#34;&#34;&#34;The complete list of tables excluding views and query tables.&#34;&#34;&#34;
+        return [table for table in self.tables if self.test_table(table)]
+
+    # ------------------------------- Methods ------------------------------- #
+    def __getitem__(self, key):
+        &#34;&#34;&#34;Called when evaluating ``database[0] or database[&#39;P81239A&#39;]``.&#34;&#34;&#34;
+        return self.table_as_df(key)
+
+    def __contains__(self, key):
+        &#34;&#34;&#34;Called when evaluating ``&#39;students&#39; in database``.&#34;&#34;&#34;
+        return key.lower() in self.tables
+
+    def test_table(self, table_name):
+        &#34;&#34;&#34;Can the table be read from?&#34;&#34;&#34;
+        import pyodbc
+        try:
+            query = &#34;SELECT COUNT (*) FROM `%s`&#34; % table_name.lower()
+            self.own_cursor.execute(query)
+            self.own_cursor.fetchone()
+        except pyodbc.Error:
+            return False
+        return True
+
+    def new_conn(self):
+        &#34;&#34;&#34;Make a new connection.&#34;&#34;&#34;
+        import pyodbc
+        return pyodbc.connect(self.conn_string)
+
+    def close(self):
+        self.cursor.close()
+        self.conn.close()
+        self.own_cursor.close()
+        self.own_conn.close()
+
+    def table_must_exist(self, table_name):
+        &#34;&#34;&#34;Return a table as a dataframe.&#34;&#34;&#34;
+        if table_name.lower() not in self.tables:
+            raise Exception(&#34;The table &#39;%s&#39; does not seem to exist.&#34; % table_name)
+
+    def table_as_df(self, table_name):
+        &#34;&#34;&#34;Return a table as a dataframe.
+        There is a library that can do this, but it has a bug.
+        See https://github.com/jbn/pandas_access/issues/3
+
+            import pandas_access
+            return pandas_access.read_table(self.path, table_name)
+
+        This is also a possibility https://github.com/gilesc/mdbread
+        but it is not in PyPI.
+        &#34;&#34;&#34;
+        # Check #
+        self.table_must_exist(table_name)
+        # If we are on unix use mdb-tools instead #
+        if os.name == &#34;posix&#34;: df = self.table_as_df_via_mdbtools(table_name)
+        # Default case #
+        else: df = self.table_as_df_via_query(table_name)
+        # Optionally rename columns #
+        if self.convert_col_names_to_snake: df = df.rename(columns=camel_to_snake)
+        # Return #
+        return df
+
+    def table_as_df_via_query(self, table_name):
+        &#34;&#34;&#34;Use an SQL query to create the dataframe.&#34;&#34;&#34;
+        query = &#34;SELECT * FROM `%s`&#34; % table_name.lower()
+        return pandas.read_sql(query, self.own_conn)
+
+    def table_as_df_via_mdbtools(self, table_name, *args, **kwargs):
+        &#34;&#34;&#34;Use an mdbtools executable to create the dataframe.&#34;&#34;&#34;
+        import subprocess
+        cmd = [&#39;mdb-export&#39;, self.path, table_name]
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        return pandas.read_csv(proc.stdout, *args, **kwargs)
+
+    def insert_df(self, table_name, df):
+        &#34;&#34;&#34;Create a table and populate it with data from a dataframe.&#34;&#34;&#34;
+        df.to_sql(table_name, con=self.own_conn)
+
+    def count_rows(self, table_name):
+        &#34;&#34;&#34;Return the number of entries in a table by counting them.&#34;&#34;&#34;
+        self.table_must_exist(table_name)
+        query = &#34;SELECT COUNT (*) FROM `%s`&#34; % table_name.lower()
+        self.own_cursor.execute(query)
+        return int(self.own_cursor.fetchone()[0])
+
+    def count_rows_fast(self, table_name):
+        &#34;&#34;&#34;Return the number of entries in a table by using the quick inaccurate method.&#34;&#34;&#34;
+        pass
+
+    def tables_with_counts(self):
+        &#34;&#34;&#34;Return the number of entries in all table.&#34;&#34;&#34;
+        table_to_count = lambda t: self.count_rows(t)
+        return zip(self.tables, map(table_to_count, self.tables))
+
+    def drop_table(self, table_name):
+        if table_name not in self.tables:
+            raise Exception(&#34;The table &#39;%s&#39; does not seem to exist.&#34; % table_name)
+        query = &#34;DROP TABLE %s&#34; % table_name
+        self.own_conn.execute(query)
+
+    # ------------------------------- Convert ------------------------------- #
+    def convert_to_sqlite(self, destination=None, method=&#34;shell&#34;, progress=False):
+        &#34;&#34;&#34;Who wants to use Access when you can deal with SQLite databases instead?&#34;&#34;&#34;
+        # Display progress bar #
+        if progress:
+            import tqdm
+            progress = tqdm.tqdm
+        else:
+            progress = lambda x:x
+        # Default path #
+        if destination is None: destination = self.replace_extension(&#39;sqlite&#39;)
+        # Delete if it exists #
+        destination.remove()
+        # Method with shell and a temp file #
+        if method == &#39;shell&#39;:     return self.sqlite_by_shell(destination)
+        # Method without a temp file #
+        if method == &#39;object&#39;:    return self.sqlite_by_object(destination, progress)
+        # Method with dataframe #
+        if method == &#39;dataframe&#39;: return self.sqlite_by_df(destination, progress)
+
+    def sqlite_by_shell(self, destination):
+        &#34;&#34;&#34;Method with shell and a temp file. This is hopefully fast.&#34;&#34;&#34;
+        script_path = new_temp_path()
+        self.sqlite_dump_shell(script_path)
+        from shell_command import shell_output
+        shell_output(&#39;sqlite3 -bail -init &#34;%s&#34; &#34;%s&#34; .quit&#39; % (script, destination))
+        script.remove()
+
+    def sqlite_by_object(self, destination, progress):
+        &#34;&#34;&#34;This is probably not very fast.&#34;&#34;&#34;
+        db = SQLiteDatabase(destination)
+        db.create()
+        for script in self.sqlite_dump_string(progress): db.cursor.executescript(script)
+        db.close()
+
+    def sqlite_by_df(self, destination, progress):
+        &#34;&#34;&#34;Is this fast?&#34;&#34;&#34;
+        db = SQLiteDatabase(destination)
+        db.create()
+        for table in progress(self.real_tables): self[table].to_sql(table, con=db.connection)
+        db.close()
+
+    def sqlite_dump_shell(self, script_path):
+        &#34;&#34;&#34;Generate a text dump compatible with SQLite by using
+        shell commands. Place this script at *script_path*.&#34;&#34;&#34;
+        # First the schema #
+        from shell_command import shell_output
+        shell_output(&#39;mdb-schema &#34;%s&#34; sqlite &gt;&gt; &#34;%s&#34;&#39; % (self.path, script_path))
+        # Start a transaction, speeds things up when importing #
+        script_path.append(&#34;\n\n\nBEGIN TRANSACTION;\n&#34;)
+        # Then export every table #
+        for table in self.tables:
+            command = &#39;mdb-export -I sqlite &#34;%s&#34; &#34;%s&#34; &gt;&gt; &#34;%s&#34;&#39;
+            shell_output(command % (self.path, table, script_path))
+        # End the transaction
+        script_path.append(&#34;\n\n\nEND TRANSACTION;\n&#34;)
+
+    def sqlite_dump_string(self, progress):
+        &#34;&#34;&#34;Generate a text dump compatible with SQLite.
+        By yielding every table one by one as a byte string.&#34;&#34;&#34;
+        # First the schema #
+        import pbs3
+        mdb_schema = pbs3.Command(&#34;mdb-schema&#34;)
+        yield mdb_schema(self.path, &#34;sqlite&#34;).encode(&#39;utf8&#39;)
+        # Start a transaction, speeds things up when importing #
+        yield &#34;BEGIN TRANSACTION;\n&#34;
+        # Then export every table #
+        mdb_export = pbs3.Command(&#34;mdb-export&#34;)
+        for table in progress(self.tables):
+            yield mdb_export(&#39;-I&#39;, &#39;sqlite&#39;, self.path, table).encode(&#39;utf8&#39;)
+        # End the transaction
+        yield &#34;END TRANSACTION;\n&#34;
+
+    # --------------------------- Multi-database ---------------------------- #
+    def import_table(self, source, table_name):
+        &#34;&#34;&#34;Copy a table from another Access database to this one.
+        Requires that you have mdbtools command line executables installed
+        in a Windows Subsystem for Linux environment.&#34;&#34;&#34;
+        # Run commands #
+        import pbs3
+        wsl = pbs3.Command(&#34;wsl.exe&#34;)
+        table_schema   = wsl(&#34;-e&#34;, &#34;mdb-schema&#34;, &#34;-T&#34;, table_name, source.wsl_style, &#34;access&#34;)
+        table_contents = wsl(&#34;-e&#34;, &#34;mdb-export&#34;, &#34;-I&#34;, &#34;access&#34;, source.wsl_style, table_name)
+        # Filter #
+        table_schema = &#39; &#39;.join(l for l in table_schema.split(&#39;\n&#39;) if not l.startswith(&#34;--&#34;))
+        # Execute statements #
+        self.cursor.execute(str(table_schema))
+        self.cursor.execute(str(table_contents))
+
+    # -------------------------------- Create ------------------------------- #
+    @classmethod
+    def create(cls, destination):
+        &#34;&#34;&#34;Create a new empty MDB at destination.&#34;&#34;&#34;
+        mdb_gz_b64 = &#34;&#34;&#34;\
+        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
+        &#34;&#34;&#34;
+        pristine = StringIO()
+        pristine.write(base64.b64decode(mdb_gz_b64))
+        pristine.seek(0)
+        pristine = gzip.GzipFile(fileobj=pristine, mode=&#39;rb&#39;)
+        with open(destination, &#39;wb&#39;) as handle: shutil.copyfileobj(pristine, handle)
+        return cls(destination)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>autopaths.file_path.FilePath</li>
+<li>autopaths.base_path.BasePath</li>
+<li>builtins.str</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="plumbing.databases.access_database.AccessDatabase.convert_col_names_to_snake"><code class="name">var <span class="ident">convert_col_names_to_snake</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="plumbing.databases.access_database.AccessDatabase.create"><code class="name flex">
+<span>def <span class="ident">create</span></span>(<span>destination)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a new empty MDB at destination.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def create(cls, destination):
+    &#34;&#34;&#34;Create a new empty MDB at destination.&#34;&#34;&#34;
+    mdb_gz_b64 = &#34;&#34;&#34;\
+    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
+    &#34;&#34;&#34;
+    pristine = StringIO()
+    pristine.write(base64.b64decode(mdb_gz_b64))
+    pristine.seek(0)
+    pristine = gzip.GzipFile(fileobj=pristine, mode=&#39;rb&#39;)
+    with open(destination, &#39;wb&#39;) as handle: shutil.copyfileobj(pristine, handle)
+    return cls(destination)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="plumbing.databases.access_database.AccessDatabase.conn"><code class="name">var <span class="ident">conn</span></code></dt>
+<dd>
+<div class="desc"><p>To be used externally by the user.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, instance, owner):
+    # If called from a class #
+    if instance is None: return self
+    # Does a cache exist for this instance? #
+    self.check_cache(instance)
+    # Is the answer in the cache? #
+    if self.name in instance.__cache__: return instance.__cache__[self.name]
+    # If not we will compute it #
+    if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+    else:                                      result = self.func(instance)
+    # Let&#39;s store the answer for later #
+    instance.__cache__[self.name] = result
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.conn_string"><code class="name">var <span class="ident">conn_string</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, instance, owner):
+    # If called from a class #
+    if instance is None: return self
+    # Does a cache exist for this instance? #
+    self.check_cache(instance)
+    # Is the answer in the cache? #
+    if self.name in instance.__cache__: return instance.__cache__[self.name]
+    # If not we will compute it #
+    if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+    else:                                      result = self.func(instance)
+    # Let&#39;s store the answer for later #
+    instance.__cache__[self.name] = result
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.cursor"><code class="name">var <span class="ident">cursor</span></code></dt>
+<dd>
+<div class="desc"><p>To be used externally by the user.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, instance, owner):
+    # If called from a class #
+    if instance is None: return self
+    # Does a cache exist for this instance? #
+    self.check_cache(instance)
+    # Is the answer in the cache? #
+    if self.name in instance.__cache__: return instance.__cache__[self.name]
+    # If not we will compute it #
+    if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+    else:                                      result = self.func(instance)
+    # Let&#39;s store the answer for later #
+    instance.__cache__[self.name] = result
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.own_conn"><code class="name">var <span class="ident">own_conn</span></code></dt>
+<dd>
+<div class="desc"><p>To be used internally in this object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, instance, owner):
+    # If called from a class #
+    if instance is None: return self
+    # Does a cache exist for this instance? #
+    self.check_cache(instance)
+    # Is the answer in the cache? #
+    if self.name in instance.__cache__: return instance.__cache__[self.name]
+    # If not we will compute it #
+    if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+    else:                                      result = self.func(instance)
+    # Let&#39;s store the answer for later #
+    instance.__cache__[self.name] = result
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.own_cursor"><code class="name">var <span class="ident">own_cursor</span></code></dt>
+<dd>
+<div class="desc"><p>To be used internally in this object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, instance, owner):
+    # If called from a class #
+    if instance is None: return self
+    # Does a cache exist for this instance? #
+    self.check_cache(instance)
+    # Is the answer in the cache? #
+    if self.name in instance.__cache__: return instance.__cache__[self.name]
+    # If not we will compute it #
+    if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+    else:                                      result = self.func(instance)
+    # Let&#39;s store the answer for later #
+    instance.__cache__[self.name] = result
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.real_tables"><code class="name">var <span class="ident">real_tables</span></code></dt>
+<dd>
+<div class="desc"><p>The complete list of tables excluding views and query tables.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def real_tables(self):
+    &#34;&#34;&#34;The complete list of tables excluding views and query tables.&#34;&#34;&#34;
+    return [table for table in self.tables if self.test_table(table)]</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.tables"><code class="name">var <span class="ident">tables</span></code></dt>
+<dd>
+<div class="desc"><p>The complete list of tables.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def tables(self):
+    &#34;&#34;&#34;The complete list of tables.&#34;&#34;&#34;
+    # If we are on unix use mdbtools instead #
+    if os.name == &#34;posix&#34;:
+        import pbs3
+        mdb_tables  = pbs3.Command(&#34;mdb-tables&#34;)
+        tables_list = mdb_tables(&#39;-1&#39;, self.path).split(&#39;\n&#39;)
+        condition   = lambda t: t and not t.startswith(&#39;MSys&#39;)
+        return [t.lower() for t in tables_list if condition(t)]
+    # Default case #
+    return [table[2].lower() for table in self.own_cursor.tables()
+            if not table[2].startswith(&#39;MSys&#39;)]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="plumbing.databases.access_database.AccessDatabase.close"><code class="name flex">
+<span>def <span class="ident">close</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def close(self):
+    self.cursor.close()
+    self.conn.close()
+    self.own_cursor.close()
+    self.own_conn.close()</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.convert_to_sqlite"><code class="name flex">
+<span>def <span class="ident">convert_to_sqlite</span></span>(<span>self, destination=None, method='shell', progress=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Who wants to use Access when you can deal with SQLite databases instead?</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convert_to_sqlite(self, destination=None, method=&#34;shell&#34;, progress=False):
+    &#34;&#34;&#34;Who wants to use Access when you can deal with SQLite databases instead?&#34;&#34;&#34;
+    # Display progress bar #
+    if progress:
+        import tqdm
+        progress = tqdm.tqdm
+    else:
+        progress = lambda x:x
+    # Default path #
+    if destination is None: destination = self.replace_extension(&#39;sqlite&#39;)
+    # Delete if it exists #
+    destination.remove()
+    # Method with shell and a temp file #
+    if method == &#39;shell&#39;:     return self.sqlite_by_shell(destination)
+    # Method without a temp file #
+    if method == &#39;object&#39;:    return self.sqlite_by_object(destination, progress)
+    # Method with dataframe #
+    if method == &#39;dataframe&#39;: return self.sqlite_by_df(destination, progress)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.count_rows"><code class="name flex">
+<span>def <span class="ident">count_rows</span></span>(<span>self, table_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the number of entries in a table by counting them.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def count_rows(self, table_name):
+    &#34;&#34;&#34;Return the number of entries in a table by counting them.&#34;&#34;&#34;
+    self.table_must_exist(table_name)
+    query = &#34;SELECT COUNT (*) FROM `%s`&#34; % table_name.lower()
+    self.own_cursor.execute(query)
+    return int(self.own_cursor.fetchone()[0])</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.count_rows_fast"><code class="name flex">
+<span>def <span class="ident">count_rows_fast</span></span>(<span>self, table_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the number of entries in a table by using the quick inaccurate method.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def count_rows_fast(self, table_name):
+    &#34;&#34;&#34;Return the number of entries in a table by using the quick inaccurate method.&#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.drop_table"><code class="name flex">
+<span>def <span class="ident">drop_table</span></span>(<span>self, table_name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def drop_table(self, table_name):
+    if table_name not in self.tables:
+        raise Exception(&#34;The table &#39;%s&#39; does not seem to exist.&#34; % table_name)
+    query = &#34;DROP TABLE %s&#34; % table_name
+    self.own_conn.execute(query)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.import_table"><code class="name flex">
+<span>def <span class="ident">import_table</span></span>(<span>self, source, table_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Copy a table from another Access database to this one.
+Requires that you have mdbtools command line executables installed
+in a Windows Subsystem for Linux environment.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def import_table(self, source, table_name):
+    &#34;&#34;&#34;Copy a table from another Access database to this one.
+    Requires that you have mdbtools command line executables installed
+    in a Windows Subsystem for Linux environment.&#34;&#34;&#34;
+    # Run commands #
+    import pbs3
+    wsl = pbs3.Command(&#34;wsl.exe&#34;)
+    table_schema   = wsl(&#34;-e&#34;, &#34;mdb-schema&#34;, &#34;-T&#34;, table_name, source.wsl_style, &#34;access&#34;)
+    table_contents = wsl(&#34;-e&#34;, &#34;mdb-export&#34;, &#34;-I&#34;, &#34;access&#34;, source.wsl_style, table_name)
+    # Filter #
+    table_schema = &#39; &#39;.join(l for l in table_schema.split(&#39;\n&#39;) if not l.startswith(&#34;--&#34;))
+    # Execute statements #
+    self.cursor.execute(str(table_schema))
+    self.cursor.execute(str(table_contents))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.insert_df"><code class="name flex">
+<span>def <span class="ident">insert_df</span></span>(<span>self, table_name, df)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a table and populate it with data from a dataframe.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def insert_df(self, table_name, df):
+    &#34;&#34;&#34;Create a table and populate it with data from a dataframe.&#34;&#34;&#34;
+    df.to_sql(table_name, con=self.own_conn)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.new_conn"><code class="name flex">
+<span>def <span class="ident">new_conn</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Make a new connection.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def new_conn(self):
+    &#34;&#34;&#34;Make a new connection.&#34;&#34;&#34;
+    import pyodbc
+    return pyodbc.connect(self.conn_string)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.sqlite_by_df"><code class="name flex">
+<span>def <span class="ident">sqlite_by_df</span></span>(<span>self, destination, progress)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Is this fast?</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sqlite_by_df(self, destination, progress):
+    &#34;&#34;&#34;Is this fast?&#34;&#34;&#34;
+    db = SQLiteDatabase(destination)
+    db.create()
+    for table in progress(self.real_tables): self[table].to_sql(table, con=db.connection)
+    db.close()</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.sqlite_by_object"><code class="name flex">
+<span>def <span class="ident">sqlite_by_object</span></span>(<span>self, destination, progress)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This is probably not very fast.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sqlite_by_object(self, destination, progress):
+    &#34;&#34;&#34;This is probably not very fast.&#34;&#34;&#34;
+    db = SQLiteDatabase(destination)
+    db.create()
+    for script in self.sqlite_dump_string(progress): db.cursor.executescript(script)
+    db.close()</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.sqlite_by_shell"><code class="name flex">
+<span>def <span class="ident">sqlite_by_shell</span></span>(<span>self, destination)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Method with shell and a temp file. This is hopefully fast.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sqlite_by_shell(self, destination):
+    &#34;&#34;&#34;Method with shell and a temp file. This is hopefully fast.&#34;&#34;&#34;
+    script_path = new_temp_path()
+    self.sqlite_dump_shell(script_path)
+    from shell_command import shell_output
+    shell_output(&#39;sqlite3 -bail -init &#34;%s&#34; &#34;%s&#34; .quit&#39; % (script, destination))
+    script.remove()</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.sqlite_dump_shell"><code class="name flex">
+<span>def <span class="ident">sqlite_dump_shell</span></span>(<span>self, script_path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a text dump compatible with SQLite by using
+shell commands. Place this script at <em>script_path</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sqlite_dump_shell(self, script_path):
+    &#34;&#34;&#34;Generate a text dump compatible with SQLite by using
+    shell commands. Place this script at *script_path*.&#34;&#34;&#34;
+    # First the schema #
+    from shell_command import shell_output
+    shell_output(&#39;mdb-schema &#34;%s&#34; sqlite &gt;&gt; &#34;%s&#34;&#39; % (self.path, script_path))
+    # Start a transaction, speeds things up when importing #
+    script_path.append(&#34;\n\n\nBEGIN TRANSACTION;\n&#34;)
+    # Then export every table #
+    for table in self.tables:
+        command = &#39;mdb-export -I sqlite &#34;%s&#34; &#34;%s&#34; &gt;&gt; &#34;%s&#34;&#39;
+        shell_output(command % (self.path, table, script_path))
+    # End the transaction
+    script_path.append(&#34;\n\n\nEND TRANSACTION;\n&#34;)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.sqlite_dump_string"><code class="name flex">
+<span>def <span class="ident">sqlite_dump_string</span></span>(<span>self, progress)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a text dump compatible with SQLite.
+By yielding every table one by one as a byte string.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sqlite_dump_string(self, progress):
+    &#34;&#34;&#34;Generate a text dump compatible with SQLite.
+    By yielding every table one by one as a byte string.&#34;&#34;&#34;
+    # First the schema #
+    import pbs3
+    mdb_schema = pbs3.Command(&#34;mdb-schema&#34;)
+    yield mdb_schema(self.path, &#34;sqlite&#34;).encode(&#39;utf8&#39;)
+    # Start a transaction, speeds things up when importing #
+    yield &#34;BEGIN TRANSACTION;\n&#34;
+    # Then export every table #
+    mdb_export = pbs3.Command(&#34;mdb-export&#34;)
+    for table in progress(self.tables):
+        yield mdb_export(&#39;-I&#39;, &#39;sqlite&#39;, self.path, table).encode(&#39;utf8&#39;)
+    # End the transaction
+    yield &#34;END TRANSACTION;\n&#34;</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.table_as_df"><code class="name flex">
+<span>def <span class="ident">table_as_df</span></span>(<span>self, table_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a table as a dataframe.
+There is a library that can do this, but it has a bug.
+See <a href="https://github.com/jbn/pandas_access/issues/3">https://github.com/jbn/pandas_access/issues/3</a></p>
+<pre><code>import pandas_access
+return pandas_access.read_table(self.path, table_name)
+</code></pre>
+<p>This is also a possibility <a href="https://github.com/gilesc/mdbread">https://github.com/gilesc/mdbread</a>
+but it is not in PyPI.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def table_as_df(self, table_name):
+    &#34;&#34;&#34;Return a table as a dataframe.
+    There is a library that can do this, but it has a bug.
+    See https://github.com/jbn/pandas_access/issues/3
+
+        import pandas_access
+        return pandas_access.read_table(self.path, table_name)
+
+    This is also a possibility https://github.com/gilesc/mdbread
+    but it is not in PyPI.
+    &#34;&#34;&#34;
+    # Check #
+    self.table_must_exist(table_name)
+    # If we are on unix use mdb-tools instead #
+    if os.name == &#34;posix&#34;: df = self.table_as_df_via_mdbtools(table_name)
+    # Default case #
+    else: df = self.table_as_df_via_query(table_name)
+    # Optionally rename columns #
+    if self.convert_col_names_to_snake: df = df.rename(columns=camel_to_snake)
+    # Return #
+    return df</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.table_as_df_via_mdbtools"><code class="name flex">
+<span>def <span class="ident">table_as_df_via_mdbtools</span></span>(<span>self, table_name, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Use an mdbtools executable to create the dataframe.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def table_as_df_via_mdbtools(self, table_name, *args, **kwargs):
+    &#34;&#34;&#34;Use an mdbtools executable to create the dataframe.&#34;&#34;&#34;
+    import subprocess
+    cmd = [&#39;mdb-export&#39;, self.path, table_name]
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    return pandas.read_csv(proc.stdout, *args, **kwargs)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.table_as_df_via_query"><code class="name flex">
+<span>def <span class="ident">table_as_df_via_query</span></span>(<span>self, table_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Use an SQL query to create the dataframe.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def table_as_df_via_query(self, table_name):
+    &#34;&#34;&#34;Use an SQL query to create the dataframe.&#34;&#34;&#34;
+    query = &#34;SELECT * FROM `%s`&#34; % table_name.lower()
+    return pandas.read_sql(query, self.own_conn)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.table_must_exist"><code class="name flex">
+<span>def <span class="ident">table_must_exist</span></span>(<span>self, table_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a table as a dataframe.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def table_must_exist(self, table_name):
+    &#34;&#34;&#34;Return a table as a dataframe.&#34;&#34;&#34;
+    if table_name.lower() not in self.tables:
+        raise Exception(&#34;The table &#39;%s&#39; does not seem to exist.&#34; % table_name)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.tables_with_counts"><code class="name flex">
+<span>def <span class="ident">tables_with_counts</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the number of entries in all table.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tables_with_counts(self):
+    &#34;&#34;&#34;Return the number of entries in all table.&#34;&#34;&#34;
+    table_to_count = lambda t: self.count_rows(t)
+    return zip(self.tables, map(table_to_count, self.tables))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.access_database.AccessDatabase.test_table"><code class="name flex">
+<span>def <span class="ident">test_table</span></span>(<span>self, table_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Can the table be read from?</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def test_table(self, table_name):
+    &#34;&#34;&#34;Can the table be read from?&#34;&#34;&#34;
+    import pyodbc
+    try:
+        query = &#34;SELECT COUNT (*) FROM `%s`&#34; % table_name.lower()
+        self.own_cursor.execute(query)
+        self.own_cursor.fetchone()
+    except pyodbc.Error:
+        return False
+    return True</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="plumbing.databases" href="index.html">plumbing.databases</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="plumbing.databases.access_database.AccessDatabase" href="#plumbing.databases.access_database.AccessDatabase">AccessDatabase</a></code></h4>
+<ul class="">
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.close" href="#plumbing.databases.access_database.AccessDatabase.close">close</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.conn" href="#plumbing.databases.access_database.AccessDatabase.conn">conn</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.conn_string" href="#plumbing.databases.access_database.AccessDatabase.conn_string">conn_string</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.convert_col_names_to_snake" href="#plumbing.databases.access_database.AccessDatabase.convert_col_names_to_snake">convert_col_names_to_snake</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.convert_to_sqlite" href="#plumbing.databases.access_database.AccessDatabase.convert_to_sqlite">convert_to_sqlite</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.count_rows" href="#plumbing.databases.access_database.AccessDatabase.count_rows">count_rows</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.count_rows_fast" href="#plumbing.databases.access_database.AccessDatabase.count_rows_fast">count_rows_fast</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.create" href="#plumbing.databases.access_database.AccessDatabase.create">create</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.cursor" href="#plumbing.databases.access_database.AccessDatabase.cursor">cursor</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.drop_table" href="#plumbing.databases.access_database.AccessDatabase.drop_table">drop_table</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.import_table" href="#plumbing.databases.access_database.AccessDatabase.import_table">import_table</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.insert_df" href="#plumbing.databases.access_database.AccessDatabase.insert_df">insert_df</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.new_conn" href="#plumbing.databases.access_database.AccessDatabase.new_conn">new_conn</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.own_conn" href="#plumbing.databases.access_database.AccessDatabase.own_conn">own_conn</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.own_cursor" href="#plumbing.databases.access_database.AccessDatabase.own_cursor">own_cursor</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.real_tables" href="#plumbing.databases.access_database.AccessDatabase.real_tables">real_tables</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.sqlite_by_df" href="#plumbing.databases.access_database.AccessDatabase.sqlite_by_df">sqlite_by_df</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.sqlite_by_object" href="#plumbing.databases.access_database.AccessDatabase.sqlite_by_object">sqlite_by_object</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.sqlite_by_shell" href="#plumbing.databases.access_database.AccessDatabase.sqlite_by_shell">sqlite_by_shell</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.sqlite_dump_shell" href="#plumbing.databases.access_database.AccessDatabase.sqlite_dump_shell">sqlite_dump_shell</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.sqlite_dump_string" href="#plumbing.databases.access_database.AccessDatabase.sqlite_dump_string">sqlite_dump_string</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.table_as_df" href="#plumbing.databases.access_database.AccessDatabase.table_as_df">table_as_df</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.table_as_df_via_mdbtools" href="#plumbing.databases.access_database.AccessDatabase.table_as_df_via_mdbtools">table_as_df_via_mdbtools</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.table_as_df_via_query" href="#plumbing.databases.access_database.AccessDatabase.table_as_df_via_query">table_as_df_via_query</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.table_must_exist" href="#plumbing.databases.access_database.AccessDatabase.table_must_exist">table_must_exist</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.tables" href="#plumbing.databases.access_database.AccessDatabase.tables">tables</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.tables_with_counts" href="#plumbing.databases.access_database.AccessDatabase.tables_with_counts">tables_with_counts</a></code></li>
+<li><code><a title="plumbing.databases.access_database.AccessDatabase.test_table" href="#plumbing.databases.access_database.AccessDatabase.test_table">test_table</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+</footer>
+</body>
+</html>

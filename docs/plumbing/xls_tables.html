@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.3" />
+<title>plumbing.xls_tables API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>plumbing.xls_tables</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Built-in modules #
+
+# First party modules #
+from autopaths import Path
+
+# Third party modules #
+import pandas
+
+# Internal modules #
+from plumbing.cache import property_cached
+
+###############################################################################
+class MultiDataFrameXLS:
+    &#34;&#34;&#34;
+    Takes several dataframes and writes them to an XLS file.
+    The dataframes are spread through different work sheets.
+    But in addition, each work sheet can contain an arbitrary number
+    of dataframes.
+    You have to provide a dictionary where:
+
+    * Each key is the name of a given work sheet in the final XLS as a string.
+    * Each value is a list containing an arbitrary number of dictionaries.
+    * Each one of these dictionaries must contain a DataFrame in the
+      &#39;dataframe&#39; key, as well as optional extra labels as seen below.
+
+            sheet = {
+                &#39;dataframe&#39;: df,
+                &#39;title&#39;:     &#34;Best dataframe ever&#34;,
+                &#39;x_title&#39;:   &#34;Foot length&#34;,
+                &#39;y_title&#39;:   &#34;Yearly income&#34;,
+                &#39;x_label&#39;:   None,
+                &#39;y_label&#39;:   None,
+                &#39;x_extra&#39;:   None,
+                &#39;y_extra&#39;:   None,
+            }
+    &#34;&#34;&#34;
+
+    # Parameters #
+    spacing = 6
+    indentation = 1
+
+    def __init__(self, sheet_to_dfs, path):
+        self.sheet_to_dfs = sheet_to_dfs
+        self.path         = Path(path)
+
+    def __call__(self):
+        &#34;&#34;&#34;
+        Write several dataframes, to several excel sheets.
+        &#34;&#34;&#34;
+        # Create path if not exists #
+        self.path.directory.create_if_not_exists()
+        # Create a writer #
+        self.writer = pandas.ExcelWriter(str(self.path), engine=&#39;xlsxwriter&#39;)
+        # Create a sheet per every key #
+        for key in self.sheet_to_dfs:
+            worksheet = self.writer.book.add_worksheet(key)
+            self.writer.sheets[key] = worksheet
+        # Write each sheet #
+        for key in self.sheet_to_dfs: self.write_one_sheet(key)
+        # Save #
+        self.writer.save()
+        # Return #
+        return self.path
+
+    def write_one_sheet(self, key):
+        &#34;&#34;&#34;
+        Write several dataframes, all to the same excel sheet.
+        It will append a custom title before hand for each
+        dataframe.
+        &#34;&#34;&#34;
+        # Get sheet #
+        sheet = self.writer.sheets[key]
+        # Get dataframes #
+        all_dfs = self.sheet_to_dfs[key]
+        # Initialize #
+        row = 0
+        # Loop #
+        for info in all_dfs:
+            # Get dataframe #
+            df = info[&#39;dataframe&#39;]
+            # Write custom title #
+            sheet.write_string(row, 0, info.get(&#39;title&#39;, &#39;&#39;))
+            row += 2
+            # Add extras #
+            df.index.name   = info.get(&#39;y_extra&#39;, &#39;&#39;)
+            df.columns.name = info.get(&#39;x_extra&#39;, &#39;&#39;)
+            # Add Y labels #
+            title, label = info.get(&#39;y_title&#39;, &#39;&#39;), info.get(&#39;y_label&#39;, &#39;&#39;)
+            df = pandas.concat({title: df}, names=[label])
+            # Add X labels #
+            title, label = info.get(&#39;x_title&#39;, &#39;&#39;), info.get(&#39;x_label&#39;, &#39;&#39;)
+            df = pandas.concat({title: df}, names=[label], axis=1)
+            # Write dataframe #
+            df.to_excel(self.writer,
+                        sheet_name = key,
+                        startrow   = row,
+                        startcol   = self.indentation)
+            # Increment #
+            row += len(df.index) + self.spacing
+
+###############################################################################
+class ConvertExcelToCSV:
+    &#34;&#34;&#34;
+    Will convert an excel file into its CSV equivalent.
+    Can support multiple work sheets into a single CSV.
+    &#34;&#34;&#34;
+
+    def __init__(self, source_path, dest_path, **kwargs):
+        # Record attributes #
+        self.source = Path(source_path)
+        self.dest   = Path(dest_path)
+        # Keep the kwargs too #
+        self.kwargs = kwargs
+        # Check directory case #
+        if self.dest.endswith(&#39;/&#39;):
+            self.dest = self.dest + self.source.filename
+            self.dest = self.dest.replace_extension(&#39;csv&#39;)
+
+    def __call__(self):
+        &#34;&#34;&#34;Are we mono or multi sheet?&#34;&#34;&#34;
+        if len(self.handle.sheet_names) &gt; 1: self.multi_sheet()
+        else:                                self.mono_sheet()
+
+    @property_cached
+    def handle(self):
+        &#34;&#34;&#34;Pandas handle to the excel file.&#34;&#34;&#34;
+        return pandas.ExcelFile(str(self.source))
+
+    def mono_sheet(self):
+        &#34;&#34;&#34;Supports only one work sheet per file.&#34;&#34;&#34;
+        xls = pandas.read_excel(str(self.source))
+        xls.to_csv(str(self.dest), **self.kwargs)
+
+    def multi_sheet(self):
+        &#34;&#34;&#34;
+        Supports multiple work sheets per file.
+        Will concatenate sheets together by adding an extra column
+        containing the original sheet name.
+        &#34;&#34;&#34;
+        # Initialize #
+        all_sheets = []
+        # Loop #
+        for name in self.handle.sheet_names:
+            sheet = self.handle.parse(name)
+            sheet.insert(0, &#34;nace&#34;, name)
+            all_sheets.append(sheet)
+        # Write #
+        df = pandas.concat(all_sheets)
+        df.to_csv(str(self.dest), **self.kwargs)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="plumbing.xls_tables.ConvertExcelToCSV"><code class="flex name class">
+<span>class <span class="ident">ConvertExcelToCSV</span></span>
+<span>(</span><span>source_path, dest_path, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Will convert an excel file into its CSV equivalent.
+Can support multiple work sheets into a single CSV.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ConvertExcelToCSV:
+    &#34;&#34;&#34;
+    Will convert an excel file into its CSV equivalent.
+    Can support multiple work sheets into a single CSV.
+    &#34;&#34;&#34;
+
+    def __init__(self, source_path, dest_path, **kwargs):
+        # Record attributes #
+        self.source = Path(source_path)
+        self.dest   = Path(dest_path)
+        # Keep the kwargs too #
+        self.kwargs = kwargs
+        # Check directory case #
+        if self.dest.endswith(&#39;/&#39;):
+            self.dest = self.dest + self.source.filename
+            self.dest = self.dest.replace_extension(&#39;csv&#39;)
+
+    def __call__(self):
+        &#34;&#34;&#34;Are we mono or multi sheet?&#34;&#34;&#34;
+        if len(self.handle.sheet_names) &gt; 1: self.multi_sheet()
+        else:                                self.mono_sheet()
+
+    @property_cached
+    def handle(self):
+        &#34;&#34;&#34;Pandas handle to the excel file.&#34;&#34;&#34;
+        return pandas.ExcelFile(str(self.source))
+
+    def mono_sheet(self):
+        &#34;&#34;&#34;Supports only one work sheet per file.&#34;&#34;&#34;
+        xls = pandas.read_excel(str(self.source))
+        xls.to_csv(str(self.dest), **self.kwargs)
+
+    def multi_sheet(self):
+        &#34;&#34;&#34;
+        Supports multiple work sheets per file.
+        Will concatenate sheets together by adding an extra column
+        containing the original sheet name.
+        &#34;&#34;&#34;
+        # Initialize #
+        all_sheets = []
+        # Loop #
+        for name in self.handle.sheet_names:
+            sheet = self.handle.parse(name)
+            sheet.insert(0, &#34;nace&#34;, name)
+            all_sheets.append(sheet)
+        # Write #
+        df = pandas.concat(all_sheets)
+        df.to_csv(str(self.dest), **self.kwargs)</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="plumbing.xls_tables.ConvertExcelToCSV.handle"><code class="name">var <span class="ident">handle</span></code></dt>
+<dd>
+<div class="desc"><p>Pandas handle to the excel file.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, instance, owner):
+    # If called from a class #
+    if instance is None: return self
+    # Does a cache exist for this instance? #
+    self.check_cache(instance)
+    # Is the answer in the cache? #
+    if self.name in instance.__cache__: return instance.__cache__[self.name]
+    # If not we will compute it #
+    if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+    else:                                      result = self.func(instance)
+    # Let&#39;s store the answer for later #
+    instance.__cache__[self.name] = result
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="plumbing.xls_tables.ConvertExcelToCSV.mono_sheet"><code class="name flex">
+<span>def <span class="ident">mono_sheet</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Supports only one work sheet per file.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mono_sheet(self):
+    &#34;&#34;&#34;Supports only one work sheet per file.&#34;&#34;&#34;
+    xls = pandas.read_excel(str(self.source))
+    xls.to_csv(str(self.dest), **self.kwargs)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.xls_tables.ConvertExcelToCSV.multi_sheet"><code class="name flex">
+<span>def <span class="ident">multi_sheet</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Supports multiple work sheets per file.
+Will concatenate sheets together by adding an extra column
+containing the original sheet name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def multi_sheet(self):
+    &#34;&#34;&#34;
+    Supports multiple work sheets per file.
+    Will concatenate sheets together by adding an extra column
+    containing the original sheet name.
+    &#34;&#34;&#34;
+    # Initialize #
+    all_sheets = []
+    # Loop #
+    for name in self.handle.sheet_names:
+        sheet = self.handle.parse(name)
+        sheet.insert(0, &#34;nace&#34;, name)
+        all_sheets.append(sheet)
+    # Write #
+    df = pandas.concat(all_sheets)
+    df.to_csv(str(self.dest), **self.kwargs)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="plumbing.xls_tables.MultiDataFrameXLS"><code class="flex name class">
+<span>class <span class="ident">MultiDataFrameXLS</span></span>
+<span>(</span><span>sheet_to_dfs, path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Takes several dataframes and writes them to an XLS file.
+The dataframes are spread through different work sheets.
+But in addition, each work sheet can contain an arbitrary number
+of dataframes.
+You have to provide a dictionary where:</p>
+<ul>
+<li>Each key is the name of a given work sheet in the final XLS as a string.</li>
+<li>Each value is a list containing an arbitrary number of dictionaries.</li>
+<li>Each one of these dictionaries must contain a DataFrame in the
+'dataframe' key, as well as optional extra labels as seen below.<pre><code>sheet = {
+    'dataframe': df,
+    'title':     "Best dataframe ever",
+    'x_title':   "Foot length",
+    'y_title':   "Yearly income",
+    'x_label':   None,
+    'y_label':   None,
+    'x_extra':   None,
+    'y_extra':   None,
+}
+</code></pre>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MultiDataFrameXLS:
+    &#34;&#34;&#34;
+    Takes several dataframes and writes them to an XLS file.
+    The dataframes are spread through different work sheets.
+    But in addition, each work sheet can contain an arbitrary number
+    of dataframes.
+    You have to provide a dictionary where:
+
+    * Each key is the name of a given work sheet in the final XLS as a string.
+    * Each value is a list containing an arbitrary number of dictionaries.
+    * Each one of these dictionaries must contain a DataFrame in the
+      &#39;dataframe&#39; key, as well as optional extra labels as seen below.
+
+            sheet = {
+                &#39;dataframe&#39;: df,
+                &#39;title&#39;:     &#34;Best dataframe ever&#34;,
+                &#39;x_title&#39;:   &#34;Foot length&#34;,
+                &#39;y_title&#39;:   &#34;Yearly income&#34;,
+                &#39;x_label&#39;:   None,
+                &#39;y_label&#39;:   None,
+                &#39;x_extra&#39;:   None,
+                &#39;y_extra&#39;:   None,
+            }
+    &#34;&#34;&#34;
+
+    # Parameters #
+    spacing = 6
+    indentation = 1
+
+    def __init__(self, sheet_to_dfs, path):
+        self.sheet_to_dfs = sheet_to_dfs
+        self.path         = Path(path)
+
+    def __call__(self):
+        &#34;&#34;&#34;
+        Write several dataframes, to several excel sheets.
+        &#34;&#34;&#34;
+        # Create path if not exists #
+        self.path.directory.create_if_not_exists()
+        # Create a writer #
+        self.writer = pandas.ExcelWriter(str(self.path), engine=&#39;xlsxwriter&#39;)
+        # Create a sheet per every key #
+        for key in self.sheet_to_dfs:
+            worksheet = self.writer.book.add_worksheet(key)
+            self.writer.sheets[key] = worksheet
+        # Write each sheet #
+        for key in self.sheet_to_dfs: self.write_one_sheet(key)
+        # Save #
+        self.writer.save()
+        # Return #
+        return self.path
+
+    def write_one_sheet(self, key):
+        &#34;&#34;&#34;
+        Write several dataframes, all to the same excel sheet.
+        It will append a custom title before hand for each
+        dataframe.
+        &#34;&#34;&#34;
+        # Get sheet #
+        sheet = self.writer.sheets[key]
+        # Get dataframes #
+        all_dfs = self.sheet_to_dfs[key]
+        # Initialize #
+        row = 0
+        # Loop #
+        for info in all_dfs:
+            # Get dataframe #
+            df = info[&#39;dataframe&#39;]
+            # Write custom title #
+            sheet.write_string(row, 0, info.get(&#39;title&#39;, &#39;&#39;))
+            row += 2
+            # Add extras #
+            df.index.name   = info.get(&#39;y_extra&#39;, &#39;&#39;)
+            df.columns.name = info.get(&#39;x_extra&#39;, &#39;&#39;)
+            # Add Y labels #
+            title, label = info.get(&#39;y_title&#39;, &#39;&#39;), info.get(&#39;y_label&#39;, &#39;&#39;)
+            df = pandas.concat({title: df}, names=[label])
+            # Add X labels #
+            title, label = info.get(&#39;x_title&#39;, &#39;&#39;), info.get(&#39;x_label&#39;, &#39;&#39;)
+            df = pandas.concat({title: df}, names=[label], axis=1)
+            # Write dataframe #
+            df.to_excel(self.writer,
+                        sheet_name = key,
+                        startrow   = row,
+                        startcol   = self.indentation)
+            # Increment #
+            row += len(df.index) + self.spacing</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="plumbing.xls_tables.MultiDataFrameXLS.indentation"><code class="name">var <span class="ident">indentation</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="plumbing.xls_tables.MultiDataFrameXLS.spacing"><code class="name">var <span class="ident">spacing</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="plumbing.xls_tables.MultiDataFrameXLS.write_one_sheet"><code class="name flex">
+<span>def <span class="ident">write_one_sheet</span></span>(<span>self, key)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Write several dataframes, all to the same excel sheet.
+It will append a custom title before hand for each
+dataframe.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_one_sheet(self, key):
+    &#34;&#34;&#34;
+    Write several dataframes, all to the same excel sheet.
+    It will append a custom title before hand for each
+    dataframe.
+    &#34;&#34;&#34;
+    # Get sheet #
+    sheet = self.writer.sheets[key]
+    # Get dataframes #
+    all_dfs = self.sheet_to_dfs[key]
+    # Initialize #
+    row = 0
+    # Loop #
+    for info in all_dfs:
+        # Get dataframe #
+        df = info[&#39;dataframe&#39;]
+        # Write custom title #
+        sheet.write_string(row, 0, info.get(&#39;title&#39;, &#39;&#39;))
+        row += 2
+        # Add extras #
+        df.index.name   = info.get(&#39;y_extra&#39;, &#39;&#39;)
+        df.columns.name = info.get(&#39;x_extra&#39;, &#39;&#39;)
+        # Add Y labels #
+        title, label = info.get(&#39;y_title&#39;, &#39;&#39;), info.get(&#39;y_label&#39;, &#39;&#39;)
+        df = pandas.concat({title: df}, names=[label])
+        # Add X labels #
+        title, label = info.get(&#39;x_title&#39;, &#39;&#39;), info.get(&#39;x_label&#39;, &#39;&#39;)
+        df = pandas.concat({title: df}, names=[label], axis=1)
+        # Write dataframe #
+        df.to_excel(self.writer,
+                    sheet_name = key,
+                    startrow   = row,
+                    startcol   = self.indentation)
+        # Increment #
+        row += len(df.index) + self.spacing</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="plumbing" href="index.html">plumbing</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="plumbing.xls_tables.ConvertExcelToCSV" href="#plumbing.xls_tables.ConvertExcelToCSV">ConvertExcelToCSV</a></code></h4>
+<ul class="">
+<li><code><a title="plumbing.xls_tables.ConvertExcelToCSV.handle" href="#plumbing.xls_tables.ConvertExcelToCSV.handle">handle</a></code></li>
+<li><code><a title="plumbing.xls_tables.ConvertExcelToCSV.mono_sheet" href="#plumbing.xls_tables.ConvertExcelToCSV.mono_sheet">mono_sheet</a></code></li>
+<li><code><a title="plumbing.xls_tables.ConvertExcelToCSV.multi_sheet" href="#plumbing.xls_tables.ConvertExcelToCSV.multi_sheet">multi_sheet</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="plumbing.xls_tables.MultiDataFrameXLS" href="#plumbing.xls_tables.MultiDataFrameXLS">MultiDataFrameXLS</a></code></h4>
+<ul class="">
+<li><code><a title="plumbing.xls_tables.MultiDataFrameXLS.indentation" href="#plumbing.xls_tables.MultiDataFrameXLS.indentation">indentation</a></code></li>
+<li><code><a title="plumbing.xls_tables.MultiDataFrameXLS.spacing" href="#plumbing.xls_tables.MultiDataFrameXLS.spacing">spacing</a></code></li>
+<li><code><a title="plumbing.xls_tables.MultiDataFrameXLS.write_one_sheet" href="#plumbing.xls_tables.MultiDataFrameXLS.write_one_sheet">write_one_sheet</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+</footer>
+</body>
+</html>

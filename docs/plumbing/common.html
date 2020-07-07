@@ -1,0 +1,2057 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.3" />
+<title>plumbing.common API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>plumbing.common</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># -*- coding: utf-8 -*-
+
+# Built-in modules #
+import sys, os, time, re, random, math, json
+import getpass, hashlib, collections
+import unicodedata
+from itertools import compress, product
+
+# Third party modules #
+from six import string_types
+
+# One liners #
+flatter = lambda x: [item for sublist in x for item in sublist]
+
+################################################################################
+def ascii(text):
+    &#34;&#34;&#34;Make a safe, ASCII version a string. For instance for use on the web.&#34;&#34;&#34;
+    return unicodedata.normalize(&#39;NFKD&#39;, unicode(text)).encode(&#39;ASCII&#39;, &#39;ignore&#39;)
+
+def alphanumeric(text):
+    r&#34;&#34;&#34;Make an ultra-safe, ASCII version a string.
+    For instance for use as a filename.
+    \w matches any alphanumeric character and the underscore.&#34;&#34;&#34;
+    return &#34;&#34;.join([c for c in text if re.match(r&#39;\w&#39;, c)])
+
+################################################################################
+def sanitize_text(text):
+    r&#34;&#34;&#34;Make a safe representation of a string.
+    Note: the `\s` special character matches any whitespace character.
+    This is equivalent to the set [\t\n\r\f\v] as well as ` ` (whitespace).&#34;&#34;&#34;
+    # First replace characters that have specific effects with their repr #
+    text = re.sub(&#34;(\\s)&#34;, lambda m: repr(m.group(0)).strip(&#34;&#39;&#34;), text)
+    # Make it a unicode string (the try supports python 2 and 3) #
+    try: text = text.decode(&#39;utf-8&#39;)
+    except AttributeError: pass
+    # Normalize it “
+    text = unicodedata.normalize(&#39;NFC&#39;, text)
+    return text
+
+################################################################################
+def camel_to_snake(text):
+    &#34;&#34;&#34;
+    Will convert CamelCaseStrings to snake_case_strings.
+    &gt;&gt;&gt; camel_to_snake(&#39;CamelCase&#39;)
+    &#39;camel_case&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;CamelCamelCase&#39;)
+    &#39;camel_camel_case&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;Camel2Camel2Case&#39;)
+    &#39;camel2_camel2_case&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;getHTTPResponseCode&#39;)
+    &#39;get_http_response_code&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;get2HTTPResponseCode&#39;)
+    &#39;get2_http_response_code&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;HTTPResponseCode&#39;)
+    &#39;http_response_code&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;HTTPResponseCodeXYZ&#39;)
+    &#39;http_response_code_xyz&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;Double_Case&#39;)
+    &#39;double_case&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;SW_Merch&#39;)
+    &#39;sw_merch&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;Odd/Characters&#39;)
+    &#39;odd_characters&#39;
+    &#34;&#34;&#34;
+    # Load #
+    result = text
+    # Eliminate trailing spaces #
+    result = result.strip(&#39; &#39;)
+    # First step #
+    try:
+        result = re.sub(&#39;(.)([A-Z][a-z]+)&#39;,  r&#39;\1_\2&#39;, result)
+    except TypeError:
+        print(&#34;The text received was &#39;%s&#39;&#34; % result)
+        raise
+    # Second step #
+    result = re.sub(&#39;([a-z0-9])([A-Z])&#39;, r&#39;\1_\2&#39;, result)
+    # Lower case the rest #
+    result = result.lower()
+    # Eliminate remaining spaces #
+    result = result.replace(&#39; &#39;, &#39;&#39;)
+    # Eliminate quote characters #
+    result = result.replace(&#39;&#34;&#39;, &#39;&#39;)
+    result = result.replace(&#34;&#39;&#34;, &#39;&#39;)
+    # Eliminate special characters #
+    result = result.replace(&#39;/&#39;, &#39;_&#39;)
+    # Eliminate double underscore #
+    while &#39;__&#39; in result: result = result.replace(&#39;__&#39;, &#39;_&#39;)
+    # Return #
+    return result
+
+################################################################################
+def bool_to_unicode(b):
+    &#34;&#34;&#34;Different possibilities for True: ☑️✔︎✓✅👍✔️
+       Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴&#34;&#34;&#34;
+    b = bool(b)
+    if b is True:  return u&#34;✅&#34;
+    if b is False: return u&#34;❎&#34;
+
+###############################################################################
+def access_dict_like_obj(obj, prop, new_value=None):
+    &#34;&#34;&#34;
+    Access a dictionary like if it was an object with properties.
+    If no &#34;new_value&#34;, then it&#39;s a getter, otherwise it&#39;s a setter.
+    &gt;&gt;&gt; {&#39;characters&#39;: {&#39;cast&#39;: &#39;Jean-Luc Picard&#39;, &#39;featuring&#39;: &#39;Deanna Troi&#39;}}
+    &gt;&gt;&gt; access_dict_like_obj(startrek, &#39;characters.cast&#39;, &#39;Pierce Brosnan&#39;)
+    &#34;&#34;&#34;
+    props = prop.split(&#39;.&#39;)
+    if new_value:
+        if props[0] not in obj: obj[props[0]] = {}
+        if len(props)==1: obj[prop] = new_value
+        else: return access_dict_like_obj(obj[props[0]], &#39;.&#39;.join(props[1:]), new_value)
+    else:
+        if len(props)==1: return obj[prop]
+        else: return access_dict_like_obj(obj[props[0]], &#39;.&#39;.join(props[1:]))
+
+################################################################################
+def all_combinations(items):
+    &#34;&#34;&#34;Generate all combinations of a given list of items.&#34;&#34;&#34;
+    return (set(compress(items,mask)) for mask in product(*[[0,1]]*len(items)))
+
+################################################################################
+def pad_equal_whitespace(string, pad=None):
+    &#34;&#34;&#34;Given a multiline string, add whitespaces to every line
+    so that every line has the same length.&#34;&#34;&#34;
+    if pad is None: pad = max(map(len, string.split(&#39;\n&#39;))) + 1
+    return &#39;\n&#39;.join((&#39;{0: &lt;%i}&#39; % pad).format(line) for line in string.split(&#39;\n&#39;))
+
+################################################################################
+def pad_extra_whitespace(string, pad):
+    &#34;&#34;&#34;Given a multiline string, add extra whitespaces to the front of every line.&#34;&#34;&#34;
+    return &#39;\n&#39;.join(&#39; &#39; * pad + line for line in string.split(&#39;\n&#39;))
+
+###############################################################################
+def mirror_lines(string):
+    &#34;&#34;&#34;Given a multiline string, return its reflection along a vertical axis.
+    Can be useful for the visualization of text version of trees.&#34;&#34;&#34;
+    return &#39;\n&#39;.join(line[::-1] for line in string.split(&#39;\n&#39;))
+
+###############################################################################
+def concatenate_by_line(first, second):
+    &#34;&#34;&#34;Zip two strings together, line wise&#34;&#34;&#34;
+    return &#39;\n&#39;.join(x+y for x,y in zip(first.split(&#39;\n&#39;), second.split(&#39;\n&#39;)))
+
+################################################################################
+def sort_string_by_pairs(strings):
+    &#34;&#34;&#34;Group a list of strings by pairs, by matching those with only
+    one character difference between each other together.&#34;&#34;&#34;
+    assert len(strings) % 2 == 0
+    pairs = []
+    strings = list(strings) # This shallow copies the list
+    while strings:
+        template = strings.pop()
+        for i, candidate in enumerate(strings):
+            if count_string_diff(template, candidate) == 1:
+                pair = [template, strings.pop(i)]
+                pair.sort()
+                pairs.append(pair)
+                break
+    return pairs
+
+################################################################################
+def count_string_diff(a,b):
+    &#34;&#34;&#34;Return the number of characters in two strings that don&#39;t exactly match&#34;&#34;&#34;
+    shortest = min(len(a), len(b))
+    return sum(a[i] != b[i] for i in range(shortest))
+
+################################################################################
+def iflatten(L):
+    &#34;&#34;&#34;Iterative flatten.&#34;&#34;&#34;
+    for sublist in L:
+        if hasattr(sublist, &#39;__iter__&#39;):
+            for item in iflatten(sublist): yield item
+        else: yield sublist
+
+################################################################################
+def uniquify_list(L):
+    &#34;&#34;&#34;Same order unique list using only a list compression.&#34;&#34;&#34;
+    return [e for i, e in enumerate(L) if L.index(e) == i]
+
+################################################################################
+def average(iterator):
+    &#34;&#34;&#34;Iterative mean.&#34;&#34;&#34;
+    count = 0
+    total = 0
+    for num in iterator:
+        count += 1
+        total += num
+    return float(total)/count
+
+################################################################################
+def round_to_halves(number):
+    &#34;&#34;&#34;Round a number to the closest half integer.
+    &gt;&gt;&gt; round_to_halves(1.3)
+    1.5
+    &gt;&gt;&gt; round_to_halves(2.6)
+    2.5
+    &gt;&gt;&gt; round_to_halves(3.0)
+    3.0
+    &gt;&gt;&gt; round_to_halves(4.1)
+    4.0
+    &#34;&#34;&#34;
+    return round(number * 2) / 2
+
+################################################################################
+def get_next_item(iterable):
+    &#34;&#34;&#34;Gets the next item of an iterable.
+    If the iterable is exhausted, returns None.&#34;&#34;&#34;
+    try: x = iterable.next()
+    except StopIteration: x = None
+    except AttributeError: x = None
+    return x
+
+################################################################################
+def pretty_now():
+    &#34;&#34;&#34;Returns some thing like &#39;2019-02-15 15:58:22 CET+0100&#39;&#34;&#34;&#34;
+    import datetime, tzlocal
+    time_zone = tzlocal.get_localzone()
+    now       = datetime.datetime.now(time_zone)
+    return now.strftime(&#34;%Y-%m-%d %H:%M:%S %Z%z&#34;)
+
+################################################################################
+def andify(list_of_strings):
+    &#34;&#34;&#34;
+    Given a list of strings will join them with commas
+    and a final &#34;and&#34; word.
+
+    &gt;&gt;&gt; andify([&#39;Apples&#39;, &#39;Oranges&#39;, &#39;Mangos&#39;])
+    &#39;Apples, Oranges and Mangos&#39;
+    &#34;&#34;&#34;
+    result = &#39;, &#39;.join(list_of_strings)
+    comma_index = result.rfind(&#39;,&#39;)
+    if comma_index &gt; -1: result = result[:comma_index] + &#39; and&#39; + result[comma_index+1:]
+    return result
+
+################################################################################
+def num_to_ith(num):
+    &#34;&#34;&#34;1 becomes 1st, 2 becomes 2nd, etc.&#34;&#34;&#34;
+    value             = str(num)
+    before_last_digit = value[-2]
+    last_digit        = value[-1]
+    if len(value) &gt; 1 and before_last_digit == &#39;1&#39;: return value +&#39;th&#39;
+    if last_digit == &#39;1&#39;: return value + &#39;st&#39;
+    if last_digit == &#39;2&#39;: return value + &#39;nd&#39;
+    if last_digit == &#39;3&#39;: return value + &#39;rd&#39;
+    return value + &#39;th&#39;
+
+################################################################################
+def isubsample(full_sample, k, full_sample_len=None):
+    &#34;&#34;&#34;Down-sample an enumerable list of things&#34;&#34;&#34;
+    # Determine length #
+    if not full_sample_len: full_sample_len = len(full_sample)
+    # Check size coherence #
+    if not 0 &lt;= k &lt;= full_sample_len:
+        raise ValueError(&#39;Required that 0 &lt;= k &lt;= full_sample_length&#39;)
+    # Do it #
+    picked = 0
+    for i, element in enumerate(full_sample):
+        prob = (k-picked) / (full_sample_len-i)
+        if random.random() &lt; prob:
+            yield element
+            picked += 1
+    # Did we pick the right amount #
+    assert picked == k
+
+###############################################################################
+def sum_vectors_with_padding(vectors):
+    &#34;&#34;&#34;
+    Given an arbitrary amount of NumPy one-dimensional vectors of floats,
+    do an element-wise sum, padding with 0 any that are shorter than the
+    longest array (see https://stackoverflow.com/questions/56166217).
+
+    &gt;&gt;&gt; v1 = numpy.array([0, 0, 5, 5, 1, 1, 1, 1, 0, 0])
+    &gt;&gt;&gt; v2 = numpy.array([4, 4, 4, 5, 5, 0, 0])
+    &gt;&gt;&gt; v3 = numpy.array([1, 1, 1])
+    &gt;&gt;&gt; sum_vectors_with_padding([v1, v2, v3])
+    array([ 5,  5, 10, 10,  6,  1,  1,  1,  0,  0])
+    &#34;&#34;&#34;
+    import numpy
+    all_lengths = [len(i) for i in vectors]
+    max_length  = max(all_lengths)
+    out         = numpy.zeros(max_length)
+    for l,v in zip(all_lengths, vectors): out[:l] += v
+    return out
+
+###############################################################################
+def moving_average(interval, windowsize, borders=None):
+    &#34;&#34;&#34;This is essentially a convolution operation
+     Several option exist for dealing with the border cases.
+
+        * None: Here the returned signal will be smaller than the inputted interval.
+
+        * zero_padding: Here the returned signal will be larger than the inputted
+        interval and we will add zeros to the original interval before operating
+         the convolution.
+
+        * zero_padding_and_cut: Same as above only the result is truncated to be
+         the same size as the original input.
+
+        * copy_padding: Here the returned signal will be larger than the inputted
+         interval and we will use the right and leftmost values for padding before
+          operating the convolution.
+
+        * copy_padding_and_cut: Same as above only the result is truncated to be
+         the same size as the original input.
+
+        * zero_stretching: Here we will compute the convolution only in the valid domain,
+         then add zeros to the result so that the output is the same size as the input.
+
+        * copy_stretching: Here we will compute the convolution only in the valid domain,
+         then copy the right and leftmost values so that the output is the same
+          size as the input.
+        &#34;&#34;&#34;
+    # The window size in half #
+    half = int(math.floor(windowsize/2.0))
+    # The normalized rectangular signal #
+    import numpy
+    window = numpy.ones(int(windowsize))/float(windowsize)
+    # How do we deal with borders #
+    if borders is None:
+        return numpy.convolve(interval, window, &#39;valid&#39;)
+    if borders == &#39;zero_padding&#39;:
+        return numpy.convolve(interval, window, &#39;full&#39;)
+    if borders == &#39;zero_padding_and_cut&#39;:
+        return numpy.convolve(interval, window, &#39;same&#39;)
+    if borders == &#39;copy_padding&#39;:
+        new_interval = [interval[0]]*(windowsize-1) + interval + [interval[-1]]*(windowsize-1)
+        return numpy.convolve(new_interval, window, &#39;valid&#39;)
+    if borders == &#39;copy_padding_and_cut&#39;:
+        new_interval = [interval[0]]*(windowsize-1) + interval + [interval[-1]]*(windowsize-1)
+        return numpy.convolve(new_interval, window, &#39;valid&#39;)[half:-half]
+    if borders == &#39;zero_stretching&#39;:
+        result = numpy.convolve(interval, window, &#39;valid&#39;)
+        pad = numpy.zeros(half)
+        return numpy.concatenate((pad, result, pad))
+    if borders == &#39;copy_stretching&#39;:
+        result = numpy.convolve(interval, window, &#39;valid&#39;)
+        left = numpy.ones(half)*result[0]
+        right = numpy.ones(half)*result[-1]
+        return numpy.concatenate((left, result, right))
+
+################################################################################
+def wait(predicate, interval=1, message=lambda: &#34;Waiting...&#34;):
+    &#34;&#34;&#34;Wait until the predicate turns true and display a turning ball.&#34;&#34;&#34;
+    ball, next_ball = u&#34;|/-\\&#34;, &#34;|&#34;
+    sys.stdout.write(&#34;    \033[K&#34;)
+    sys.stdout.flush()
+    while not predicate():
+        time.sleep(interval)
+        next_ball = ball[(ball.index(next_ball) + 1) % len(ball)]
+        sys.stdout.write(&#34;\r &#34; + str(message()) + &#34; &#34; + next_ball + &#34; \033[K&#34;)
+        sys.stdout.flush()
+    print(&#34;\r Done. \033[K&#34;)
+    sys.stdout.flush()
+
+###############################################################################
+def natural_sort(item):
+    &#34;&#34;&#34;
+    Sort strings that contain numbers correctly. Works in Python 2 and 3.
+
+    &gt;&gt;&gt; l = [&#39;v1.3.12&#39;, &#39;v1.3.3&#39;, &#39;v1.2.5&#39;, &#39;v1.2.15&#39;, &#39;v1.2.3&#39;, &#39;v1.2.1&#39;]
+    &gt;&gt;&gt; l.sort(key=natural_sort)
+    &gt;&gt;&gt; l.__repr__()
+    &#34;[&#39;v1.2.1&#39;, &#39;v1.2.3&#39;, &#39;v1.2.5&#39;, &#39;v1.2.15&#39;, &#39;v1.3.3&#39;, &#39;v1.3.12&#39;]&#34;
+    &#34;&#34;&#34;
+    dre = re.compile(r&#39;(\d+)&#39;)
+    return [int(s) if s.isdigit() else s.lower() for s in re.split(dre, item)]
+
+###############################################################################
+def split_thousands(s):
+    &#34;&#34;&#34;
+    Splits a number on thousands.
+
+    &gt;&gt;&gt; split_thousands(1000012)
+    &#34;1&#39;000&#39;012&#34;
+    &#34;&#34;&#34;
+    # Check input #
+    if s is None: return &#34;0&#34;
+    # If it&#39;s a string #
+    if isinstance(s, string_types): s = float(s)
+    # If it&#39;s a float that should be an int #
+    if isinstance(s, float) and s.is_integer(): s = int(s)
+    # Use python built-in #
+    result = &#34;{:,}&#34;.format(s)
+    # But we want single quotes #
+    result = result.replace(&#39;,&#39;, &#34;&#39;&#34;)
+    # Return #
+    return result
+
+################################################################################
+def gps_deg_to_float(data):
+    m = re.search(&#34;(\\d+?)°(\\d+?)\&#39;(\\d+?)\&#39;\&#39;&#34;, data.strip())
+    degs, mins, secs = [0.0 if m.group(i) is None else int(m.group(i)) for i in range(1, 4)]
+    comp_dir = -1 if data[-1] in (&#39;N&#39;, &#39;E&#39;) else 1
+    return (degs + (mins / 60) + (secs / 3600)) * comp_dir
+
+################################################################################
+def is_integer(string):
+    try: int(string)
+    except ValueError: return False
+    return True
+
+################################################################################
+def reverse_compl_with_name(old_seq):
+    &#34;&#34;&#34;Reverse a SeqIO sequence, but keep its name intact.&#34;&#34;&#34;
+    new_seq = old_seq.reverse_complement()
+    new_seq.id = old_seq.id
+    new_seq.description = old_seq.description
+    return new_seq
+
+################################################################################
+class GenWithLength(object):
+    &#34;&#34;&#34;A generator with a length attribute&#34;&#34;&#34;
+    def __init__(self, gen, length): self.gen, self.length = gen, length
+    def __iter__(self): return self.gen
+    def __len__(self):  return self.length
+
+###############################################################################
+class Password(object):
+    &#34;&#34;&#34;A password object that will only prompt the user once per session&#34;&#34;&#34;
+    def __str__(self): return self.value
+    def __init__(self, prompt=None):
+        self._value = None
+        self.prompt = prompt
+
+    @property
+    def value(self):
+        if self._value == None: self._value = getpass.getpass(self.prompt)
+        return self._value
+
+################################################################################
+class OrderedSet(collections.OrderedDict, collections.abc.MutableSet):
+    &#34;&#34;&#34;
+    A recipe for an ordered set.
+    http://stackoverflow.com/a/1653978/287297
+    &#34;&#34;&#34;
+
+    def update(self, *args, **kwargs):
+        if kwargs: raise TypeError(&#34;update() takes no keyword arguments&#34;)
+        for s in args:
+            for e in s: self.add(e)
+
+    def add(self, elem):     self[elem] = None
+    def discard(self, elem): self.pop(elem, None)
+    def __le__(self, other): return all(e in other for e in self)
+    def __lt__(self, other): return self &lt;= other and self != other
+    def __ge__(self, other): return all(e in self for e in other)
+    def __gt__(self, other): return self &gt;= other and self != other
+    def __repr__(self):      return &#39;OrderedSet([%s])&#39; % (&#39;, &#39;.join(map(repr, self.keys())))
+    def __str__(self):       return &#39;{%s}&#39; % (&#39;, &#39;.join(map(repr, self.keys())))
+
+    difference                  = property(lambda self: self.__sub__)
+    difference_update           = property(lambda self: self.__isub__)
+    intersection                = property(lambda self: self.__and__)
+    intersection_update         = property(lambda self: self.__iand__)
+    issubset                    = property(lambda self: self.__le__)
+    issuperset                  = property(lambda self: self.__ge__)
+    symmetric_difference        = property(lambda self: self.__xor__)
+    symmetric_difference_update = property(lambda self: self.__ixor__)
+    union                       = property(lambda self: self.__or__)
+
+################################################################################
+def load_json_path(path):
+    &#34;&#34;&#34;Load a file with the json module, but report errors better if it
+    fails. And have it ordered too !&#34;&#34;&#34;
+    with open(path) as handle:
+        try: return json.load(handle, object_pairs_hook=collections.OrderedDict)
+        except ValueError as error:
+            message = &#34;Could not decode JSON file &#39;%s&#39;.&#34; % path
+            message = &#34;-&#34;*20 + &#34;\n&#34; + message + &#34;\n&#34; + str(error) + &#34;\n&#34; + &#34;-&#34;*20 + &#34;\n&#34;
+            sys.stderr.write(message)
+            raise error
+
+###############################################################################
+def find_file_by_name(name, root=os.curdir):
+    for dirpath, dirnames, filenames in os.walk(os.path.abspath(root)):
+        if name in filenames: return os.path.join(dirpath, name)
+    raise Exception(&#34;Could not find file &#39;%s&#39; in &#39;%s&#39;&#34; % (name, root))
+
+################################################################################
+def md5sum(file_path, blocksize=65536):
+    &#34;&#34;&#34;Compute the md5 of a file. Pretty fast.&#34;&#34;&#34;
+    md5 = hashlib.md5()
+    with open(file_path, &#34;rb&#34;) as f:
+        for block in iter(lambda: f.read(blocksize), &#34;&#34;):
+            md5.update(block)
+    return md5.hexdigest()
+
+###############################################################################
+def reversed_lines(path):
+    &#34;&#34;&#34;Generate the lines of file in reverse order.&#34;&#34;&#34;
+    with open(path, &#39;r&#39;) as handle:
+        part = &#39;&#39;
+        for block in reversed_blocks(handle):
+            for c in reversed(block):
+                if c == &#39;\n&#39; and part:
+                    yield part[::-1]
+                    part = &#39;&#39;
+                part += c
+        if part: yield part[::-1]
+
+###############################################################################
+def reversed_blocks(handle, blocksize=4096):
+    &#34;&#34;&#34;Generate blocks of file&#39;s contents in reverse order.&#34;&#34;&#34;
+    handle.seek(0, os.SEEK_END)
+    here = handle.tell()
+    while 0 &lt; here:
+        delta = min(blocksize, here)
+        here -= delta
+        handle.seek(here, os.SEEK_SET)
+        yield handle.read(delta)
+
+################################################################################
+def prepend_to_file(path, data, bufsize=1&lt;&lt;15):
+    &#34;&#34;&#34;TODO:
+    * Add a random string to the backup file.
+    * Restore permissions after copy.
+    &#34;&#34;&#34;
+    # Backup the file #
+    backupname = path + os.extsep + &#39;bak&#39;
+    # Remove previous backup if it exists #
+    try: os.unlink(backupname)
+    except OSError: pass
+    os.rename(path, backupname)
+    # Open input/output files,  note: outputfile&#39;s permissions lost #
+    with open(backupname) as inputfile:
+        with open(path, &#39;w&#39;) as outputfile:
+            outputfile.write(data)
+            buf = inputfile.read(bufsize)
+            while buf:
+                outputfile.write(buf)
+                buf = inputfile.read(bufsize)
+    # Remove backup on success #
+    os.remove(backupname)
+
+def append_to_file(path, data):
+    with open(path, &#34;a&#34;) as handle:
+        handle.write(data)
+
+################################################################################
+def tail(path, window=20):
+    with open(path, &#39;r&#39;) as f:
+        BUFSIZ = 1024
+        f.seek(0, 2)
+        num_bytes = f.tell()
+        size = window + 1
+        block = -1
+        data = []
+        while size &gt; 0 and num_bytes &gt; 0:
+            if num_bytes - BUFSIZ &gt; 0:
+                # Seek back one whole BUFSIZ
+                f.seek(block * BUFSIZ, 2)
+                # Read BUFFER
+                data.insert(0, f.read(BUFSIZ))
+            else:
+                # File too small, start from beginning
+                f.seek(0,0)
+                # Only read what was not read
+                data.insert(0, f.read(num_bytes))
+            lines_found = data[0].count(&#39;\n&#39;)
+            size -= lines_found
+            num_bytes -= BUFSIZ
+            block -= 1
+        return &#39;\n&#39;.join(&#39;&#39;.join(data).splitlines()[-window:])
+
+def head(path, lines=20):
+    with open(path, &#39;r&#39;) as handle:
+        return &#39;&#39;.join(handle.next() for line in xrange(lines))
+
+###############################################################################
+def which(cmd_name, safe=False):
+    &#34;&#34;&#34;
+    Portable Python implementation of the unix `which` command.
+    Will return the full path of a given executable if it is found
+    somewhere in the `$PATH`.
+    Otherwise we return `None` or alternatively we raise an exception when
+    `safe` is set to False.
+    Note: Python 3.3 and above also offers `shutil.which()`.
+    Based on the package at: https://github.com/jc0n/python-which
+    And the answers at: http://stackoverflow.com/questions/377017
+    &#34;&#34;&#34;
+    # The name of the command cannot contain separators #
+    assert os.sep not in cmd_name
+    # We will use our own first party package #
+    from autopaths.file_path import FilePath
+    # Loop over every path in the environment variable #
+    for path in os.environ[&#39;PATH&#39;].split(os.pathsep):
+        path = os.path.expanduser(path)
+        candidate = os.path.join(path, cmd_name)
+        if not os.path.isfile(candidate):     continue
+        if not os.access(candidate, os.X_OK): continue
+        return FilePath(candidate)
+    # Raise an exception optionally #
+    msg = &#39;which() failed to locate a proper command path for &#34;%s&#34;&#39; % cmd_name
+    if not safe: raise Exception(msg)
+
+###############################################################################
+def query_yes_no(question, default=&#34;no&#34;):
+    &#34;&#34;&#34;Ask a yes/no question via raw_input() and return their answer.
+
+    &#34;question&#34; is a string that is presented to the user.
+    &#34;default&#34; is the presumed answer if the user just hits &lt;Enter&gt;.
+        It must be &#34;yes&#34; (the default), &#34;no&#34; or None (meaning
+        an answer is required of the user).
+
+    The &#34;answer&#34; return value is True for &#34;yes&#34; or False for &#34;no&#34;.
+    &#34;&#34;&#34;
+    valid = {&#34;yes&#34;: True, &#34;y&#34;: True, &#34;ye&#34;: True, &#34;no&#34;: False, &#34;n&#34;: False}
+    if default is None:    prompt = &#34; [y/n] &#34;
+    elif default == &#34;yes&#34;: prompt = &#34; [Y/n] &#34;
+    elif default == &#34;no&#34;:  prompt = &#34; [y/N] &#34;
+    else: raise ValueError(&#34;invalid default answer: &#39;%s&#39;&#34; % default)
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == &#39;&#39;: return valid[default]
+        elif choice in valid:                    return valid[choice]
+        else: sys.stdout.write(&#34;Please respond with &#39;yes&#39; or &#39;no&#39;\n&#34;)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="plumbing.common.access_dict_like_obj"><code class="name flex">
+<span>def <span class="ident">access_dict_like_obj</span></span>(<span>obj, prop, new_value=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Access a dictionary like if it was an object with properties.
+If no "new_value", then it's a getter, otherwise it's a setter.</p>
+<pre><code class="python">&gt;&gt;&gt; {'characters': {'cast': 'Jean-Luc Picard', 'featuring': 'Deanna Troi'}}
+&gt;&gt;&gt; access_dict_like_obj(startrek, 'characters.cast', 'Pierce Brosnan')
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def access_dict_like_obj(obj, prop, new_value=None):
+    &#34;&#34;&#34;
+    Access a dictionary like if it was an object with properties.
+    If no &#34;new_value&#34;, then it&#39;s a getter, otherwise it&#39;s a setter.
+    &gt;&gt;&gt; {&#39;characters&#39;: {&#39;cast&#39;: &#39;Jean-Luc Picard&#39;, &#39;featuring&#39;: &#39;Deanna Troi&#39;}}
+    &gt;&gt;&gt; access_dict_like_obj(startrek, &#39;characters.cast&#39;, &#39;Pierce Brosnan&#39;)
+    &#34;&#34;&#34;
+    props = prop.split(&#39;.&#39;)
+    if new_value:
+        if props[0] not in obj: obj[props[0]] = {}
+        if len(props)==1: obj[prop] = new_value
+        else: return access_dict_like_obj(obj[props[0]], &#39;.&#39;.join(props[1:]), new_value)
+    else:
+        if len(props)==1: return obj[prop]
+        else: return access_dict_like_obj(obj[props[0]], &#39;.&#39;.join(props[1:]))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.all_combinations"><code class="name flex">
+<span>def <span class="ident">all_combinations</span></span>(<span>items)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate all combinations of a given list of items.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def all_combinations(items):
+    &#34;&#34;&#34;Generate all combinations of a given list of items.&#34;&#34;&#34;
+    return (set(compress(items,mask)) for mask in product(*[[0,1]]*len(items)))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.alphanumeric"><code class="name flex">
+<span>def <span class="ident">alphanumeric</span></span>(<span>text)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Make an ultra-safe, ASCII version a string.
+For instance for use as a filename.
+\w matches any alphanumeric character and the underscore.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def alphanumeric(text):
+    r&#34;&#34;&#34;Make an ultra-safe, ASCII version a string.
+    For instance for use as a filename.
+    \w matches any alphanumeric character and the underscore.&#34;&#34;&#34;
+    return &#34;&#34;.join([c for c in text if re.match(r&#39;\w&#39;, c)])</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.andify"><code class="name flex">
+<span>def <span class="ident">andify</span></span>(<span>list_of_strings)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a list of strings will join them with commas
+and a final "and" word.</p>
+<pre><code class="python">&gt;&gt;&gt; andify(['Apples', 'Oranges', 'Mangos'])
+'Apples, Oranges and Mangos'
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def andify(list_of_strings):
+    &#34;&#34;&#34;
+    Given a list of strings will join them with commas
+    and a final &#34;and&#34; word.
+
+    &gt;&gt;&gt; andify([&#39;Apples&#39;, &#39;Oranges&#39;, &#39;Mangos&#39;])
+    &#39;Apples, Oranges and Mangos&#39;
+    &#34;&#34;&#34;
+    result = &#39;, &#39;.join(list_of_strings)
+    comma_index = result.rfind(&#39;,&#39;)
+    if comma_index &gt; -1: result = result[:comma_index] + &#39; and&#39; + result[comma_index+1:]
+    return result</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.append_to_file"><code class="name flex">
+<span>def <span class="ident">append_to_file</span></span>(<span>path, data)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def append_to_file(path, data):
+    with open(path, &#34;a&#34;) as handle:
+        handle.write(data)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.ascii"><code class="name flex">
+<span>def <span class="ident">ascii</span></span>(<span>text)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Make a safe, ASCII version a string. For instance for use on the web.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ascii(text):
+    &#34;&#34;&#34;Make a safe, ASCII version a string. For instance for use on the web.&#34;&#34;&#34;
+    return unicodedata.normalize(&#39;NFKD&#39;, unicode(text)).encode(&#39;ASCII&#39;, &#39;ignore&#39;)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.average"><code class="name flex">
+<span>def <span class="ident">average</span></span>(<span>iterator)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Iterative mean.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def average(iterator):
+    &#34;&#34;&#34;Iterative mean.&#34;&#34;&#34;
+    count = 0
+    total = 0
+    for num in iterator:
+        count += 1
+        total += num
+    return float(total)/count</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.bool_to_unicode"><code class="name flex">
+<span>def <span class="ident">bool_to_unicode</span></span>(<span>b)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Different possibilities for True: ☑️✔︎✓✅👍✔️
+Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bool_to_unicode(b):
+    &#34;&#34;&#34;Different possibilities for True: ☑️✔︎✓✅👍✔️
+       Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴&#34;&#34;&#34;
+    b = bool(b)
+    if b is True:  return u&#34;✅&#34;
+    if b is False: return u&#34;❎&#34;</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.camel_to_snake"><code class="name flex">
+<span>def <span class="ident">camel_to_snake</span></span>(<span>text)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Will convert CamelCaseStrings to snake_case_strings.</p>
+<pre><code class="python">&gt;&gt;&gt; camel_to_snake('CamelCase')
+'camel_case'
+&gt;&gt;&gt; camel_to_snake('CamelCamelCase')
+'camel_camel_case'
+&gt;&gt;&gt; camel_to_snake('Camel2Camel2Case')
+'camel2_camel2_case'
+&gt;&gt;&gt; camel_to_snake('getHTTPResponseCode')
+'get_http_response_code'
+&gt;&gt;&gt; camel_to_snake('get2HTTPResponseCode')
+'get2_http_response_code'
+&gt;&gt;&gt; camel_to_snake('HTTPResponseCode')
+'http_response_code'
+&gt;&gt;&gt; camel_to_snake('HTTPResponseCodeXYZ')
+'http_response_code_xyz'
+&gt;&gt;&gt; camel_to_snake('Double_Case')
+'double_case'
+&gt;&gt;&gt; camel_to_snake('SW_Merch')
+'sw_merch'
+&gt;&gt;&gt; camel_to_snake('Odd/Characters')
+'odd_characters'
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def camel_to_snake(text):
+    &#34;&#34;&#34;
+    Will convert CamelCaseStrings to snake_case_strings.
+    &gt;&gt;&gt; camel_to_snake(&#39;CamelCase&#39;)
+    &#39;camel_case&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;CamelCamelCase&#39;)
+    &#39;camel_camel_case&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;Camel2Camel2Case&#39;)
+    &#39;camel2_camel2_case&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;getHTTPResponseCode&#39;)
+    &#39;get_http_response_code&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;get2HTTPResponseCode&#39;)
+    &#39;get2_http_response_code&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;HTTPResponseCode&#39;)
+    &#39;http_response_code&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;HTTPResponseCodeXYZ&#39;)
+    &#39;http_response_code_xyz&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;Double_Case&#39;)
+    &#39;double_case&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;SW_Merch&#39;)
+    &#39;sw_merch&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;Odd/Characters&#39;)
+    &#39;odd_characters&#39;
+    &#34;&#34;&#34;
+    # Load #
+    result = text
+    # Eliminate trailing spaces #
+    result = result.strip(&#39; &#39;)
+    # First step #
+    try:
+        result = re.sub(&#39;(.)([A-Z][a-z]+)&#39;,  r&#39;\1_\2&#39;, result)
+    except TypeError:
+        print(&#34;The text received was &#39;%s&#39;&#34; % result)
+        raise
+    # Second step #
+    result = re.sub(&#39;([a-z0-9])([A-Z])&#39;, r&#39;\1_\2&#39;, result)
+    # Lower case the rest #
+    result = result.lower()
+    # Eliminate remaining spaces #
+    result = result.replace(&#39; &#39;, &#39;&#39;)
+    # Eliminate quote characters #
+    result = result.replace(&#39;&#34;&#39;, &#39;&#39;)
+    result = result.replace(&#34;&#39;&#34;, &#39;&#39;)
+    # Eliminate special characters #
+    result = result.replace(&#39;/&#39;, &#39;_&#39;)
+    # Eliminate double underscore #
+    while &#39;__&#39; in result: result = result.replace(&#39;__&#39;, &#39;_&#39;)
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.concatenate_by_line"><code class="name flex">
+<span>def <span class="ident">concatenate_by_line</span></span>(<span>first, second)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Zip two strings together, line wise</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def concatenate_by_line(first, second):
+    &#34;&#34;&#34;Zip two strings together, line wise&#34;&#34;&#34;
+    return &#39;\n&#39;.join(x+y for x,y in zip(first.split(&#39;\n&#39;), second.split(&#39;\n&#39;)))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.count_string_diff"><code class="name flex">
+<span>def <span class="ident">count_string_diff</span></span>(<span>a, b)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the number of characters in two strings that don't exactly match</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def count_string_diff(a,b):
+    &#34;&#34;&#34;Return the number of characters in two strings that don&#39;t exactly match&#34;&#34;&#34;
+    shortest = min(len(a), len(b))
+    return sum(a[i] != b[i] for i in range(shortest))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.find_file_by_name"><code class="name flex">
+<span>def <span class="ident">find_file_by_name</span></span>(<span>name, root='.')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_file_by_name(name, root=os.curdir):
+    for dirpath, dirnames, filenames in os.walk(os.path.abspath(root)):
+        if name in filenames: return os.path.join(dirpath, name)
+    raise Exception(&#34;Could not find file &#39;%s&#39; in &#39;%s&#39;&#34; % (name, root))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.flatter"><code class="name flex">
+<span>def <span class="ident">flatter</span></span>(<span>x)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">flatter = lambda x: [item for sublist in x for item in sublist]</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.get_next_item"><code class="name flex">
+<span>def <span class="ident">get_next_item</span></span>(<span>iterable)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the next item of an iterable.
+If the iterable is exhausted, returns None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_next_item(iterable):
+    &#34;&#34;&#34;Gets the next item of an iterable.
+    If the iterable is exhausted, returns None.&#34;&#34;&#34;
+    try: x = iterable.next()
+    except StopIteration: x = None
+    except AttributeError: x = None
+    return x</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.gps_deg_to_float"><code class="name flex">
+<span>def <span class="ident">gps_deg_to_float</span></span>(<span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gps_deg_to_float(data):
+    m = re.search(&#34;(\\d+?)°(\\d+?)\&#39;(\\d+?)\&#39;\&#39;&#34;, data.strip())
+    degs, mins, secs = [0.0 if m.group(i) is None else int(m.group(i)) for i in range(1, 4)]
+    comp_dir = -1 if data[-1] in (&#39;N&#39;, &#39;E&#39;) else 1
+    return (degs + (mins / 60) + (secs / 3600)) * comp_dir</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.head"><code class="name flex">
+<span>def <span class="ident">head</span></span>(<span>path, lines=20)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def head(path, lines=20):
+    with open(path, &#39;r&#39;) as handle:
+        return &#39;&#39;.join(handle.next() for line in xrange(lines))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.iflatten"><code class="name flex">
+<span>def <span class="ident">iflatten</span></span>(<span>L)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Iterative flatten.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iflatten(L):
+    &#34;&#34;&#34;Iterative flatten.&#34;&#34;&#34;
+    for sublist in L:
+        if hasattr(sublist, &#39;__iter__&#39;):
+            for item in iflatten(sublist): yield item
+        else: yield sublist</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.is_integer"><code class="name flex">
+<span>def <span class="ident">is_integer</span></span>(<span>string)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_integer(string):
+    try: int(string)
+    except ValueError: return False
+    return True</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.isubsample"><code class="name flex">
+<span>def <span class="ident">isubsample</span></span>(<span>full_sample, k, full_sample_len=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Down-sample an enumerable list of things</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def isubsample(full_sample, k, full_sample_len=None):
+    &#34;&#34;&#34;Down-sample an enumerable list of things&#34;&#34;&#34;
+    # Determine length #
+    if not full_sample_len: full_sample_len = len(full_sample)
+    # Check size coherence #
+    if not 0 &lt;= k &lt;= full_sample_len:
+        raise ValueError(&#39;Required that 0 &lt;= k &lt;= full_sample_length&#39;)
+    # Do it #
+    picked = 0
+    for i, element in enumerate(full_sample):
+        prob = (k-picked) / (full_sample_len-i)
+        if random.random() &lt; prob:
+            yield element
+            picked += 1
+    # Did we pick the right amount #
+    assert picked == k</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.load_json_path"><code class="name flex">
+<span>def <span class="ident">load_json_path</span></span>(<span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load a file with the json module, but report errors better if it
+fails. And have it ordered too !</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_json_path(path):
+    &#34;&#34;&#34;Load a file with the json module, but report errors better if it
+    fails. And have it ordered too !&#34;&#34;&#34;
+    with open(path) as handle:
+        try: return json.load(handle, object_pairs_hook=collections.OrderedDict)
+        except ValueError as error:
+            message = &#34;Could not decode JSON file &#39;%s&#39;.&#34; % path
+            message = &#34;-&#34;*20 + &#34;\n&#34; + message + &#34;\n&#34; + str(error) + &#34;\n&#34; + &#34;-&#34;*20 + &#34;\n&#34;
+            sys.stderr.write(message)
+            raise error</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.md5sum"><code class="name flex">
+<span>def <span class="ident">md5sum</span></span>(<span>file_path, blocksize=65536)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compute the md5 of a file. Pretty fast.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def md5sum(file_path, blocksize=65536):
+    &#34;&#34;&#34;Compute the md5 of a file. Pretty fast.&#34;&#34;&#34;
+    md5 = hashlib.md5()
+    with open(file_path, &#34;rb&#34;) as f:
+        for block in iter(lambda: f.read(blocksize), &#34;&#34;):
+            md5.update(block)
+    return md5.hexdigest()</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.mirror_lines"><code class="name flex">
+<span>def <span class="ident">mirror_lines</span></span>(<span>string)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a multiline string, return its reflection along a vertical axis.
+Can be useful for the visualization of text version of trees.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mirror_lines(string):
+    &#34;&#34;&#34;Given a multiline string, return its reflection along a vertical axis.
+    Can be useful for the visualization of text version of trees.&#34;&#34;&#34;
+    return &#39;\n&#39;.join(line[::-1] for line in string.split(&#39;\n&#39;))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.moving_average"><code class="name flex">
+<span>def <span class="ident">moving_average</span></span>(<span>interval, windowsize, borders=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This is essentially a convolution operation
+Several option exist for dealing with the border cases.</p>
+<ul>
+<li>
+<p>None: Here the returned signal will be smaller than the inputted interval.</p>
+</li>
+<li>
+<p>zero_padding: Here the returned signal will be larger than the inputted
+interval and we will add zeros to the original interval before operating
+the convolution.</p>
+</li>
+<li>
+<p>zero_padding_and_cut: Same as above only the result is truncated to be
+the same size as the original input.</p>
+</li>
+<li>
+<p>copy_padding: Here the returned signal will be larger than the inputted
+interval and we will use the right and leftmost values for padding before
+operating the convolution.</p>
+</li>
+<li>
+<p>copy_padding_and_cut: Same as above only the result is truncated to be
+the same size as the original input.</p>
+</li>
+<li>
+<p>zero_stretching: Here we will compute the convolution only in the valid domain,
+then add zeros to the result so that the output is the same size as the input.</p>
+</li>
+<li>
+<p>copy_stretching: Here we will compute the convolution only in the valid domain,
+then copy the right and leftmost values so that the output is the same
+size as the input.</p>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def moving_average(interval, windowsize, borders=None):
+    &#34;&#34;&#34;This is essentially a convolution operation
+     Several option exist for dealing with the border cases.
+
+        * None: Here the returned signal will be smaller than the inputted interval.
+
+        * zero_padding: Here the returned signal will be larger than the inputted
+        interval and we will add zeros to the original interval before operating
+         the convolution.
+
+        * zero_padding_and_cut: Same as above only the result is truncated to be
+         the same size as the original input.
+
+        * copy_padding: Here the returned signal will be larger than the inputted
+         interval and we will use the right and leftmost values for padding before
+          operating the convolution.
+
+        * copy_padding_and_cut: Same as above only the result is truncated to be
+         the same size as the original input.
+
+        * zero_stretching: Here we will compute the convolution only in the valid domain,
+         then add zeros to the result so that the output is the same size as the input.
+
+        * copy_stretching: Here we will compute the convolution only in the valid domain,
+         then copy the right and leftmost values so that the output is the same
+          size as the input.
+        &#34;&#34;&#34;
+    # The window size in half #
+    half = int(math.floor(windowsize/2.0))
+    # The normalized rectangular signal #
+    import numpy
+    window = numpy.ones(int(windowsize))/float(windowsize)
+    # How do we deal with borders #
+    if borders is None:
+        return numpy.convolve(interval, window, &#39;valid&#39;)
+    if borders == &#39;zero_padding&#39;:
+        return numpy.convolve(interval, window, &#39;full&#39;)
+    if borders == &#39;zero_padding_and_cut&#39;:
+        return numpy.convolve(interval, window, &#39;same&#39;)
+    if borders == &#39;copy_padding&#39;:
+        new_interval = [interval[0]]*(windowsize-1) + interval + [interval[-1]]*(windowsize-1)
+        return numpy.convolve(new_interval, window, &#39;valid&#39;)
+    if borders == &#39;copy_padding_and_cut&#39;:
+        new_interval = [interval[0]]*(windowsize-1) + interval + [interval[-1]]*(windowsize-1)
+        return numpy.convolve(new_interval, window, &#39;valid&#39;)[half:-half]
+    if borders == &#39;zero_stretching&#39;:
+        result = numpy.convolve(interval, window, &#39;valid&#39;)
+        pad = numpy.zeros(half)
+        return numpy.concatenate((pad, result, pad))
+    if borders == &#39;copy_stretching&#39;:
+        result = numpy.convolve(interval, window, &#39;valid&#39;)
+        left = numpy.ones(half)*result[0]
+        right = numpy.ones(half)*result[-1]
+        return numpy.concatenate((left, result, right))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.natural_sort"><code class="name flex">
+<span>def <span class="ident">natural_sort</span></span>(<span>item)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sort strings that contain numbers correctly. Works in Python 2 and 3.</p>
+<pre><code class="python">&gt;&gt;&gt; l = ['v1.3.12', 'v1.3.3', 'v1.2.5', 'v1.2.15', 'v1.2.3', 'v1.2.1']
+&gt;&gt;&gt; l.sort(key=natural_sort)
+&gt;&gt;&gt; l.__repr__()
+&quot;['v1.2.1', 'v1.2.3', 'v1.2.5', 'v1.2.15', 'v1.3.3', 'v1.3.12']&quot;
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def natural_sort(item):
+    &#34;&#34;&#34;
+    Sort strings that contain numbers correctly. Works in Python 2 and 3.
+
+    &gt;&gt;&gt; l = [&#39;v1.3.12&#39;, &#39;v1.3.3&#39;, &#39;v1.2.5&#39;, &#39;v1.2.15&#39;, &#39;v1.2.3&#39;, &#39;v1.2.1&#39;]
+    &gt;&gt;&gt; l.sort(key=natural_sort)
+    &gt;&gt;&gt; l.__repr__()
+    &#34;[&#39;v1.2.1&#39;, &#39;v1.2.3&#39;, &#39;v1.2.5&#39;, &#39;v1.2.15&#39;, &#39;v1.3.3&#39;, &#39;v1.3.12&#39;]&#34;
+    &#34;&#34;&#34;
+    dre = re.compile(r&#39;(\d+)&#39;)
+    return [int(s) if s.isdigit() else s.lower() for s in re.split(dre, item)]</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.num_to_ith"><code class="name flex">
+<span>def <span class="ident">num_to_ith</span></span>(<span>num)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>1 becomes 1st, 2 becomes 2nd, etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def num_to_ith(num):
+    &#34;&#34;&#34;1 becomes 1st, 2 becomes 2nd, etc.&#34;&#34;&#34;
+    value             = str(num)
+    before_last_digit = value[-2]
+    last_digit        = value[-1]
+    if len(value) &gt; 1 and before_last_digit == &#39;1&#39;: return value +&#39;th&#39;
+    if last_digit == &#39;1&#39;: return value + &#39;st&#39;
+    if last_digit == &#39;2&#39;: return value + &#39;nd&#39;
+    if last_digit == &#39;3&#39;: return value + &#39;rd&#39;
+    return value + &#39;th&#39;</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.pad_equal_whitespace"><code class="name flex">
+<span>def <span class="ident">pad_equal_whitespace</span></span>(<span>string, pad=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a multiline string, add whitespaces to every line
+so that every line has the same length.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pad_equal_whitespace(string, pad=None):
+    &#34;&#34;&#34;Given a multiline string, add whitespaces to every line
+    so that every line has the same length.&#34;&#34;&#34;
+    if pad is None: pad = max(map(len, string.split(&#39;\n&#39;))) + 1
+    return &#39;\n&#39;.join((&#39;{0: &lt;%i}&#39; % pad).format(line) for line in string.split(&#39;\n&#39;))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.pad_extra_whitespace"><code class="name flex">
+<span>def <span class="ident">pad_extra_whitespace</span></span>(<span>string, pad)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a multiline string, add extra whitespaces to the front of every line.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pad_extra_whitespace(string, pad):
+    &#34;&#34;&#34;Given a multiline string, add extra whitespaces to the front of every line.&#34;&#34;&#34;
+    return &#39;\n&#39;.join(&#39; &#39; * pad + line for line in string.split(&#39;\n&#39;))</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.prepend_to_file"><code class="name flex">
+<span>def <span class="ident">prepend_to_file</span></span>(<span>path, data, bufsize=32768)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>TODO:
+* Add a random string to the backup file.
+* Restore permissions after copy.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepend_to_file(path, data, bufsize=1&lt;&lt;15):
+    &#34;&#34;&#34;TODO:
+    * Add a random string to the backup file.
+    * Restore permissions after copy.
+    &#34;&#34;&#34;
+    # Backup the file #
+    backupname = path + os.extsep + &#39;bak&#39;
+    # Remove previous backup if it exists #
+    try: os.unlink(backupname)
+    except OSError: pass
+    os.rename(path, backupname)
+    # Open input/output files,  note: outputfile&#39;s permissions lost #
+    with open(backupname) as inputfile:
+        with open(path, &#39;w&#39;) as outputfile:
+            outputfile.write(data)
+            buf = inputfile.read(bufsize)
+            while buf:
+                outputfile.write(buf)
+                buf = inputfile.read(bufsize)
+    # Remove backup on success #
+    os.remove(backupname)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.pretty_now"><code class="name flex">
+<span>def <span class="ident">pretty_now</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns some thing like '2019-02-15 15:58:22 CET+0100'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pretty_now():
+    &#34;&#34;&#34;Returns some thing like &#39;2019-02-15 15:58:22 CET+0100&#39;&#34;&#34;&#34;
+    import datetime, tzlocal
+    time_zone = tzlocal.get_localzone()
+    now       = datetime.datetime.now(time_zone)
+    return now.strftime(&#34;%Y-%m-%d %H:%M:%S %Z%z&#34;)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.query_yes_no"><code class="name flex">
+<span>def <span class="ident">query_yes_no</span></span>(<span>question, default='no')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Ask a yes/no question via raw_input() and return their answer.</p>
+<p>"question" is a string that is presented to the user.
+"default" is the presumed answer if the user just hits <Enter>.
+It must be "yes" (the default), "no" or None (meaning
+an answer is required of the user).</p>
+<p>The "answer" return value is True for "yes" or False for "no".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def query_yes_no(question, default=&#34;no&#34;):
+    &#34;&#34;&#34;Ask a yes/no question via raw_input() and return their answer.
+
+    &#34;question&#34; is a string that is presented to the user.
+    &#34;default&#34; is the presumed answer if the user just hits &lt;Enter&gt;.
+        It must be &#34;yes&#34; (the default), &#34;no&#34; or None (meaning
+        an answer is required of the user).
+
+    The &#34;answer&#34; return value is True for &#34;yes&#34; or False for &#34;no&#34;.
+    &#34;&#34;&#34;
+    valid = {&#34;yes&#34;: True, &#34;y&#34;: True, &#34;ye&#34;: True, &#34;no&#34;: False, &#34;n&#34;: False}
+    if default is None:    prompt = &#34; [y/n] &#34;
+    elif default == &#34;yes&#34;: prompt = &#34; [Y/n] &#34;
+    elif default == &#34;no&#34;:  prompt = &#34; [y/N] &#34;
+    else: raise ValueError(&#34;invalid default answer: &#39;%s&#39;&#34; % default)
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == &#39;&#39;: return valid[default]
+        elif choice in valid:                    return valid[choice]
+        else: sys.stdout.write(&#34;Please respond with &#39;yes&#39; or &#39;no&#39;\n&#34;)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.reverse_compl_with_name"><code class="name flex">
+<span>def <span class="ident">reverse_compl_with_name</span></span>(<span>old_seq)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Reverse a SeqIO sequence, but keep its name intact.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reverse_compl_with_name(old_seq):
+    &#34;&#34;&#34;Reverse a SeqIO sequence, but keep its name intact.&#34;&#34;&#34;
+    new_seq = old_seq.reverse_complement()
+    new_seq.id = old_seq.id
+    new_seq.description = old_seq.description
+    return new_seq</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.reversed_blocks"><code class="name flex">
+<span>def <span class="ident">reversed_blocks</span></span>(<span>handle, blocksize=4096)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate blocks of file's contents in reverse order.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reversed_blocks(handle, blocksize=4096):
+    &#34;&#34;&#34;Generate blocks of file&#39;s contents in reverse order.&#34;&#34;&#34;
+    handle.seek(0, os.SEEK_END)
+    here = handle.tell()
+    while 0 &lt; here:
+        delta = min(blocksize, here)
+        here -= delta
+        handle.seek(here, os.SEEK_SET)
+        yield handle.read(delta)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.reversed_lines"><code class="name flex">
+<span>def <span class="ident">reversed_lines</span></span>(<span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate the lines of file in reverse order.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reversed_lines(path):
+    &#34;&#34;&#34;Generate the lines of file in reverse order.&#34;&#34;&#34;
+    with open(path, &#39;r&#39;) as handle:
+        part = &#39;&#39;
+        for block in reversed_blocks(handle):
+            for c in reversed(block):
+                if c == &#39;\n&#39; and part:
+                    yield part[::-1]
+                    part = &#39;&#39;
+                part += c
+        if part: yield part[::-1]</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.round_to_halves"><code class="name flex">
+<span>def <span class="ident">round_to_halves</span></span>(<span>number)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Round a number to the closest half integer.</p>
+<pre><code class="python">&gt;&gt;&gt; round_to_halves(1.3)
+1.5
+&gt;&gt;&gt; round_to_halves(2.6)
+2.5
+&gt;&gt;&gt; round_to_halves(3.0)
+3.0
+&gt;&gt;&gt; round_to_halves(4.1)
+4.0
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def round_to_halves(number):
+    &#34;&#34;&#34;Round a number to the closest half integer.
+    &gt;&gt;&gt; round_to_halves(1.3)
+    1.5
+    &gt;&gt;&gt; round_to_halves(2.6)
+    2.5
+    &gt;&gt;&gt; round_to_halves(3.0)
+    3.0
+    &gt;&gt;&gt; round_to_halves(4.1)
+    4.0
+    &#34;&#34;&#34;
+    return round(number * 2) / 2</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.sanitize_text"><code class="name flex">
+<span>def <span class="ident">sanitize_text</span></span>(<span>text)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Make a safe representation of a string.
+Note: the <code>\s</code> special character matches any whitespace character.
+This is equivalent to the set [\t\n\r\f\v] as well as <code> </code> (whitespace).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sanitize_text(text):
+    r&#34;&#34;&#34;Make a safe representation of a string.
+    Note: the `\s` special character matches any whitespace character.
+    This is equivalent to the set [\t\n\r\f\v] as well as ` ` (whitespace).&#34;&#34;&#34;
+    # First replace characters that have specific effects with their repr #
+    text = re.sub(&#34;(\\s)&#34;, lambda m: repr(m.group(0)).strip(&#34;&#39;&#34;), text)
+    # Make it a unicode string (the try supports python 2 and 3) #
+    try: text = text.decode(&#39;utf-8&#39;)
+    except AttributeError: pass
+    # Normalize it “
+    text = unicodedata.normalize(&#39;NFC&#39;, text)
+    return text</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.sort_string_by_pairs"><code class="name flex">
+<span>def <span class="ident">sort_string_by_pairs</span></span>(<span>strings)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Group a list of strings by pairs, by matching those with only
+one character difference between each other together.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sort_string_by_pairs(strings):
+    &#34;&#34;&#34;Group a list of strings by pairs, by matching those with only
+    one character difference between each other together.&#34;&#34;&#34;
+    assert len(strings) % 2 == 0
+    pairs = []
+    strings = list(strings) # This shallow copies the list
+    while strings:
+        template = strings.pop()
+        for i, candidate in enumerate(strings):
+            if count_string_diff(template, candidate) == 1:
+                pair = [template, strings.pop(i)]
+                pair.sort()
+                pairs.append(pair)
+                break
+    return pairs</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.split_thousands"><code class="name flex">
+<span>def <span class="ident">split_thousands</span></span>(<span>s)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Splits a number on thousands.</p>
+<pre><code class="python">&gt;&gt;&gt; split_thousands(1000012)
+&quot;1'000'012&quot;
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def split_thousands(s):
+    &#34;&#34;&#34;
+    Splits a number on thousands.
+
+    &gt;&gt;&gt; split_thousands(1000012)
+    &#34;1&#39;000&#39;012&#34;
+    &#34;&#34;&#34;
+    # Check input #
+    if s is None: return &#34;0&#34;
+    # If it&#39;s a string #
+    if isinstance(s, string_types): s = float(s)
+    # If it&#39;s a float that should be an int #
+    if isinstance(s, float) and s.is_integer(): s = int(s)
+    # Use python built-in #
+    result = &#34;{:,}&#34;.format(s)
+    # But we want single quotes #
+    result = result.replace(&#39;,&#39;, &#34;&#39;&#34;)
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.sum_vectors_with_padding"><code class="name flex">
+<span>def <span class="ident">sum_vectors_with_padding</span></span>(<span>vectors)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given an arbitrary amount of NumPy one-dimensional vectors of floats,
+do an element-wise sum, padding with 0 any that are shorter than the
+longest array (see <a href="https://stackoverflow.com/questions/56166217">https://stackoverflow.com/questions/56166217</a>).</p>
+<pre><code class="python">&gt;&gt;&gt; v1 = numpy.array([0, 0, 5, 5, 1, 1, 1, 1, 0, 0])
+&gt;&gt;&gt; v2 = numpy.array([4, 4, 4, 5, 5, 0, 0])
+&gt;&gt;&gt; v3 = numpy.array([1, 1, 1])
+&gt;&gt;&gt; sum_vectors_with_padding([v1, v2, v3])
+array([ 5,  5, 10, 10,  6,  1,  1,  1,  0,  0])
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sum_vectors_with_padding(vectors):
+    &#34;&#34;&#34;
+    Given an arbitrary amount of NumPy one-dimensional vectors of floats,
+    do an element-wise sum, padding with 0 any that are shorter than the
+    longest array (see https://stackoverflow.com/questions/56166217).
+
+    &gt;&gt;&gt; v1 = numpy.array([0, 0, 5, 5, 1, 1, 1, 1, 0, 0])
+    &gt;&gt;&gt; v2 = numpy.array([4, 4, 4, 5, 5, 0, 0])
+    &gt;&gt;&gt; v3 = numpy.array([1, 1, 1])
+    &gt;&gt;&gt; sum_vectors_with_padding([v1, v2, v3])
+    array([ 5,  5, 10, 10,  6,  1,  1,  1,  0,  0])
+    &#34;&#34;&#34;
+    import numpy
+    all_lengths = [len(i) for i in vectors]
+    max_length  = max(all_lengths)
+    out         = numpy.zeros(max_length)
+    for l,v in zip(all_lengths, vectors): out[:l] += v
+    return out</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.tail"><code class="name flex">
+<span>def <span class="ident">tail</span></span>(<span>path, window=20)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tail(path, window=20):
+    with open(path, &#39;r&#39;) as f:
+        BUFSIZ = 1024
+        f.seek(0, 2)
+        num_bytes = f.tell()
+        size = window + 1
+        block = -1
+        data = []
+        while size &gt; 0 and num_bytes &gt; 0:
+            if num_bytes - BUFSIZ &gt; 0:
+                # Seek back one whole BUFSIZ
+                f.seek(block * BUFSIZ, 2)
+                # Read BUFFER
+                data.insert(0, f.read(BUFSIZ))
+            else:
+                # File too small, start from beginning
+                f.seek(0,0)
+                # Only read what was not read
+                data.insert(0, f.read(num_bytes))
+            lines_found = data[0].count(&#39;\n&#39;)
+            size -= lines_found
+            num_bytes -= BUFSIZ
+            block -= 1
+        return &#39;\n&#39;.join(&#39;&#39;.join(data).splitlines()[-window:])</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.uniquify_list"><code class="name flex">
+<span>def <span class="ident">uniquify_list</span></span>(<span>L)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Same order unique list using only a list compression.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def uniquify_list(L):
+    &#34;&#34;&#34;Same order unique list using only a list compression.&#34;&#34;&#34;
+    return [e for i, e in enumerate(L) if L.index(e) == i]</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.wait"><code class="name flex">
+<span>def <span class="ident">wait</span></span>(<span>predicate, interval=1, message=&lt;function &lt;lambda&gt;&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Wait until the predicate turns true and display a turning ball.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def wait(predicate, interval=1, message=lambda: &#34;Waiting...&#34;):
+    &#34;&#34;&#34;Wait until the predicate turns true and display a turning ball.&#34;&#34;&#34;
+    ball, next_ball = u&#34;|/-\\&#34;, &#34;|&#34;
+    sys.stdout.write(&#34;    \033[K&#34;)
+    sys.stdout.flush()
+    while not predicate():
+        time.sleep(interval)
+        next_ball = ball[(ball.index(next_ball) + 1) % len(ball)]
+        sys.stdout.write(&#34;\r &#34; + str(message()) + &#34; &#34; + next_ball + &#34; \033[K&#34;)
+        sys.stdout.flush()
+    print(&#34;\r Done. \033[K&#34;)
+    sys.stdout.flush()</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.which"><code class="name flex">
+<span>def <span class="ident">which</span></span>(<span>cmd_name, safe=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Portable Python implementation of the unix <code><a title="plumbing.common.which" href="#plumbing.common.which">which()</a></code> command.
+Will return the full path of a given executable if it is found
+somewhere in the <code>$PATH</code>.
+Otherwise we return <code>None</code> or alternatively we raise an exception when
+<code>safe</code> is set to False.
+Note: Python 3.3 and above also offers <code>shutil.which()</code>.
+Based on the package at: <a href="https://github.com/jc0n/python-which">https://github.com/jc0n/python-which</a>
+And the answers at: <a href="http://stackoverflow.com/questions/377017">http://stackoverflow.com/questions/377017</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def which(cmd_name, safe=False):
+    &#34;&#34;&#34;
+    Portable Python implementation of the unix `which` command.
+    Will return the full path of a given executable if it is found
+    somewhere in the `$PATH`.
+    Otherwise we return `None` or alternatively we raise an exception when
+    `safe` is set to False.
+    Note: Python 3.3 and above also offers `shutil.which()`.
+    Based on the package at: https://github.com/jc0n/python-which
+    And the answers at: http://stackoverflow.com/questions/377017
+    &#34;&#34;&#34;
+    # The name of the command cannot contain separators #
+    assert os.sep not in cmd_name
+    # We will use our own first party package #
+    from autopaths.file_path import FilePath
+    # Loop over every path in the environment variable #
+    for path in os.environ[&#39;PATH&#39;].split(os.pathsep):
+        path = os.path.expanduser(path)
+        candidate = os.path.join(path, cmd_name)
+        if not os.path.isfile(candidate):     continue
+        if not os.access(candidate, os.X_OK): continue
+        return FilePath(candidate)
+    # Raise an exception optionally #
+    msg = &#39;which() failed to locate a proper command path for &#34;%s&#34;&#39; % cmd_name
+    if not safe: raise Exception(msg)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="plumbing.common.GenWithLength"><code class="flex name class">
+<span>class <span class="ident">GenWithLength</span></span>
+<span>(</span><span>gen, length)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A generator with a length attribute</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenWithLength(object):
+    &#34;&#34;&#34;A generator with a length attribute&#34;&#34;&#34;
+    def __init__(self, gen, length): self.gen, self.length = gen, length
+    def __iter__(self): return self.gen
+    def __len__(self):  return self.length</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet"><code class="flex name class">
+<span>class <span class="ident">OrderedSet</span></span>
+<span>(</span><span>...)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A recipe for an ordered set.
+<a href="http://stackoverflow.com/a/1653978/287297">http://stackoverflow.com/a/1653978/287297</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OrderedSet(collections.OrderedDict, collections.abc.MutableSet):
+    &#34;&#34;&#34;
+    A recipe for an ordered set.
+    http://stackoverflow.com/a/1653978/287297
+    &#34;&#34;&#34;
+
+    def update(self, *args, **kwargs):
+        if kwargs: raise TypeError(&#34;update() takes no keyword arguments&#34;)
+        for s in args:
+            for e in s: self.add(e)
+
+    def add(self, elem):     self[elem] = None
+    def discard(self, elem): self.pop(elem, None)
+    def __le__(self, other): return all(e in other for e in self)
+    def __lt__(self, other): return self &lt;= other and self != other
+    def __ge__(self, other): return all(e in self for e in other)
+    def __gt__(self, other): return self &gt;= other and self != other
+    def __repr__(self):      return &#39;OrderedSet([%s])&#39; % (&#39;, &#39;.join(map(repr, self.keys())))
+    def __str__(self):       return &#39;{%s}&#39; % (&#39;, &#39;.join(map(repr, self.keys())))
+
+    difference                  = property(lambda self: self.__sub__)
+    difference_update           = property(lambda self: self.__isub__)
+    intersection                = property(lambda self: self.__and__)
+    intersection_update         = property(lambda self: self.__iand__)
+    issubset                    = property(lambda self: self.__le__)
+    issuperset                  = property(lambda self: self.__ge__)
+    symmetric_difference        = property(lambda self: self.__xor__)
+    symmetric_difference_update = property(lambda self: self.__ixor__)
+    union                       = property(lambda self: self.__or__)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>collections.OrderedDict</li>
+<li>builtins.dict</li>
+<li>collections.abc.MutableSet</li>
+<li>collections.abc.Set</li>
+<li>collections.abc.Collection</li>
+<li>collections.abc.Sized</li>
+<li>collections.abc.Iterable</li>
+<li>collections.abc.Container</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="plumbing.common.OrderedSet.difference"><code class="name">var <span class="ident">difference</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">difference                  = property(lambda self: self.__sub__)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.difference_update"><code class="name">var <span class="ident">difference_update</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">difference_update           = property(lambda self: self.__isub__)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.intersection"><code class="name">var <span class="ident">intersection</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">intersection                = property(lambda self: self.__and__)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.intersection_update"><code class="name">var <span class="ident">intersection_update</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">intersection_update         = property(lambda self: self.__iand__)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.issubset"><code class="name">var <span class="ident">issubset</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">issubset                    = property(lambda self: self.__le__)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.issuperset"><code class="name">var <span class="ident">issuperset</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">issuperset                  = property(lambda self: self.__ge__)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.symmetric_difference"><code class="name">var <span class="ident">symmetric_difference</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">symmetric_difference        = property(lambda self: self.__xor__)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.symmetric_difference_update"><code class="name">var <span class="ident">symmetric_difference_update</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">symmetric_difference_update = property(lambda self: self.__ixor__)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.union"><code class="name">var <span class="ident">union</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">union                       = property(lambda self: self.__or__)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="plumbing.common.OrderedSet.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self, elem)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add an element.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self, elem):     self[elem] = None</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.discard"><code class="name flex">
+<span>def <span class="ident">discard</span></span>(<span>self, elem)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Remove an element.
+Do not raise an exception if absent.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def discard(self, elem): self.pop(elem, None)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.common.OrderedSet.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>D.update([E, ]**F) -&gt; None.
+Update D from dict/iterable E and F.
+If E is present and has a .keys() method, then does:
+for k in E: D[k] = E[k]
+If E is present and lacks a .keys() method, then does:
+for k, v in E: D[k] = v
+In either case, this is followed by: for k in F:
+D[k] = F[k]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update(self, *args, **kwargs):
+    if kwargs: raise TypeError(&#34;update() takes no keyword arguments&#34;)
+    for s in args:
+        for e in s: self.add(e)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="plumbing.common.Password"><code class="flex name class">
+<span>class <span class="ident">Password</span></span>
+<span>(</span><span>prompt=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A password object that will only prompt the user once per session</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Password(object):
+    &#34;&#34;&#34;A password object that will only prompt the user once per session&#34;&#34;&#34;
+    def __str__(self): return self.value
+    def __init__(self, prompt=None):
+        self._value = None
+        self.prompt = prompt
+
+    @property
+    def value(self):
+        if self._value == None: self._value = getpass.getpass(self.prompt)
+        return self._value</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="plumbing.common.Password.value"><code class="name">var <span class="ident">value</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def value(self):
+    if self._value == None: self._value = getpass.getpass(self.prompt)
+    return self._value</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="plumbing" href="index.html">plumbing</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="plumbing.common.access_dict_like_obj" href="#plumbing.common.access_dict_like_obj">access_dict_like_obj</a></code></li>
+<li><code><a title="plumbing.common.all_combinations" href="#plumbing.common.all_combinations">all_combinations</a></code></li>
+<li><code><a title="plumbing.common.alphanumeric" href="#plumbing.common.alphanumeric">alphanumeric</a></code></li>
+<li><code><a title="plumbing.common.andify" href="#plumbing.common.andify">andify</a></code></li>
+<li><code><a title="plumbing.common.append_to_file" href="#plumbing.common.append_to_file">append_to_file</a></code></li>
+<li><code><a title="plumbing.common.ascii" href="#plumbing.common.ascii">ascii</a></code></li>
+<li><code><a title="plumbing.common.average" href="#plumbing.common.average">average</a></code></li>
+<li><code><a title="plumbing.common.bool_to_unicode" href="#plumbing.common.bool_to_unicode">bool_to_unicode</a></code></li>
+<li><code><a title="plumbing.common.camel_to_snake" href="#plumbing.common.camel_to_snake">camel_to_snake</a></code></li>
+<li><code><a title="plumbing.common.concatenate_by_line" href="#plumbing.common.concatenate_by_line">concatenate_by_line</a></code></li>
+<li><code><a title="plumbing.common.count_string_diff" href="#plumbing.common.count_string_diff">count_string_diff</a></code></li>
+<li><code><a title="plumbing.common.find_file_by_name" href="#plumbing.common.find_file_by_name">find_file_by_name</a></code></li>
+<li><code><a title="plumbing.common.flatter" href="#plumbing.common.flatter">flatter</a></code></li>
+<li><code><a title="plumbing.common.get_next_item" href="#plumbing.common.get_next_item">get_next_item</a></code></li>
+<li><code><a title="plumbing.common.gps_deg_to_float" href="#plumbing.common.gps_deg_to_float">gps_deg_to_float</a></code></li>
+<li><code><a title="plumbing.common.head" href="#plumbing.common.head">head</a></code></li>
+<li><code><a title="plumbing.common.iflatten" href="#plumbing.common.iflatten">iflatten</a></code></li>
+<li><code><a title="plumbing.common.is_integer" href="#plumbing.common.is_integer">is_integer</a></code></li>
+<li><code><a title="plumbing.common.isubsample" href="#plumbing.common.isubsample">isubsample</a></code></li>
+<li><code><a title="plumbing.common.load_json_path" href="#plumbing.common.load_json_path">load_json_path</a></code></li>
+<li><code><a title="plumbing.common.md5sum" href="#plumbing.common.md5sum">md5sum</a></code></li>
+<li><code><a title="plumbing.common.mirror_lines" href="#plumbing.common.mirror_lines">mirror_lines</a></code></li>
+<li><code><a title="plumbing.common.moving_average" href="#plumbing.common.moving_average">moving_average</a></code></li>
+<li><code><a title="plumbing.common.natural_sort" href="#plumbing.common.natural_sort">natural_sort</a></code></li>
+<li><code><a title="plumbing.common.num_to_ith" href="#plumbing.common.num_to_ith">num_to_ith</a></code></li>
+<li><code><a title="plumbing.common.pad_equal_whitespace" href="#plumbing.common.pad_equal_whitespace">pad_equal_whitespace</a></code></li>
+<li><code><a title="plumbing.common.pad_extra_whitespace" href="#plumbing.common.pad_extra_whitespace">pad_extra_whitespace</a></code></li>
+<li><code><a title="plumbing.common.prepend_to_file" href="#plumbing.common.prepend_to_file">prepend_to_file</a></code></li>
+<li><code><a title="plumbing.common.pretty_now" href="#plumbing.common.pretty_now">pretty_now</a></code></li>
+<li><code><a title="plumbing.common.query_yes_no" href="#plumbing.common.query_yes_no">query_yes_no</a></code></li>
+<li><code><a title="plumbing.common.reverse_compl_with_name" href="#plumbing.common.reverse_compl_with_name">reverse_compl_with_name</a></code></li>
+<li><code><a title="plumbing.common.reversed_blocks" href="#plumbing.common.reversed_blocks">reversed_blocks</a></code></li>
+<li><code><a title="plumbing.common.reversed_lines" href="#plumbing.common.reversed_lines">reversed_lines</a></code></li>
+<li><code><a title="plumbing.common.round_to_halves" href="#plumbing.common.round_to_halves">round_to_halves</a></code></li>
+<li><code><a title="plumbing.common.sanitize_text" href="#plumbing.common.sanitize_text">sanitize_text</a></code></li>
+<li><code><a title="plumbing.common.sort_string_by_pairs" href="#plumbing.common.sort_string_by_pairs">sort_string_by_pairs</a></code></li>
+<li><code><a title="plumbing.common.split_thousands" href="#plumbing.common.split_thousands">split_thousands</a></code></li>
+<li><code><a title="plumbing.common.sum_vectors_with_padding" href="#plumbing.common.sum_vectors_with_padding">sum_vectors_with_padding</a></code></li>
+<li><code><a title="plumbing.common.tail" href="#plumbing.common.tail">tail</a></code></li>
+<li><code><a title="plumbing.common.uniquify_list" href="#plumbing.common.uniquify_list">uniquify_list</a></code></li>
+<li><code><a title="plumbing.common.wait" href="#plumbing.common.wait">wait</a></code></li>
+<li><code><a title="plumbing.common.which" href="#plumbing.common.which">which</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="plumbing.common.GenWithLength" href="#plumbing.common.GenWithLength">GenWithLength</a></code></h4>
+</li>
+<li>
+<h4><code><a title="plumbing.common.OrderedSet" href="#plumbing.common.OrderedSet">OrderedSet</a></code></h4>
+<ul class="">
+<li><code><a title="plumbing.common.OrderedSet.add" href="#plumbing.common.OrderedSet.add">add</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.difference" href="#plumbing.common.OrderedSet.difference">difference</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.difference_update" href="#plumbing.common.OrderedSet.difference_update">difference_update</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.discard" href="#plumbing.common.OrderedSet.discard">discard</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.intersection" href="#plumbing.common.OrderedSet.intersection">intersection</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.intersection_update" href="#plumbing.common.OrderedSet.intersection_update">intersection_update</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.issubset" href="#plumbing.common.OrderedSet.issubset">issubset</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.issuperset" href="#plumbing.common.OrderedSet.issuperset">issuperset</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.symmetric_difference" href="#plumbing.common.OrderedSet.symmetric_difference">symmetric_difference</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.symmetric_difference_update" href="#plumbing.common.OrderedSet.symmetric_difference_update">symmetric_difference_update</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.union" href="#plumbing.common.OrderedSet.union">union</a></code></li>
+<li><code><a title="plumbing.common.OrderedSet.update" href="#plumbing.common.OrderedSet.update">update</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="plumbing.common.Password" href="#plumbing.common.Password">Password</a></code></h4>
+<ul class="">
+<li><code><a title="plumbing.common.Password.value" href="#plumbing.common.Password.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+</footer>
+</body>
+</html>

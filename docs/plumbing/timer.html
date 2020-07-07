@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.3" />
+<title>plumbing.timer API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>plumbing.timer</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Built-in modules #
+from datetime import datetime
+
+# Internal modules #
+from plumbing.color import Color
+
+################################################################################
+class Timer(object):
+    &#34;&#34;&#34;Useful for timing the different steps in a pipeline.
+
+    Use it like this:
+
+        timer = Timer()
+        timer.print_start()
+        timer.print_elapsed()
+        timer.print_end()
+        timer.print_total_elapsed()
+
+    Or like this:
+
+        with Timer():
+            time.sleep(2)
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        self.start_time = datetime.now()
+        self.last_mark = datetime.now()
+
+    def print_start(self):
+        print(self.prefix + &#34;Start at: %s&#34; % (self.start_time) + self.suffix)
+
+    def print_end(self):
+        self.end_time = datetime.now()
+        print(self.prefix + &#34;End at: %s&#34; % (self.end_time) + self.suffix)
+
+    def print_elapsed(self, reset=True):
+        print(self.prefix + &#34;Elapsed time: %s&#34; % (datetime.now() - self.last_mark) + self.suffix)
+        if reset: self.last_mark = datetime.now()
+
+    def print_total_elapsed(self, reset=True):
+        print(self.prefix + &#34;Total elapsed time: %s&#34; % (datetime.now() - self.start_time) + self.suffix)
+        if reset: self.last_mark = datetime.now()
+
+    @property
+    def color(self):
+        &#34;&#34;&#34;Should we use color or not ? If we are not in a shell like ipython then not.&#34;&#34;&#34;
+        import __main__ as main
+        if not hasattr(main, &#39;__file__&#39;): return True
+        return False
+
+    @property
+    def prefix(self): return &#34;&#34; if not self.color else Color.grn
+    @property
+    def suffix(self): return &#34;&#34; if not self.color else Color.end
+
+    def __enter__(self):
+        &#34;&#34;&#34;Start the timer and print.&#34;&#34;&#34;
+        self.start_time = datetime.now()
+        self.print_start()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        &#34;&#34;&#34;Stop the timer and print.&#34;&#34;&#34;
+        self.print_end()
+        self.print_total_elapsed()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="plumbing.timer.Timer"><code class="flex name class">
+<span>class <span class="ident">Timer</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Useful for timing the different steps in a pipeline.</p>
+<p>Use it like this:</p>
+<pre><code>timer = Timer()
+timer.print_start()
+timer.print_elapsed()
+timer.print_end()
+timer.print_total_elapsed()
+</code></pre>
+<p>Or like this:</p>
+<pre><code>with Timer():
+    time.sleep(2)
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Timer(object):
+    &#34;&#34;&#34;Useful for timing the different steps in a pipeline.
+
+    Use it like this:
+
+        timer = Timer()
+        timer.print_start()
+        timer.print_elapsed()
+        timer.print_end()
+        timer.print_total_elapsed()
+
+    Or like this:
+
+        with Timer():
+            time.sleep(2)
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        self.start_time = datetime.now()
+        self.last_mark = datetime.now()
+
+    def print_start(self):
+        print(self.prefix + &#34;Start at: %s&#34; % (self.start_time) + self.suffix)
+
+    def print_end(self):
+        self.end_time = datetime.now()
+        print(self.prefix + &#34;End at: %s&#34; % (self.end_time) + self.suffix)
+
+    def print_elapsed(self, reset=True):
+        print(self.prefix + &#34;Elapsed time: %s&#34; % (datetime.now() - self.last_mark) + self.suffix)
+        if reset: self.last_mark = datetime.now()
+
+    def print_total_elapsed(self, reset=True):
+        print(self.prefix + &#34;Total elapsed time: %s&#34; % (datetime.now() - self.start_time) + self.suffix)
+        if reset: self.last_mark = datetime.now()
+
+    @property
+    def color(self):
+        &#34;&#34;&#34;Should we use color or not ? If we are not in a shell like ipython then not.&#34;&#34;&#34;
+        import __main__ as main
+        if not hasattr(main, &#39;__file__&#39;): return True
+        return False
+
+    @property
+    def prefix(self): return &#34;&#34; if not self.color else Color.grn
+    @property
+    def suffix(self): return &#34;&#34; if not self.color else Color.end
+
+    def __enter__(self):
+        &#34;&#34;&#34;Start the timer and print.&#34;&#34;&#34;
+        self.start_time = datetime.now()
+        self.print_start()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        &#34;&#34;&#34;Stop the timer and print.&#34;&#34;&#34;
+        self.print_end()
+        self.print_total_elapsed()</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="plumbing.timer.Timer.color"><code class="name">var <span class="ident">color</span></code></dt>
+<dd>
+<div class="desc"><p>Should we use color or not ? If we are not in a shell like ipython then not.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def color(self):
+    &#34;&#34;&#34;Should we use color or not ? If we are not in a shell like ipython then not.&#34;&#34;&#34;
+    import __main__ as main
+    if not hasattr(main, &#39;__file__&#39;): return True
+    return False</code></pre>
+</details>
+</dd>
+<dt id="plumbing.timer.Timer.prefix"><code class="name">var <span class="ident">prefix</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def prefix(self): return &#34;&#34; if not self.color else Color.grn</code></pre>
+</details>
+</dd>
+<dt id="plumbing.timer.Timer.suffix"><code class="name">var <span class="ident">suffix</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="plumbing.timer.Timer.print_elapsed"><code class="name flex">
+<span>def <span class="ident">print_elapsed</span></span>(<span>self, reset=True)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_elapsed(self, reset=True):
+    print(self.prefix + &#34;Elapsed time: %s&#34; % (datetime.now() - self.last_mark) + self.suffix)
+    if reset: self.last_mark = datetime.now()</code></pre>
+</details>
+</dd>
+<dt id="plumbing.timer.Timer.print_end"><code class="name flex">
+<span>def <span class="ident">print_end</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_end(self):
+    self.end_time = datetime.now()
+    print(self.prefix + &#34;End at: %s&#34; % (self.end_time) + self.suffix)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.timer.Timer.print_start"><code class="name flex">
+<span>def <span class="ident">print_start</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_start(self):
+    print(self.prefix + &#34;Start at: %s&#34; % (self.start_time) + self.suffix)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.timer.Timer.print_total_elapsed"><code class="name flex">
+<span>def <span class="ident">print_total_elapsed</span></span>(<span>self, reset=True)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_total_elapsed(self, reset=True):
+    print(self.prefix + &#34;Total elapsed time: %s&#34; % (datetime.now() - self.start_time) + self.suffix)
+    if reset: self.last_mark = datetime.now()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="plumbing" href="index.html">plumbing</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="plumbing.timer.Timer" href="#plumbing.timer.Timer">Timer</a></code></h4>
+<ul class="two-column">
+<li><code><a title="plumbing.timer.Timer.color" href="#plumbing.timer.Timer.color">color</a></code></li>
+<li><code><a title="plumbing.timer.Timer.prefix" href="#plumbing.timer.Timer.prefix">prefix</a></code></li>
+<li><code><a title="plumbing.timer.Timer.print_elapsed" href="#plumbing.timer.Timer.print_elapsed">print_elapsed</a></code></li>
+<li><code><a title="plumbing.timer.Timer.print_end" href="#plumbing.timer.Timer.print_end">print_end</a></code></li>
+<li><code><a title="plumbing.timer.Timer.print_start" href="#plumbing.timer.Timer.print_start">print_start</a></code></li>
+<li><code><a title="plumbing.timer.Timer.print_total_elapsed" href="#plumbing.timer.Timer.print_total_elapsed">print_total_elapsed</a></code></li>
+<li><code><a title="plumbing.timer.Timer.suffix" href="#plumbing.timer.Timer.suffix">suffix</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+</footer>
+</body>
+</html>

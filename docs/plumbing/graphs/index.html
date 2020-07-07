@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.3" />
+<title>plumbing.graphs API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>plumbing.graphs</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Built-in modules #
+import os, time, inspect, getpass
+from collections import OrderedDict
+
+# Internal modules #
+from plumbing.common import split_thousands, camel_to_snake
+from plumbing.cache  import property_cached
+
+# First party modules #
+from autopaths           import Path
+from autopaths.file_path import FilePath
+
+# Third party modules #
+import numpy, matplotlib
+from matplotlib import pyplot
+
+################################################################################
+class Graph(object):
+    &#34;&#34;&#34;A nice class to make graphs with matplotlib. Example usage:
+
+            from plumbing.graphs import Graph
+
+            class RegressionGraph(Graph):
+                formats = (&#39;pdf&#39;, &#39;svg&#39;)
+                def plot(self, **kwargs):
+                    fig = pyplot.figure()
+                    seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
+                    self.save_plot(fig, **kwargs)
+
+            for x_name in x_names:
+                graph            = PearsonGraph(short_name = x_name)
+                graph.title      = &#34;Regression between y and &#39;%s&#39;&#34; % (x_name)
+                graph.x_data     = x_data[x_name]
+                graph.y_data     = y_data
+                graph.plot()
+    &#34;&#34;&#34;
+
+    default_params = OrderedDict((
+        (&#39;width&#39;  , None),
+        (&#39;height&#39; , None),
+        (&#39;bottom&#39; , None),
+        (&#39;top&#39;    , None),
+        (&#39;left&#39;   , None),
+        (&#39;right&#39;  , None),
+        (&#39;x_grid&#39; , None), # Vertical lines
+        (&#39;y_grid&#39; , None), # Horizontal lines
+        (&#39;x_scale&#39;, None),
+        (&#39;y_scale&#39;, None),
+        (&#39;x_label&#39;, None),
+        (&#39;y_label&#39;, None),
+        (&#39;x_labels_rot&#39;, None),
+        (&#39;x_labels_size&#39;, None),
+        (&#39;y_labels_size&#39;, None),
+        (&#39;title&#39;  , None),
+        (&#39;y_lim_min&#39;, None), # Minimum (ymax - ymin) after autoscale
+        (&#39;x_lim_min&#39;, None), # Minimum (xmax - xmin) after autoscale
+        (&#39;sep&#39;    , ()),
+        (&#39;formats&#39;, (&#39;pdf&#39;,)),
+        (&#39;close&#39;  , True),
+        (&#39;dpi&#39;    , None),
+        (&#39;bbox&#39;   , None),
+    ))
+
+    def __repr__(self):
+        return &#39;&lt;%s graph &#34;%s&#34;&gt;&#39; % (self.__class__.__name__, self.short_name)
+
+    def __bool__(self): return bool(self.path)
+    __nonzero__ = __bool__
+
+    def __init__(self, parent=None, base_dir=None, short_name=None):
+        # Save parent #
+        self.parent = parent
+        # If we got a file #
+        if isinstance(base_dir, FilePath):
+            self.base_dir = base_dir.directory
+            short_name    = base_dir.short_prefix
+        # If no parent and no directory #
+        if base_dir is None and parent is None:
+            file_name     = os.path.abspath((inspect.stack()[1])[1])
+            self.base_dir = os.path.dirname(os.path.abspath(file_name)) + &#39;/&#39;
+            self.base_dir = Path(self.base_dir)
+        # If no directory but a parent is present #
+        if base_dir is None:
+            if hasattr(self.parent, &#39;p&#39;):
+                self.base_dir = self.parent.p.graphs_dir
+            if hasattr(self.parent, &#39;paths&#39;):
+                self.base_dir = self.parent.paths.graphs_dir
+            raise Exception(&#34;Please specify a base_dir for this graph.&#34;)
+        else:
+            self.base_dir = Path(base_dir)
+        self.base_dir.create_if_not_exists()
+        # Short name #
+        if short_name: self.short_name = short_name
+        # Use the parents name or the base class name #
+        if not hasattr(self, &#39;short_name&#39;):
+            if hasattr(self.parent, &#39;short_name&#39;):
+                self.short_name = self.parent.short_name
+            else:
+                self.short_name = camel_to_snake(self.__class__.__name__)
+
+    @property_cached
+    def path(self):
+        return Path(self.base_dir + self.short_name + &#39;.pdf&#39;)
+
+    def __call__(self, *args, **kwargs):
+        &#34;&#34;&#34;
+        Plot the graph if it doesn&#39;t exist. Then return the path to it.
+        Force the re-runing with rerun=True.
+        &#34;&#34;&#34;
+        if not self or kwargs.get(&#39;rerun&#39;): self.plot(*args, **kwargs)
+        return self.path
+
+    def save_plot(self, fig=None, axes=None, **kwargs):
+        # Missing figure #
+        if fig is None:   fig = pyplot.gcf()
+        # Missing axes #
+        if axes is None: axes = pyplot.gca()
+        # Parameters #
+        self.params = {}
+        for key in self.default_params:
+            if key in kwargs:                          self.params[key] = kwargs[key]
+            elif hasattr(self, key):                   self.params[key] = getattr(self, key)
+            elif self.default_params[key] is not None: self.params[key] = self.default_params[key]
+        # Backwards compatibility #
+        if kwargs.get(&#39;x_log&#39;, False): self.params[&#39;x_scale&#39;] = &#39;symlog&#39;
+        if kwargs.get(&#39;y_log&#39;, False): self.params[&#39;y_scale&#39;] = &#39;symlog&#39;
+        # Log #
+        if &#39;x_scale&#39; in self.params: axes.set_xscale(self.params[&#39;x_scale&#39;])
+        if &#39;y_scale&#39; in self.params: axes.set_yscale(self.params[&#39;y_scale&#39;])
+        # Axis limits #
+        if &#39;x_min&#39; in self.params: axes.set_xlim(self.params[&#39;x_min&#39;], axes.get_xlim()[1])
+        if &#39;x_max&#39; in self.params: axes.set_xlim(axes.get_xlim()[0], self.params[&#39;x_max&#39;])
+        if &#39;y_min&#39; in self.params: axes.set_ylim(self.params[&#39;y_min&#39;], axes.get_ylim()[1])
+        if &#39;y_max&#39; in self.params: axes.set_ylim(axes.get_ylim()[0], self.params[&#39;y_max&#39;])
+        # Minimum delta on axis limits #
+        if &#39;y_lim_min&#39; in self.params:
+            top, bottom = axes.get_ylim()
+            minimum     = self.params[&#39;y_lim_min&#39;]
+            delta       = top - bottom
+            if delta &lt; minimum:
+                center = bottom + delta/2
+                axes.set_ylim(center - minimum/2, center + minimum/2)
+        # Title #
+        title = self.params.get(&#39;title&#39;, False)
+        if title: axes.set_title(title)
+        # Axes labels  #
+        if self.params.get(&#39;x_label&#39;): axes.set_xlabel(self.params[&#39;x_label&#39;])
+        if self.params.get(&#39;y_label&#39;): axes.set_ylabel(self.params[&#39;y_label&#39;])
+        # Set height and width #
+        if self.params.get(&#39;width&#39;):  fig.set_figwidth(self.params[&#39;width&#39;])
+        if self.params.get(&#39;height&#39;): fig.set_figheight(self.params[&#39;height&#39;])
+        # Adjust #
+        if self.params.get(&#39;bottom&#39;):
+            fig.subplots_adjust(hspace=0.0, bottom = self.params[&#39;bottom&#39;], top   = self.params[&#39;top&#39;],
+                                            left   = self.params[&#39;left&#39;],   right = self.params[&#39;right&#39;])
+        # Grid #
+        if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;])
+        if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;])
+        # Data and source extra text #
+        if hasattr(self, &#39;dev_mode&#39;) and self.dev_mode is True:
+            fig.text(0.99, 0.98, time.asctime(), horizontalalignment=&#39;right&#39;)
+            job_name = os.environ.get(&#39;SLURM_JOB_NAME&#39;, &#39;Unnamed&#39;)
+            user_msg = &#39;user: %s, job: %s&#39; % (getpass.getuser(), job_name)
+            fig.text(0.01, 0.98, user_msg, horizontalalignment=&#39;left&#39;)
+        # Nice digit grouping #
+        if &#39;x&#39; in self.params[&#39;sep&#39;]:
+            separate = lambda x,pos: split_thousands(x)
+            axes.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
+        if &#39;y&#39; in self.params[&#39;sep&#39;]:
+            separate = lambda y,pos: split_thousands(y)
+            axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
+        # Add custom labels #
+        if &#39;x_labels&#39; in self.params: axes.set_xticklabels(self.params[&#39;x_labels&#39;])
+        if &#39;x_labels_rot&#39; in self.params:
+            pyplot.setp(axes.xaxis.get_majorticklabels(), rotation=self.params[&#39;x_labels_rot&#39;])
+        # Adjust font size #
+        if &#39;x_labels_size&#39; in self.params:
+            pyplot.setp(axes.xaxis.get_majorticklabels(), fontsize=self.params[&#39;x_labels_size&#39;])
+        if &#39;y_labels_size&#39; in self.params:
+            pyplot.setp(axes.yaxis.get_majorticklabels(), fontsize=self.params[&#39;y_labels_size&#39;])
+        # Possibility to overwrite path #
+        if &#39;path&#39; in self.params:   path = FilePath(self.params[&#39;path&#39;])
+        elif hasattr(self, &#39;path&#39;): path = FilePath(self.path)
+        else:                       path = FilePath(self.short_name + &#39;.pdf&#39;)
+        # The arguments to save #
+        save_args = {}
+        if &#39;dpi&#39;  in self.params: save_args[&#39;dpi&#39;]  = self.params[&#39;dpi&#39;]
+        if &#39;bbox&#39; in self.params: save_args[&#39;bbox_inches&#39;] = self.params[&#39;bbox&#39;]
+        # Save it as different formats #
+        for ext in self.params[&#39;formats&#39;]:
+            fig.savefig(path.replace_extension(ext), **save_args)
+        # Close it #
+        if self.params[&#39;close&#39;]: pyplot.close(fig)
+
+    def plot_and_save(self, **kwargs):
+        &#34;&#34;&#34;
+        Used when the plot method defined does not create a figure nor calls save_plot
+        Then the plot method has to use self.fig.
+        &#34;&#34;&#34;
+        self.fig = pyplot.figure()
+        self.plot()
+        self.axes = pyplot.gca()
+        self.save_plot(self.fig, self.axes, **kwargs)
+        pyplot.close(self.fig)
+
+    def plot(self, bins=250, **kwargs):
+        &#34;&#34;&#34;An example plot function. You have to subclass this method.&#34;&#34;&#34;
+        # Data #
+        counts = [sum(map(len, b.contigs)) for b in self.parent.bins]
+        # Linear bins in logarithmic space #
+        if &#39;log&#39; in kwargs.get(&#39;x_scale&#39;, &#39;&#39;):
+            start, stop = numpy.log10(1), numpy.log10(max(counts))
+            bins = list(numpy.logspace(start=start, stop=stop, num=bins))
+            bins.insert(0, 0)
+        # Plot #
+        fig = pyplot.figure()
+        pyplot.hist(counts, bins=bins, color=&#39;gray&#39;)
+        axes = pyplot.gca()
+        # Information #
+        title = &#39;Distribution of the total nucleotide count in the bins&#39;
+        axes.set_title(title)
+        axes.set_xlabel(&#39;Number of nucleotides in a bin&#39;)
+        axes.set_ylabel(&#39;Number of bins with that many nucleotides in them&#39;)
+        # Save it #
+        self.save_plot(fig, axes, **kwargs)
+        pyplot.close(fig)
+        # For convenience #
+        return self
+
+    def save_anim(self, fig, animate, init, bitrate=10000, fps=30):
+        &#34;&#34;&#34;Not functional -- TODO.&#34;&#34;&#34;
+        from matplotlib import animation
+        anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20)
+        FFMpegWriter = animation.writers[&#39;ffmpeg&#39;]
+        writer = FFMpegWriter(bitrate= bitrate, fps=fps)
+        # Save #
+        self.avi_path = self.base_dir + self.short_name + &#39;.avi&#39;
+        anim.save(self.avi_path, writer=writer, codec=&#39;x264&#39;)</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="plumbing.graphs.cool_colors" href="cool_colors.html">plumbing.graphs.cool_colors</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="plumbing.graphs.multiplot" href="multiplot.html">plumbing.graphs.multiplot</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="plumbing.graphs.solo_legend" href="solo_legend.html">plumbing.graphs.solo_legend</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="plumbing.graphs.Graph"><code class="flex name class">
+<span>class <span class="ident">Graph</span></span>
+<span>(</span><span>parent=None, base_dir=None, short_name=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A nice class to make graphs with matplotlib. Example usage:</p>
+<p>from plumbing.graphs import Graph</p>
+<p>class RegressionGraph(Graph):
+formats = ('pdf', 'svg')
+def plot(self, <strong>kwargs):
+fig = pyplot.figure()
+seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
+self.save_plot(fig, </strong>kwargs)</p>
+<p>for x_name in x_names:
+graph
+= PearsonGraph(short_name = x_name)
+graph.title
+= "Regression between y and '%s'" % (x_name)
+graph.x_data
+= x_data[x_name]
+graph.y_data
+= y_data
+graph.plot()</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Graph(object):
+    &#34;&#34;&#34;A nice class to make graphs with matplotlib. Example usage:
+
+            from plumbing.graphs import Graph
+
+            class RegressionGraph(Graph):
+                formats = (&#39;pdf&#39;, &#39;svg&#39;)
+                def plot(self, **kwargs):
+                    fig = pyplot.figure()
+                    seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
+                    self.save_plot(fig, **kwargs)
+
+            for x_name in x_names:
+                graph            = PearsonGraph(short_name = x_name)
+                graph.title      = &#34;Regression between y and &#39;%s&#39;&#34; % (x_name)
+                graph.x_data     = x_data[x_name]
+                graph.y_data     = y_data
+                graph.plot()
+    &#34;&#34;&#34;
+
+    default_params = OrderedDict((
+        (&#39;width&#39;  , None),
+        (&#39;height&#39; , None),
+        (&#39;bottom&#39; , None),
+        (&#39;top&#39;    , None),
+        (&#39;left&#39;   , None),
+        (&#39;right&#39;  , None),
+        (&#39;x_grid&#39; , None), # Vertical lines
+        (&#39;y_grid&#39; , None), # Horizontal lines
+        (&#39;x_scale&#39;, None),
+        (&#39;y_scale&#39;, None),
+        (&#39;x_label&#39;, None),
+        (&#39;y_label&#39;, None),
+        (&#39;x_labels_rot&#39;, None),
+        (&#39;x_labels_size&#39;, None),
+        (&#39;y_labels_size&#39;, None),
+        (&#39;title&#39;  , None),
+        (&#39;y_lim_min&#39;, None), # Minimum (ymax - ymin) after autoscale
+        (&#39;x_lim_min&#39;, None), # Minimum (xmax - xmin) after autoscale
+        (&#39;sep&#39;    , ()),
+        (&#39;formats&#39;, (&#39;pdf&#39;,)),
+        (&#39;close&#39;  , True),
+        (&#39;dpi&#39;    , None),
+        (&#39;bbox&#39;   , None),
+    ))
+
+    def __repr__(self):
+        return &#39;&lt;%s graph &#34;%s&#34;&gt;&#39; % (self.__class__.__name__, self.short_name)
+
+    def __bool__(self): return bool(self.path)
+    __nonzero__ = __bool__
+
+    def __init__(self, parent=None, base_dir=None, short_name=None):
+        # Save parent #
+        self.parent = parent
+        # If we got a file #
+        if isinstance(base_dir, FilePath):
+            self.base_dir = base_dir.directory
+            short_name    = base_dir.short_prefix
+        # If no parent and no directory #
+        if base_dir is None and parent is None:
+            file_name     = os.path.abspath((inspect.stack()[1])[1])
+            self.base_dir = os.path.dirname(os.path.abspath(file_name)) + &#39;/&#39;
+            self.base_dir = Path(self.base_dir)
+        # If no directory but a parent is present #
+        if base_dir is None:
+            if hasattr(self.parent, &#39;p&#39;):
+                self.base_dir = self.parent.p.graphs_dir
+            if hasattr(self.parent, &#39;paths&#39;):
+                self.base_dir = self.parent.paths.graphs_dir
+            raise Exception(&#34;Please specify a base_dir for this graph.&#34;)
+        else:
+            self.base_dir = Path(base_dir)
+        self.base_dir.create_if_not_exists()
+        # Short name #
+        if short_name: self.short_name = short_name
+        # Use the parents name or the base class name #
+        if not hasattr(self, &#39;short_name&#39;):
+            if hasattr(self.parent, &#39;short_name&#39;):
+                self.short_name = self.parent.short_name
+            else:
+                self.short_name = camel_to_snake(self.__class__.__name__)
+
+    @property_cached
+    def path(self):
+        return Path(self.base_dir + self.short_name + &#39;.pdf&#39;)
+
+    def __call__(self, *args, **kwargs):
+        &#34;&#34;&#34;
+        Plot the graph if it doesn&#39;t exist. Then return the path to it.
+        Force the re-runing with rerun=True.
+        &#34;&#34;&#34;
+        if not self or kwargs.get(&#39;rerun&#39;): self.plot(*args, **kwargs)
+        return self.path
+
+    def save_plot(self, fig=None, axes=None, **kwargs):
+        # Missing figure #
+        if fig is None:   fig = pyplot.gcf()
+        # Missing axes #
+        if axes is None: axes = pyplot.gca()
+        # Parameters #
+        self.params = {}
+        for key in self.default_params:
+            if key in kwargs:                          self.params[key] = kwargs[key]
+            elif hasattr(self, key):                   self.params[key] = getattr(self, key)
+            elif self.default_params[key] is not None: self.params[key] = self.default_params[key]
+        # Backwards compatibility #
+        if kwargs.get(&#39;x_log&#39;, False): self.params[&#39;x_scale&#39;] = &#39;symlog&#39;
+        if kwargs.get(&#39;y_log&#39;, False): self.params[&#39;y_scale&#39;] = &#39;symlog&#39;
+        # Log #
+        if &#39;x_scale&#39; in self.params: axes.set_xscale(self.params[&#39;x_scale&#39;])
+        if &#39;y_scale&#39; in self.params: axes.set_yscale(self.params[&#39;y_scale&#39;])
+        # Axis limits #
+        if &#39;x_min&#39; in self.params: axes.set_xlim(self.params[&#39;x_min&#39;], axes.get_xlim()[1])
+        if &#39;x_max&#39; in self.params: axes.set_xlim(axes.get_xlim()[0], self.params[&#39;x_max&#39;])
+        if &#39;y_min&#39; in self.params: axes.set_ylim(self.params[&#39;y_min&#39;], axes.get_ylim()[1])
+        if &#39;y_max&#39; in self.params: axes.set_ylim(axes.get_ylim()[0], self.params[&#39;y_max&#39;])
+        # Minimum delta on axis limits #
+        if &#39;y_lim_min&#39; in self.params:
+            top, bottom = axes.get_ylim()
+            minimum     = self.params[&#39;y_lim_min&#39;]
+            delta       = top - bottom
+            if delta &lt; minimum:
+                center = bottom + delta/2
+                axes.set_ylim(center - minimum/2, center + minimum/2)
+        # Title #
+        title = self.params.get(&#39;title&#39;, False)
+        if title: axes.set_title(title)
+        # Axes labels  #
+        if self.params.get(&#39;x_label&#39;): axes.set_xlabel(self.params[&#39;x_label&#39;])
+        if self.params.get(&#39;y_label&#39;): axes.set_ylabel(self.params[&#39;y_label&#39;])
+        # Set height and width #
+        if self.params.get(&#39;width&#39;):  fig.set_figwidth(self.params[&#39;width&#39;])
+        if self.params.get(&#39;height&#39;): fig.set_figheight(self.params[&#39;height&#39;])
+        # Adjust #
+        if self.params.get(&#39;bottom&#39;):
+            fig.subplots_adjust(hspace=0.0, bottom = self.params[&#39;bottom&#39;], top   = self.params[&#39;top&#39;],
+                                            left   = self.params[&#39;left&#39;],   right = self.params[&#39;right&#39;])
+        # Grid #
+        if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;])
+        if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;])
+        # Data and source extra text #
+        if hasattr(self, &#39;dev_mode&#39;) and self.dev_mode is True:
+            fig.text(0.99, 0.98, time.asctime(), horizontalalignment=&#39;right&#39;)
+            job_name = os.environ.get(&#39;SLURM_JOB_NAME&#39;, &#39;Unnamed&#39;)
+            user_msg = &#39;user: %s, job: %s&#39; % (getpass.getuser(), job_name)
+            fig.text(0.01, 0.98, user_msg, horizontalalignment=&#39;left&#39;)
+        # Nice digit grouping #
+        if &#39;x&#39; in self.params[&#39;sep&#39;]:
+            separate = lambda x,pos: split_thousands(x)
+            axes.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
+        if &#39;y&#39; in self.params[&#39;sep&#39;]:
+            separate = lambda y,pos: split_thousands(y)
+            axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
+        # Add custom labels #
+        if &#39;x_labels&#39; in self.params: axes.set_xticklabels(self.params[&#39;x_labels&#39;])
+        if &#39;x_labels_rot&#39; in self.params:
+            pyplot.setp(axes.xaxis.get_majorticklabels(), rotation=self.params[&#39;x_labels_rot&#39;])
+        # Adjust font size #
+        if &#39;x_labels_size&#39; in self.params:
+            pyplot.setp(axes.xaxis.get_majorticklabels(), fontsize=self.params[&#39;x_labels_size&#39;])
+        if &#39;y_labels_size&#39; in self.params:
+            pyplot.setp(axes.yaxis.get_majorticklabels(), fontsize=self.params[&#39;y_labels_size&#39;])
+        # Possibility to overwrite path #
+        if &#39;path&#39; in self.params:   path = FilePath(self.params[&#39;path&#39;])
+        elif hasattr(self, &#39;path&#39;): path = FilePath(self.path)
+        else:                       path = FilePath(self.short_name + &#39;.pdf&#39;)
+        # The arguments to save #
+        save_args = {}
+        if &#39;dpi&#39;  in self.params: save_args[&#39;dpi&#39;]  = self.params[&#39;dpi&#39;]
+        if &#39;bbox&#39; in self.params: save_args[&#39;bbox_inches&#39;] = self.params[&#39;bbox&#39;]
+        # Save it as different formats #
+        for ext in self.params[&#39;formats&#39;]:
+            fig.savefig(path.replace_extension(ext), **save_args)
+        # Close it #
+        if self.params[&#39;close&#39;]: pyplot.close(fig)
+
+    def plot_and_save(self, **kwargs):
+        &#34;&#34;&#34;
+        Used when the plot method defined does not create a figure nor calls save_plot
+        Then the plot method has to use self.fig.
+        &#34;&#34;&#34;
+        self.fig = pyplot.figure()
+        self.plot()
+        self.axes = pyplot.gca()
+        self.save_plot(self.fig, self.axes, **kwargs)
+        pyplot.close(self.fig)
+
+    def plot(self, bins=250, **kwargs):
+        &#34;&#34;&#34;An example plot function. You have to subclass this method.&#34;&#34;&#34;
+        # Data #
+        counts = [sum(map(len, b.contigs)) for b in self.parent.bins]
+        # Linear bins in logarithmic space #
+        if &#39;log&#39; in kwargs.get(&#39;x_scale&#39;, &#39;&#39;):
+            start, stop = numpy.log10(1), numpy.log10(max(counts))
+            bins = list(numpy.logspace(start=start, stop=stop, num=bins))
+            bins.insert(0, 0)
+        # Plot #
+        fig = pyplot.figure()
+        pyplot.hist(counts, bins=bins, color=&#39;gray&#39;)
+        axes = pyplot.gca()
+        # Information #
+        title = &#39;Distribution of the total nucleotide count in the bins&#39;
+        axes.set_title(title)
+        axes.set_xlabel(&#39;Number of nucleotides in a bin&#39;)
+        axes.set_ylabel(&#39;Number of bins with that many nucleotides in them&#39;)
+        # Save it #
+        self.save_plot(fig, axes, **kwargs)
+        pyplot.close(fig)
+        # For convenience #
+        return self
+
+    def save_anim(self, fig, animate, init, bitrate=10000, fps=30):
+        &#34;&#34;&#34;Not functional -- TODO.&#34;&#34;&#34;
+        from matplotlib import animation
+        anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20)
+        FFMpegWriter = animation.writers[&#39;ffmpeg&#39;]
+        writer = FFMpegWriter(bitrate= bitrate, fps=fps)
+        # Save #
+        self.avi_path = self.base_dir + self.short_name + &#39;.avi&#39;
+        anim.save(self.avi_path, writer=writer, codec=&#39;x264&#39;)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="plumbing.graphs.multiplot.Multiplot" href="multiplot.html#plumbing.graphs.multiplot.Multiplot">Multiplot</a></li>
+<li><a title="plumbing.graphs.solo_legend.SoloLegend" href="solo_legend.html#plumbing.graphs.solo_legend.SoloLegend">SoloLegend</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="plumbing.graphs.Graph.default_params"><code class="name">var <span class="ident">default_params</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="plumbing.graphs.Graph.path"><code class="name">var <span class="ident">path</span></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(self, instance, owner):
+    # If called from a class #
+    if instance is None: return self
+    # Does a cache exist for this instance? #
+    self.check_cache(instance)
+    # Is the answer in the cache? #
+    if self.name in instance.__cache__: return instance.__cache__[self.name]
+    # If not we will compute it #
+    if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+    else:                                      result = self.func(instance)
+    # Let&#39;s store the answer for later #
+    instance.__cache__[self.name] = result
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="plumbing.graphs.Graph.plot"><code class="name flex">
+<span>def <span class="ident">plot</span></span>(<span>self, bins=250, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An example plot function. You have to subclass this method.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot(self, bins=250, **kwargs):
+    &#34;&#34;&#34;An example plot function. You have to subclass this method.&#34;&#34;&#34;
+    # Data #
+    counts = [sum(map(len, b.contigs)) for b in self.parent.bins]
+    # Linear bins in logarithmic space #
+    if &#39;log&#39; in kwargs.get(&#39;x_scale&#39;, &#39;&#39;):
+        start, stop = numpy.log10(1), numpy.log10(max(counts))
+        bins = list(numpy.logspace(start=start, stop=stop, num=bins))
+        bins.insert(0, 0)
+    # Plot #
+    fig = pyplot.figure()
+    pyplot.hist(counts, bins=bins, color=&#39;gray&#39;)
+    axes = pyplot.gca()
+    # Information #
+    title = &#39;Distribution of the total nucleotide count in the bins&#39;
+    axes.set_title(title)
+    axes.set_xlabel(&#39;Number of nucleotides in a bin&#39;)
+    axes.set_ylabel(&#39;Number of bins with that many nucleotides in them&#39;)
+    # Save it #
+    self.save_plot(fig, axes, **kwargs)
+    pyplot.close(fig)
+    # For convenience #
+    return self</code></pre>
+</details>
+</dd>
+<dt id="plumbing.graphs.Graph.plot_and_save"><code class="name flex">
+<span>def <span class="ident">plot_and_save</span></span>(<span>self, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Used when the plot method defined does not create a figure nor calls save_plot
+Then the plot method has to use self.fig.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_and_save(self, **kwargs):
+    &#34;&#34;&#34;
+    Used when the plot method defined does not create a figure nor calls save_plot
+    Then the plot method has to use self.fig.
+    &#34;&#34;&#34;
+    self.fig = pyplot.figure()
+    self.plot()
+    self.axes = pyplot.gca()
+    self.save_plot(self.fig, self.axes, **kwargs)
+    pyplot.close(self.fig)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.graphs.Graph.save_anim"><code class="name flex">
+<span>def <span class="ident">save_anim</span></span>(<span>self, fig, animate, init, bitrate=10000, fps=30)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Not functional &ndash; TODO.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_anim(self, fig, animate, init, bitrate=10000, fps=30):
+    &#34;&#34;&#34;Not functional -- TODO.&#34;&#34;&#34;
+    from matplotlib import animation
+    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20)
+    FFMpegWriter = animation.writers[&#39;ffmpeg&#39;]
+    writer = FFMpegWriter(bitrate= bitrate, fps=fps)
+    # Save #
+    self.avi_path = self.base_dir + self.short_name + &#39;.avi&#39;
+    anim.save(self.avi_path, writer=writer, codec=&#39;x264&#39;)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.graphs.Graph.save_plot"><code class="name flex">
+<span>def <span class="ident">save_plot</span></span>(<span>self, fig=None, axes=None, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_plot(self, fig=None, axes=None, **kwargs):
+    # Missing figure #
+    if fig is None:   fig = pyplot.gcf()
+    # Missing axes #
+    if axes is None: axes = pyplot.gca()
+    # Parameters #
+    self.params = {}
+    for key in self.default_params:
+        if key in kwargs:                          self.params[key] = kwargs[key]
+        elif hasattr(self, key):                   self.params[key] = getattr(self, key)
+        elif self.default_params[key] is not None: self.params[key] = self.default_params[key]
+    # Backwards compatibility #
+    if kwargs.get(&#39;x_log&#39;, False): self.params[&#39;x_scale&#39;] = &#39;symlog&#39;
+    if kwargs.get(&#39;y_log&#39;, False): self.params[&#39;y_scale&#39;] = &#39;symlog&#39;
+    # Log #
+    if &#39;x_scale&#39; in self.params: axes.set_xscale(self.params[&#39;x_scale&#39;])
+    if &#39;y_scale&#39; in self.params: axes.set_yscale(self.params[&#39;y_scale&#39;])
+    # Axis limits #
+    if &#39;x_min&#39; in self.params: axes.set_xlim(self.params[&#39;x_min&#39;], axes.get_xlim()[1])
+    if &#39;x_max&#39; in self.params: axes.set_xlim(axes.get_xlim()[0], self.params[&#39;x_max&#39;])
+    if &#39;y_min&#39; in self.params: axes.set_ylim(self.params[&#39;y_min&#39;], axes.get_ylim()[1])
+    if &#39;y_max&#39; in self.params: axes.set_ylim(axes.get_ylim()[0], self.params[&#39;y_max&#39;])
+    # Minimum delta on axis limits #
+    if &#39;y_lim_min&#39; in self.params:
+        top, bottom = axes.get_ylim()
+        minimum     = self.params[&#39;y_lim_min&#39;]
+        delta       = top - bottom
+        if delta &lt; minimum:
+            center = bottom + delta/2
+            axes.set_ylim(center - minimum/2, center + minimum/2)
+    # Title #
+    title = self.params.get(&#39;title&#39;, False)
+    if title: axes.set_title(title)
+    # Axes labels  #
+    if self.params.get(&#39;x_label&#39;): axes.set_xlabel(self.params[&#39;x_label&#39;])
+    if self.params.get(&#39;y_label&#39;): axes.set_ylabel(self.params[&#39;y_label&#39;])
+    # Set height and width #
+    if self.params.get(&#39;width&#39;):  fig.set_figwidth(self.params[&#39;width&#39;])
+    if self.params.get(&#39;height&#39;): fig.set_figheight(self.params[&#39;height&#39;])
+    # Adjust #
+    if self.params.get(&#39;bottom&#39;):
+        fig.subplots_adjust(hspace=0.0, bottom = self.params[&#39;bottom&#39;], top   = self.params[&#39;top&#39;],
+                                        left   = self.params[&#39;left&#39;],   right = self.params[&#39;right&#39;])
+    # Grid #
+    if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;])
+    if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;])
+    # Data and source extra text #
+    if hasattr(self, &#39;dev_mode&#39;) and self.dev_mode is True:
+        fig.text(0.99, 0.98, time.asctime(), horizontalalignment=&#39;right&#39;)
+        job_name = os.environ.get(&#39;SLURM_JOB_NAME&#39;, &#39;Unnamed&#39;)
+        user_msg = &#39;user: %s, job: %s&#39; % (getpass.getuser(), job_name)
+        fig.text(0.01, 0.98, user_msg, horizontalalignment=&#39;left&#39;)
+    # Nice digit grouping #
+    if &#39;x&#39; in self.params[&#39;sep&#39;]:
+        separate = lambda x,pos: split_thousands(x)
+        axes.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
+    if &#39;y&#39; in self.params[&#39;sep&#39;]:
+        separate = lambda y,pos: split_thousands(y)
+        axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
+    # Add custom labels #
+    if &#39;x_labels&#39; in self.params: axes.set_xticklabels(self.params[&#39;x_labels&#39;])
+    if &#39;x_labels_rot&#39; in self.params:
+        pyplot.setp(axes.xaxis.get_majorticklabels(), rotation=self.params[&#39;x_labels_rot&#39;])
+    # Adjust font size #
+    if &#39;x_labels_size&#39; in self.params:
+        pyplot.setp(axes.xaxis.get_majorticklabels(), fontsize=self.params[&#39;x_labels_size&#39;])
+    if &#39;y_labels_size&#39; in self.params:
+        pyplot.setp(axes.yaxis.get_majorticklabels(), fontsize=self.params[&#39;y_labels_size&#39;])
+    # Possibility to overwrite path #
+    if &#39;path&#39; in self.params:   path = FilePath(self.params[&#39;path&#39;])
+    elif hasattr(self, &#39;path&#39;): path = FilePath(self.path)
+    else:                       path = FilePath(self.short_name + &#39;.pdf&#39;)
+    # The arguments to save #
+    save_args = {}
+    if &#39;dpi&#39;  in self.params: save_args[&#39;dpi&#39;]  = self.params[&#39;dpi&#39;]
+    if &#39;bbox&#39; in self.params: save_args[&#39;bbox_inches&#39;] = self.params[&#39;bbox&#39;]
+    # Save it as different formats #
+    for ext in self.params[&#39;formats&#39;]:
+        fig.savefig(path.replace_extension(ext), **save_args)
+    # Close it #
+    if self.params[&#39;close&#39;]: pyplot.close(fig)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="plumbing" href="../index.html">plumbing</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="plumbing.graphs.cool_colors" href="cool_colors.html">plumbing.graphs.cool_colors</a></code></li>
+<li><code><a title="plumbing.graphs.multiplot" href="multiplot.html">plumbing.graphs.multiplot</a></code></li>
+<li><code><a title="plumbing.graphs.solo_legend" href="solo_legend.html">plumbing.graphs.solo_legend</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="plumbing.graphs.Graph" href="#plumbing.graphs.Graph">Graph</a></code></h4>
+<ul class="two-column">
+<li><code><a title="plumbing.graphs.Graph.default_params" href="#plumbing.graphs.Graph.default_params">default_params</a></code></li>
+<li><code><a title="plumbing.graphs.Graph.path" href="#plumbing.graphs.Graph.path">path</a></code></li>
+<li><code><a title="plumbing.graphs.Graph.plot" href="#plumbing.graphs.Graph.plot">plot</a></code></li>
+<li><code><a title="plumbing.graphs.Graph.plot_and_save" href="#plumbing.graphs.Graph.plot_and_save">plot_and_save</a></code></li>
+<li><code><a title="plumbing.graphs.Graph.save_anim" href="#plumbing.graphs.Graph.save_anim">save_anim</a></code></li>
+<li><code><a title="plumbing.graphs.Graph.save_plot" href="#plumbing.graphs.Graph.save_plot">save_plot</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+</footer>
+</body>
+</html>

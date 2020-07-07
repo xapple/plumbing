@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.3" />
+<title>plumbing.dataframes API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>plumbing.dataframes</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Built-in modules #
+from six import StringIO
+
+# Internal modules #
+
+# Third party modules #
+import pandas, numpy
+
+################################################################################
+def r_matrix_to_dataframe(matrix):
+    cols = list(matrix.colnames)
+    rows = list(matrix.rownames)
+    return pandas.DataFrame(numpy.array(matrix), index=rows, columns=cols)
+
+################################################################################
+def pandas_df_to_r_df(pandas_df):
+    from pandas.rpy.common import convert_to_r_dataframe
+    return convert_to_r_dataframe(pandas_df)
+
+################################################################################
+def pandas_df_to_named_r_df(pandas_df, r_name):
+    eval(&#34;%s = convert_to_r_dataframe(pandas_df)&#34; % r_name)
+    eval(&#34;return %s&#34; % r_name)
+
+################################################################################
+def string_to_df(string, **kwargs):
+    &#34;&#34;&#34;
+    Parse a string as a dataframe. Example:
+
+        &gt;&gt;&gt; from plumbing.dataframes import string_to_df
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; a = &#39;&#39;&#39;  i  | x | y | z
+        &gt;&gt;&gt;         AR  | v | 5 | 1
+        &gt;&gt;&gt;         For | w | 3 | 3
+        &gt;&gt;&gt;         For | w | 4 | 4 &#39;&#39;&#39;
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; df = string_to_df(a)
+        &gt;&gt;&gt; print(df)
+
+             i  x  y  z
+        0   AR  v  5  1
+        1  For  w  3  3
+        2  For  w  4  4
+    &#34;&#34;&#34;
+    handle = StringIO(string.replace(&#39; &#39;,&#39;&#39;))
+    df     = pandas.read_csv(handle, sep=&#34;|&#34;, header=0, **kwargs)
+    return df
+
+################################################################################
+def count_unique_index(df, by):
+    &#34;&#34;&#34;
+    This function enables you to quickly see how many unique combinations of
+    column values exist in a data frame. Here are two examples:
+
+        &gt;&gt;&gt; df = &#39;&#39;&#39; i   | A  | B | C
+        &gt;&gt;&gt;          For | 3  | 1 | x
+        &gt;&gt;&gt;          For | 3  | 2 | x
+        &gt;&gt;&gt;          For | 3  | 3 | y &#39;&#39;&#39;
+        &gt;&gt;&gt; from plumbing.dataframes import string_to_df
+        &gt;&gt;&gt; df = string_to_df(df)
+        &gt;&gt;&gt; count_unique_index(df, by=[&#39;A&#39;, &#39;C&#39;])
+
+           A  C  count
+        0  3  x      2
+        1  3  y      1
+
+        &gt;&gt;&gt; import seaborn
+        &gt;&gt;&gt; tips = seaborn.load_dataset(&#34;tips&#34;)
+        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;]))
+
+              sex smoker  count
+        0    Male    Yes     60
+        1    Male     No     97
+        2  Female    Yes     33
+        3  Female     No     54
+
+        &gt;&gt;&gt; tips = seaborn.load_dataset(&#34;tips&#34;)
+        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;, &#39;day&#39;]))
+
+              sex smoker    time  count
+        0    Male    Yes   Lunch     13
+        1    Male    Yes  Dinner     47
+        2    Male     No   Lunch     20
+        3    Male     No  Dinner     77
+        4  Female    Yes   Lunch     10
+        5  Female    Yes  Dinner     23
+        6  Female     No   Lunch     25
+        7  Female     No  Dinner     29
+    &#34;&#34;&#34;
+    return df.groupby(by).size().reset_index().rename(columns={0: &#39;count&#39;})
+
+################################################################################
+def multiply_propagate_nan(df, series):
+    &#34;&#34;&#34;
+    This function enables you to multiply a dataframe by a series with &#39;smart&#39;
+    propagation of NaN values.
+
+    We implement a simple rule where:
+
+        x * NaN = NaN | ∀x≠0
+        0 * NaN = 0
+
+    In essence, multipling a NaN with a zero will yield a zero and multipling
+    a NaN with anything else will yield a NaN.
+    This is usefull in some scenarios where NaN simply indicates a missing
+    value in a dataset, which is known to be a dataset of real numbers.
+    For instance, when a scientist knows that all values considered in a given
+    experiment are scalars but a few of the values were not recorded or were
+    lost.
+    This is done because, as it stands, NaN can represent anything even the
+    result of an operation yielding infinity. But there is no float named &#34;IaN&#34;
+    that would stand for &#34;Is a Number&#34;, where we know that the number is
+    in R or N, but are missing its particular value.
+
+    #TODO restore zeros from the series too not only the dataframe.
+
+    An example follows:
+
+        &gt;&gt;&gt; one = &#39;&#39;&#39;    | W1   | W2   | W3
+        &gt;&gt;&gt;           A  | 0.0  | 0.7  | NaN
+        &gt;&gt;&gt;           B  | 0.1  | 1.0  | 1.0
+        &gt;&gt;&gt;           C  | 0.2  | 0.8  | 0.49
+        &gt;&gt;&gt;           D  | 0.0  | 0.0  | 1.0  &#39;&#39;&#39;
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; two = &#39;&#39;&#39;    | Y
+        &gt;&gt;&gt;           W3 | 8.0
+        &gt;&gt;&gt;           W1 | NaN
+        &gt;&gt;&gt;           W2 | 9.0  &#39;&#39;&#39;
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; from plumbing.dataframes import string_to_df
+        &gt;&gt;&gt; one = string_to_df(one, index_col=0)
+        &gt;&gt;&gt; two = string_to_df(two, index_col=0)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; from plumbing.dataframes import multiply_propagate_nan
+        &gt;&gt;&gt; print(multiply_propagate_nan(one, two[&#39;Y&#39;]))
+
+                W1   W2    W3
+            A  0.0  6.3   NaN
+            B  NaN  9.0  8.00
+            C  NaN  7.2  3.92
+            D  0.0  0.0  8.00
+    &#34;&#34;&#34;
+    # Multiply #
+    result = df * series
+    # Restore the zeros where they should be #
+    result[df == 0.0] = 0.0
+    # Return #
+    return result</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="plumbing.dataframes.count_unique_index"><code class="name flex">
+<span>def <span class="ident">count_unique_index</span></span>(<span>df, by)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This function enables you to quickly see how many unique combinations of
+column values exist in a data frame. Here are two examples:</p>
+<pre><code>&gt;&gt;&gt; df = ''' i   | A  | B | C
+&gt;&gt;&gt;          For | 3  | 1 | x
+&gt;&gt;&gt;          For | 3  | 2 | x
+&gt;&gt;&gt;          For | 3  | 3 | y '''
+&gt;&gt;&gt; from plumbing.dataframes import string_to_df
+&gt;&gt;&gt; df = string_to_df(df)
+&gt;&gt;&gt; count_unique_index(df, by=['A', 'C'])
+
+   A  C  count
+0  3  x      2
+1  3  y      1
+
+&gt;&gt;&gt; import seaborn
+&gt;&gt;&gt; tips = seaborn.load_dataset("tips")
+&gt;&gt;&gt; print(count_unique_index(tips, ['sex', 'smoker']))
+
+      sex smoker  count
+0    Male    Yes     60
+1    Male     No     97
+2  Female    Yes     33
+3  Female     No     54
+
+&gt;&gt;&gt; tips = seaborn.load_dataset("tips")
+&gt;&gt;&gt; print(count_unique_index(tips, ['sex', 'smoker', 'day']))
+
+      sex smoker    time  count
+0    Male    Yes   Lunch     13
+1    Male    Yes  Dinner     47
+2    Male     No   Lunch     20
+3    Male     No  Dinner     77
+4  Female    Yes   Lunch     10
+5  Female    Yes  Dinner     23
+6  Female     No   Lunch     25
+7  Female     No  Dinner     29
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def count_unique_index(df, by):
+    &#34;&#34;&#34;
+    This function enables you to quickly see how many unique combinations of
+    column values exist in a data frame. Here are two examples:
+
+        &gt;&gt;&gt; df = &#39;&#39;&#39; i   | A  | B | C
+        &gt;&gt;&gt;          For | 3  | 1 | x
+        &gt;&gt;&gt;          For | 3  | 2 | x
+        &gt;&gt;&gt;          For | 3  | 3 | y &#39;&#39;&#39;
+        &gt;&gt;&gt; from plumbing.dataframes import string_to_df
+        &gt;&gt;&gt; df = string_to_df(df)
+        &gt;&gt;&gt; count_unique_index(df, by=[&#39;A&#39;, &#39;C&#39;])
+
+           A  C  count
+        0  3  x      2
+        1  3  y      1
+
+        &gt;&gt;&gt; import seaborn
+        &gt;&gt;&gt; tips = seaborn.load_dataset(&#34;tips&#34;)
+        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;]))
+
+              sex smoker  count
+        0    Male    Yes     60
+        1    Male     No     97
+        2  Female    Yes     33
+        3  Female     No     54
+
+        &gt;&gt;&gt; tips = seaborn.load_dataset(&#34;tips&#34;)
+        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;, &#39;day&#39;]))
+
+              sex smoker    time  count
+        0    Male    Yes   Lunch     13
+        1    Male    Yes  Dinner     47
+        2    Male     No   Lunch     20
+        3    Male     No  Dinner     77
+        4  Female    Yes   Lunch     10
+        5  Female    Yes  Dinner     23
+        6  Female     No   Lunch     25
+        7  Female     No  Dinner     29
+    &#34;&#34;&#34;
+    return df.groupby(by).size().reset_index().rename(columns={0: &#39;count&#39;})</code></pre>
+</details>
+</dd>
+<dt id="plumbing.dataframes.multiply_propagate_nan"><code class="name flex">
+<span>def <span class="ident">multiply_propagate_nan</span></span>(<span>df, series)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This function enables you to multiply a dataframe by a series with 'smart'
+propagation of NaN values.</p>
+<p>We implement a simple rule where:</p>
+<pre><code>x * NaN = NaN | ∀x≠0
+0 * NaN = 0
+</code></pre>
+<p>In essence, multipling a NaN with a zero will yield a zero and multipling
+a NaN with anything else will yield a NaN.
+This is usefull in some scenarios where NaN simply indicates a missing
+value in a dataset, which is known to be a dataset of real numbers.
+For instance, when a scientist knows that all values considered in a given
+experiment are scalars but a few of the values were not recorded or were
+lost.
+This is done because, as it stands, NaN can represent anything even the
+result of an operation yielding infinity. But there is no float named "IaN"
+that would stand for "Is a Number", where we know that the number is
+in R or N, but are missing its particular value.</p>
+<h1 id="todo-restore-zeros-from-the-series-too-not-only-the-dataframe">TODO restore zeros from the series too not only the dataframe.</h1>
+<p>An example follows:</p>
+<pre><code>&gt;&gt;&gt; one = '''    | W1   | W2   | W3
+&gt;&gt;&gt;           A  | 0.0  | 0.7  | NaN
+&gt;&gt;&gt;           B  | 0.1  | 1.0  | 1.0
+&gt;&gt;&gt;           C  | 0.2  | 0.8  | 0.49
+&gt;&gt;&gt;           D  | 0.0  | 0.0  | 1.0  '''
+&gt;&gt;&gt;
+&gt;&gt;&gt; two = '''    | Y
+&gt;&gt;&gt;           W3 | 8.0
+&gt;&gt;&gt;           W1 | NaN
+&gt;&gt;&gt;           W2 | 9.0  '''
+&gt;&gt;&gt;
+&gt;&gt;&gt; from plumbing.dataframes import string_to_df
+&gt;&gt;&gt; one = string_to_df(one, index_col=0)
+&gt;&gt;&gt; two = string_to_df(two, index_col=0)
+&gt;&gt;&gt;
+&gt;&gt;&gt; from plumbing.dataframes import multiply_propagate_nan
+&gt;&gt;&gt; print(multiply_propagate_nan(one, two['Y']))
+
+        W1   W2    W3
+    A  0.0  6.3   NaN
+    B  NaN  9.0  8.00
+    C  NaN  7.2  3.92
+    D  0.0  0.0  8.00
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def multiply_propagate_nan(df, series):
+    &#34;&#34;&#34;
+    This function enables you to multiply a dataframe by a series with &#39;smart&#39;
+    propagation of NaN values.
+
+    We implement a simple rule where:
+
+        x * NaN = NaN | ∀x≠0
+        0 * NaN = 0
+
+    In essence, multipling a NaN with a zero will yield a zero and multipling
+    a NaN with anything else will yield a NaN.
+    This is usefull in some scenarios where NaN simply indicates a missing
+    value in a dataset, which is known to be a dataset of real numbers.
+    For instance, when a scientist knows that all values considered in a given
+    experiment are scalars but a few of the values were not recorded or were
+    lost.
+    This is done because, as it stands, NaN can represent anything even the
+    result of an operation yielding infinity. But there is no float named &#34;IaN&#34;
+    that would stand for &#34;Is a Number&#34;, where we know that the number is
+    in R or N, but are missing its particular value.
+
+    #TODO restore zeros from the series too not only the dataframe.
+
+    An example follows:
+
+        &gt;&gt;&gt; one = &#39;&#39;&#39;    | W1   | W2   | W3
+        &gt;&gt;&gt;           A  | 0.0  | 0.7  | NaN
+        &gt;&gt;&gt;           B  | 0.1  | 1.0  | 1.0
+        &gt;&gt;&gt;           C  | 0.2  | 0.8  | 0.49
+        &gt;&gt;&gt;           D  | 0.0  | 0.0  | 1.0  &#39;&#39;&#39;
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; two = &#39;&#39;&#39;    | Y
+        &gt;&gt;&gt;           W3 | 8.0
+        &gt;&gt;&gt;           W1 | NaN
+        &gt;&gt;&gt;           W2 | 9.0  &#39;&#39;&#39;
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; from plumbing.dataframes import string_to_df
+        &gt;&gt;&gt; one = string_to_df(one, index_col=0)
+        &gt;&gt;&gt; two = string_to_df(two, index_col=0)
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; from plumbing.dataframes import multiply_propagate_nan
+        &gt;&gt;&gt; print(multiply_propagate_nan(one, two[&#39;Y&#39;]))
+
+                W1   W2    W3
+            A  0.0  6.3   NaN
+            B  NaN  9.0  8.00
+            C  NaN  7.2  3.92
+            D  0.0  0.0  8.00
+    &#34;&#34;&#34;
+    # Multiply #
+    result = df * series
+    # Restore the zeros where they should be #
+    result[df == 0.0] = 0.0
+    # Return #
+    return result</code></pre>
+</details>
+</dd>
+<dt id="plumbing.dataframes.pandas_df_to_named_r_df"><code class="name flex">
+<span>def <span class="ident">pandas_df_to_named_r_df</span></span>(<span>pandas_df, r_name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pandas_df_to_named_r_df(pandas_df, r_name):
+    eval(&#34;%s = convert_to_r_dataframe(pandas_df)&#34; % r_name)
+    eval(&#34;return %s&#34; % r_name)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.dataframes.pandas_df_to_r_df"><code class="name flex">
+<span>def <span class="ident">pandas_df_to_r_df</span></span>(<span>pandas_df)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pandas_df_to_r_df(pandas_df):
+    from pandas.rpy.common import convert_to_r_dataframe
+    return convert_to_r_dataframe(pandas_df)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.dataframes.r_matrix_to_dataframe"><code class="name flex">
+<span>def <span class="ident">r_matrix_to_dataframe</span></span>(<span>matrix)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def r_matrix_to_dataframe(matrix):
+    cols = list(matrix.colnames)
+    rows = list(matrix.rownames)
+    return pandas.DataFrame(numpy.array(matrix), index=rows, columns=cols)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.dataframes.string_to_df"><code class="name flex">
+<span>def <span class="ident">string_to_df</span></span>(<span>string, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parse a string as a dataframe. Example:</p>
+<pre><code>&gt;&gt;&gt; from plumbing.dataframes import string_to_df
+&gt;&gt;&gt;
+&gt;&gt;&gt; a = '''  i  | x | y | z
+&gt;&gt;&gt;         AR  | v | 5 | 1
+&gt;&gt;&gt;         For | w | 3 | 3
+&gt;&gt;&gt;         For | w | 4 | 4 '''
+&gt;&gt;&gt;
+&gt;&gt;&gt; df = string_to_df(a)
+&gt;&gt;&gt; print(df)
+
+     i  x  y  z
+0   AR  v  5  1
+1  For  w  3  3
+2  For  w  4  4
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def string_to_df(string, **kwargs):
+    &#34;&#34;&#34;
+    Parse a string as a dataframe. Example:
+
+        &gt;&gt;&gt; from plumbing.dataframes import string_to_df
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; a = &#39;&#39;&#39;  i  | x | y | z
+        &gt;&gt;&gt;         AR  | v | 5 | 1
+        &gt;&gt;&gt;         For | w | 3 | 3
+        &gt;&gt;&gt;         For | w | 4 | 4 &#39;&#39;&#39;
+        &gt;&gt;&gt;
+        &gt;&gt;&gt; df = string_to_df(a)
+        &gt;&gt;&gt; print(df)
+
+             i  x  y  z
+        0   AR  v  5  1
+        1  For  w  3  3
+        2  For  w  4  4
+    &#34;&#34;&#34;
+    handle = StringIO(string.replace(&#39; &#39;,&#39;&#39;))
+    df     = pandas.read_csv(handle, sep=&#34;|&#34;, header=0, **kwargs)
+    return df</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="plumbing" href="index.html">plumbing</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="plumbing.dataframes.count_unique_index" href="#plumbing.dataframes.count_unique_index">count_unique_index</a></code></li>
+<li><code><a title="plumbing.dataframes.multiply_propagate_nan" href="#plumbing.dataframes.multiply_propagate_nan">multiply_propagate_nan</a></code></li>
+<li><code><a title="plumbing.dataframes.pandas_df_to_named_r_df" href="#plumbing.dataframes.pandas_df_to_named_r_df">pandas_df_to_named_r_df</a></code></li>
+<li><code><a title="plumbing.dataframes.pandas_df_to_r_df" href="#plumbing.dataframes.pandas_df_to_r_df">pandas_df_to_r_df</a></code></li>
+<li><code><a title="plumbing.dataframes.r_matrix_to_dataframe" href="#plumbing.dataframes.r_matrix_to_dataframe">r_matrix_to_dataframe</a></code></li>
+<li><code><a title="plumbing.dataframes.string_to_df" href="#plumbing.dataframes.string_to_df">string_to_df</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+</footer>
+</body>
+</html>
