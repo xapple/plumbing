@@ -8,10 +8,11 @@ Written by Lucas Sinclair. MIT Licensed.
 
 Call it like this:
 
-    $ ipython3 -i ~/repos/plumbing/tests/scraping/test_user_agent.py
+    $ ipython3 -i ~/repos/plumbing/test/scraping/test_user_agent.py
 """
 
 # Internal modules #
+
 ###############################################################################
 url = "http://example.com/index.html"
 

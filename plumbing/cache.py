@@ -49,6 +49,11 @@ class property_cached(object):
         self.name    = self.func.__name__
 
     def __get__(self, instance, owner):
+        """
+        If you see the current source code in a seemingly unrelated part of
+        an auto-generated documentation, it means the program making the
+        documentation was unable to correctly traverse a decorated property.
+        """
         # If called from a class #
         if instance is None: return self
         # Does a cache exist for this instance? #
@@ -110,6 +115,11 @@ class property_pickled(object):
         self.at      = at
 
     def __get__(self, instance, owner):
+        """
+        If you see the current source code in a seemingly unrelated part of
+        an auto-generated documentation, it means the program making the
+        documentation was unable to correctly traverse a decorated property.
+        """
         # If called from a class #
         if instance is None: return self
         # Does a cache exist for this instance? #

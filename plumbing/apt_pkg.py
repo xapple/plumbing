@@ -52,8 +52,9 @@ def check_apt_pkg(pkg_name, exception=False):
 ################################################################################
 def install_apt_pkg(pkg_name, verbose=False, redirect=False):
     """
-    Checks if the given executable is found in the path.
-    Optionally, raises an exception if the executable `cmd_name` is not found.
+    Install a given apt package.
+    Optionally, prints a status message before starting.
+    Optionally, prints the output of apt on the current stdout.
     """
     # Optional message #
     if verbose: print("Installing apt package '%s'..." % pkg_name)

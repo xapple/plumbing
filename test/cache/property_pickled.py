@@ -8,7 +8,7 @@ Written by Lucas Sinclair. MIT Licensed.
 
 Call it like this:
 
-    $ ipython3 -i ~/repos/plumbing/tests/cache/property_pickled.py
+    $ ipython3 -i ~/repos/plumbing/test/cache/property_pickled.py
 """
 
 # Internal modules #
