@@ -8,7 +8,7 @@ It contains many classes and functions which have not yet all been documented.
 
 ## Prerequisites
 
-Since `plumbing` is written in python it is compatible with all operating systems: Linux, macOS and Windows. The only prerequisite is `python3` (which is often installed by default) along with the `pip3` package manager.
+Since `plumbing` is written in python, it is compatible with all operating systems: Linux, macOS and Windows. The only prerequisite is `python3` (which is often installed by default) along with the `pip3` package manager.
 
 To check if you have `python3` installed, type the following on your terminal:
 

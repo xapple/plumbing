@@ -9,7 +9,7 @@ setup(
     author           = 'Lucas Sinclair',
     author_email     = 'lucas.sinclair@me.com',
     packages         = find_packages(),
-    install_requires = ['autopaths>=1.4.1', 'six', 'pandas', 'numpy', 'matplotlib',
+    install_requires = ['autopaths>=1.4.2', 'six', 'pandas', 'numpy', 'matplotlib',
                         'retry'],
     long_description = open('README.md').read(),
     long_description_content_type = 'text/markdown',
