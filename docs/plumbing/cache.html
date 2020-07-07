@@ -77,6 +77,11 @@ class property_cached(object):
         self.name    = self.func.__name__
 
     def __get__(self, instance, owner):
+        &#34;&#34;&#34;
+        If you see the current source code in a seemingly unrelated part of
+        an auto-generated documentation, it means the program making the
+        documentation was unable to correctly traverse a decorated property.
+        &#34;&#34;&#34;
         # If called from a class #
         if instance is None: return self
         # Does a cache exist for this instance? #
@@ -138,6 +143,11 @@ class property_pickled(object):
         self.at      = at
 
     def __get__(self, instance, owner):
+        &#34;&#34;&#34;
+        If you see the current source code in a seemingly unrelated part of
+        an auto-generated documentation, it means the program making the
+        documentation was unable to correctly traverse a decorated property.
+        &#34;&#34;&#34;
         # If called from a class #
         if instance is None: return self
         # Does a cache exist for this instance? #
@@ -701,6 +711,11 @@ print(shape.area)  # Updated result, it's computed again
         self.name    = self.func.__name__
 
     def __get__(self, instance, owner):
+        &#34;&#34;&#34;
+        If you see the current source code in a seemingly unrelated part of
+        an auto-generated documentation, it means the program making the
+        documentation was unable to correctly traverse a decorated property.
+        &#34;&#34;&#34;
         # If called from a class #
         if instance is None: return self
         # Does a cache exist for this instance? #
@@ -800,6 +815,11 @@ hash of the function's import path, so you could get something like this:</p>
         self.at      = at
 
     def __get__(self, instance, owner):
+        &#34;&#34;&#34;
+        If you see the current source code in a seemingly unrelated part of
+        an auto-generated documentation, it means the program making the
+        documentation was unable to correctly traverse a decorated property.
+        &#34;&#34;&#34;
         # If called from a class #
         if instance is None: return self
         # Does a cache exist for this instance? #

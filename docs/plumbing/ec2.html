@@ -299,6 +299,11 @@ def machine_on(self):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def __get__(self, instance, owner):
+    &#34;&#34;&#34;
+    If you see the current source code in a seemingly unrelated part of
+    an auto-generated documentation, it means the program making the
+    documentation was unable to correctly traverse a decorated property.
+    &#34;&#34;&#34;
     # If called from a class #
     if instance is None: return self
     # Does a cache exist for this instance? #
