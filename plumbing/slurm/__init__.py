@@ -14,7 +14,7 @@ def count_processors():
          text = os.environ['SLURM_JOB_CPUS_PER_NODE']
          if is_integer(text): return int(text)
          else:
-            n, N = re.findall("([1-9]+)\(x([1-9]+)\)", text)[0]
+            n, N = re.findall("([1-9]+)\\(x([1-9]+)\\)", text)[0]
             return int(n) * int(N)
     else: return multiprocessing.cpu_count()
 

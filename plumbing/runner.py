@@ -34,8 +34,8 @@ class Runner(object):
 
     def run(self, steps=None, **kwargs):
         # Message #
-        if self.color: print Color.f_cyn + "Running %s" % (self.parent) + Color.end
-        else: print "Running %s" % self.parent
+        if self.color: print(Color.f_cyn + "Running %s" % (self.parent) + Color.end)
+        else: print("Running %s" % self.parent)
         # Check input #
         if not steps:                     steps = self.default_steps
         if isinstance(steps, basestring): steps = [steps]
@@ -47,7 +47,7 @@ class Runner(object):
             fns = self.find_fns(name)
             self.run_step(name, fns, **params)
         # Report success #
-        print "Success. Results are in %s" % self.parent.base_dir
+        print("Success. Results are in %s" % self.parent.base_dir)
 
     def find_fns(self, name):
         # Special case #
@@ -85,8 +85,8 @@ class Runner(object):
         # Start timer #
         start_time = time.time()
         # Message #
-        if self.color: print "Running step: " + Color.f_grn + name + Color.end
-        else: print "Running step: " + name
+        if self.color: print("Running step: " + Color.f_grn + name + Color.end)
+        else: print("Running step: " + name)
         sys.stdout.flush()
         # Threads #
         if threads and len(list(fns)) > 1:
@@ -100,8 +100,8 @@ class Runner(object):
             for fn in fns: fn(*args, **kwargs)
         # Stop timer #
         run_time = datetime.timedelta(seconds=round(time.time() - start_time))
-        if self.color: print Color.ylw + "Run time: '%s'" % (run_time) + Color.end
-        else: print "Run time: '%s'" % (run_time)
+        if self.color: print(Color.ylw + "Run time: '%s'" % (run_time) + Color.end)
+        else: print("Run time: '%s'" % (run_time))
         sys.stdout.flush()
 
     @property

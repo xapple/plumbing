@@ -4,5 +4,12 @@
 
 This project contains functions and classes that help with plumbing-type programing.
 
+# Extra documentation 
+
 More documentation is available at:
-<http://xapple.github.io/plumbing/>
+
+<http://xapple.github.io/plumbing/plumbing>
+
+This documentation is simply generated with:
+
+    $ pdoc --html --output-dir docs --force plumbing

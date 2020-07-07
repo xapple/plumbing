@@ -26,9 +26,9 @@ def retrieve_from_url(url, user_agent=1, **kwargs):
     By default we will retry if an HTTP error arises.
     """
     # Custom user agent if needed #
-    headers = make_headers(user_agent)
+    header = make_headers(user_agent)
     # Download #
-    content = request(url, headers, text=True, **kwargs)
+    content = request(url, header, text=True, **kwargs)
     # Return #
     return content
 
@@ -45,7 +45,7 @@ def stream_from_url(*args, **kwargs):
 
 def download_from_url(url,
                       destination = None,
-                      uncompress  = True,
+                      uncompress  = False,
                       user_agent  = 1,
                       stream      = False,
                       progress    = False,
@@ -112,13 +112,13 @@ def handle_destination(url, destination):
 ###############################################################################
 @retry(requests.exceptions.HTTPError, tries=8, delay=1, backoff=2)
 def request(url,
-            headers  = None,
+            header   = None,
             text     = False,
             content  = False,
             response = False,
             **kwargs):
     # Get #
-    resp = requests.get(url, headers=headers, **kwargs)
+    resp = requests.get(url, headers=header, **kwargs)
     resp.raise_for_status()
     # Pick what to return #
     if text:     return resp.text

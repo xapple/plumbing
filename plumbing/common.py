@@ -29,7 +29,7 @@ def sanitize_text(text):
     Note: the `\s` special character matches any whitespace character.
     This is equivalent to the set [\t\n\r\f\v] as well as ` ` (whitespace)."""
     # First replace characters that have specific effects with their repr #
-    text = re.sub("(\s)", lambda m: repr(m.group(0)).strip("'"), text)
+    text = re.sub("(\\s)", lambda m: repr(m.group(0)).strip("'"), text)
     # Make it a unicode string (the try supports python 2 and 3) #
     try: text = text.decode('utf-8')
     except AttributeError: pass
@@ -264,7 +264,8 @@ def isubsample(full_sample, k, full_sample_len=None):
 
 ###############################################################################
 def sum_vectors_with_padding(vectors):
-    """Given an arbitrary amount of NumPy one-dimensional vectors of floats,
+    """
+    Given an arbitrary amount of NumPy one-dimensional vectors of floats,
     do an element-wise sum, padding with 0 any that are shorter than the
     longest array (see https://stackoverflow.com/questions/56166217).
 
@@ -315,7 +316,7 @@ def moving_average(interval, windowsize, borders=None):
     import numpy
     window = numpy.ones(int(windowsize))/float(windowsize)
     # How do we deal with borders #
-    if borders == None:
+    if borders is None:
         return numpy.convolve(interval, window, 'valid')
     if borders == 'zero_padding':
         return numpy.convolve(interval, window, 'full')
@@ -344,7 +345,7 @@ def wait(predicate, interval=1, message=lambda: "Waiting..."):
     sys.stdout.write("    \033[K")
     sys.stdout.flush()
     while not predicate():
-        time.sleep(1)
+        time.sleep(interval)
         next_ball = ball[(ball.index(next_ball) + 1) % len(ball)]
         sys.stdout.write("\r " + str(message()) + " " + next_ball + " \033[K")
         sys.stdout.flush()
@@ -387,7 +388,7 @@ def split_thousands(s):
 
 ################################################################################
 def gps_deg_to_float(data):
-    m = re.search(u"(\d+?)°(\d+?)\'(\d+?)\'\'", data.strip())
+    m = re.search("(\\d+?)°(\\d+?)\'(\\d+?)\'\'", data.strip())
     degs, mins, secs = [0.0 if m.group(i) is None else int(m.group(i)) for i in range(1, 4)]
     comp_dir = -1 if data[-1] in ('N', 'E') else 1
     return (degs + (mins / 60) + (secs / 3600)) * comp_dir
@@ -427,9 +428,11 @@ class Password(object):
         return self._value
 
 ################################################################################
-class OrderedSet(collections.OrderedDict, collections.MutableSet):
-    """A recipe for an ordered set.
-    http://stackoverflow.com/a/1653978/287297"""
+class OrderedSet(collections.OrderedDict, collections.abc.MutableSet):
+    """
+    A recipe for an ordered set.
+    http://stackoverflow.com/a/1653978/287297
+    """
 
     def update(self, *args, **kwargs):
         if kwargs: raise TypeError("update() takes no keyword arguments")
@@ -581,6 +584,7 @@ def which(cmd_name, safe=False):
     from autopaths.file_path import FilePath
     # Loop over every path in the environment variable #
     for path in os.environ['PATH'].split(os.pathsep):
+        path = os.path.expanduser(path)
         candidate = os.path.join(path, cmd_name)
         if not os.path.isfile(candidate):     continue
         if not os.access(candidate, os.X_OK): continue

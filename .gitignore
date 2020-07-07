@@ -18,7 +18,3 @@
 
 # Testing #
 /.pytest_cache/
-
-# Automatic documentation #
-documentation/automatic
-documentation/html

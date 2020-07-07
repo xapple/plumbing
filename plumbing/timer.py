@@ -27,18 +27,18 @@ class Timer(object):
         self.last_mark = datetime.now()
 
     def print_start(self):
-        print self.prefix + "Start at: %s" % (self.start_time) + self.suffix
+        print(self.prefix + "Start at: %s" % (self.start_time) + self.suffix)
 
     def print_end(self):
         self.end_time = datetime.now()
-        print self.prefix + "End at: %s" % (self.end_time) + self.suffix
+        print(self.prefix + "End at: %s" % (self.end_time) + self.suffix)
 
     def print_elapsed(self, reset=True):
-        print self.prefix + "Elapsed time: %s" % (datetime.now() - self.last_mark) + self.suffix
+        print(self.prefix + "Elapsed time: %s" % (datetime.now() - self.last_mark) + self.suffix)
         if reset: self.last_mark = datetime.now()
 
     def print_total_elapsed(self, reset=True):
-        print self.prefix + "Total elapsed time: %s" % (datetime.now() - self.start_time) + self.suffix
+        print(self.prefix + "Total elapsed time: %s" % (datetime.now() - self.start_time) + self.suffix)
         if reset: self.last_mark = datetime.now()
 
     @property

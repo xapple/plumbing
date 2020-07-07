@@ -6,10 +6,11 @@ from collections import OrderedDict
 from plumbing.slurm.existing import projects, jobs
 from plumbing.common import tail, flatter
 from plumbing.color import Color
-from plumbing.tmpstuff import new_temp_path
 from plumbing.slurm import num_processors
-from plumbing.autopaths import FilePath, DirectoryPath
 from plumbing.cache import property_cached
+from autopaths.tmp_path import new_temp_path
+from autopaths.file_path import FilePath
+from autopaths.dir_path import DirectoryPath
 
 # Third party modules #
 import sh
@@ -219,8 +220,8 @@ class JobSLURM(object):
         if self.status == "ABORTED":    message = "Job '%s' was killed without any output file (?)."
         if self.status == "CANCELED":   message = "Job '%s' was canceled or killed while running."
         if self.status == "INTERUPTED": message = "Job '%s' is not running. We don't know why. Look at the log file."
-        print Color.i_red + message % (self.name,) + Color.end
-        print "Job might have run already (?). Not starting."
+        print(Color.i_red + message % (self.name,) + Color.end)
+        print("Job might have run already (?). Not starting.")
 
     def launch(self):
         """Make the script file and return the newly created job id"""
@@ -230,7 +231,7 @@ class JobSLURM(object):
         sbatch_out = sh.sbatch(self.script_path)
         jobs.expire()
         # Message #
-        print Color.i_blu + "SLURM:" + Color.end + " " + str(sbatch_out),
+        print(Color.i_blu + "SLURM:" + Color.end + " " + str(sbatch_out),)
         # Return id #
         self.id = int(re.findall("Submitted batch job ([0-9]+)", str(sbatch_out))[0])
         return self.id
@@ -264,4 +265,4 @@ class JobSLURM(object):
         """If you have run the query in a non-blocking way, call this method to pause
         until the query is finished."""
         try: self.thread.join(sys.maxint) # maxint timeout so that we can Ctrl-C them
-        except KeyboardInterrupt: print "Stopped waiting on job '%s'" % self.kwargs['job_name']
+        except KeyboardInterrupt: print("Stopped waiting on job '%s'" % self.kwargs['job_name'])
