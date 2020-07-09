@@ -87,6 +87,7 @@ class Graph(object):
         (&#39;close&#39;  , True),
         (&#39;dpi&#39;    , None),
         (&#39;bbox&#39;   , None),
+        (&#39;remove_frame&#39;, False),
     ))
 
     def __repr__(self):
@@ -182,8 +183,12 @@ class Graph(object):
             fig.subplots_adjust(hspace=0.0, bottom = self.params[&#39;bottom&#39;], top   = self.params[&#39;top&#39;],
                                             left   = self.params[&#39;left&#39;],   right = self.params[&#39;right&#39;])
         # Grid #
-        if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;])
-        if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;])
+        if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;], linestyle=&#39;:&#39;)
+        if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;], linestyle=&#39;:&#39;)
+        # Frame #
+        if &#39;remove_frame&#39; in self.params:
+            axes.spines[&#34;top&#34;].set_visible(False)
+            axes.spines[&#34;right&#34;].set_visible(False)
         # Data and source extra text #
         if hasattr(self, &#39;dev_mode&#39;) and self.dev_mode is True:
             fig.text(0.99, 0.98, time.asctime(), horizontalalignment=&#39;right&#39;)
@@ -361,6 +366,7 @@ graph.plot()</p></div>
         (&#39;close&#39;  , True),
         (&#39;dpi&#39;    , None),
         (&#39;bbox&#39;   , None),
+        (&#39;remove_frame&#39;, False),
     ))
 
     def __repr__(self):
@@ -456,8 +462,12 @@ graph.plot()</p></div>
             fig.subplots_adjust(hspace=0.0, bottom = self.params[&#39;bottom&#39;], top   = self.params[&#39;top&#39;],
                                             left   = self.params[&#39;left&#39;],   right = self.params[&#39;right&#39;])
         # Grid #
-        if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;])
-        if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;])
+        if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;], linestyle=&#39;:&#39;)
+        if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;], linestyle=&#39;:&#39;)
+        # Frame #
+        if &#39;remove_frame&#39; in self.params:
+            axes.spines[&#34;top&#34;].set_visible(False)
+            axes.spines[&#34;right&#34;].set_visible(False)
         # Data and source extra text #
         if hasattr(self, &#39;dev_mode&#39;) and self.dev_mode is True:
             fig.text(0.99, 0.98, time.asctime(), horizontalalignment=&#39;right&#39;)
@@ -715,8 +725,12 @@ Then the plot method has to use self.fig.</p></div>
         fig.subplots_adjust(hspace=0.0, bottom = self.params[&#39;bottom&#39;], top   = self.params[&#39;top&#39;],
                                         left   = self.params[&#39;left&#39;],   right = self.params[&#39;right&#39;])
     # Grid #
-    if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;])
-    if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;])
+    if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;], linestyle=&#39;:&#39;)
+    if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;], linestyle=&#39;:&#39;)
+    # Frame #
+    if &#39;remove_frame&#39; in self.params:
+        axes.spines[&#34;top&#34;].set_visible(False)
+        axes.spines[&#34;right&#34;].set_visible(False)
     # Data and source extra text #
     if hasattr(self, &#39;dev_mode&#39;) and self.dev_mode is True:
         fig.text(0.99, 0.98, time.asctime(), horizontalalignment=&#39;right&#39;)
