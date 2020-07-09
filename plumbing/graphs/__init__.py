@@ -59,6 +59,7 @@ class Graph(object):
         ('close'  , True),
         ('dpi'    , None),
         ('bbox'   , None),
+        ('remove_frame', False),
     ))
 
     def __repr__(self):
@@ -154,8 +155,12 @@ class Graph(object):
             fig.subplots_adjust(hspace=0.0, bottom = self.params['bottom'], top   = self.params['top'],
                                             left   = self.params['left'],   right = self.params['right'])
         # Grid #
-        if 'x_grid' in self.params: axes.xaxis.grid(self.params['x_grid'])
-        if 'y_grid' in self.params: axes.yaxis.grid(self.params['y_grid'])
+        if 'x_grid' in self.params: axes.xaxis.grid(self.params['x_grid'], linestyle=':')
+        if 'y_grid' in self.params: axes.yaxis.grid(self.params['y_grid'], linestyle=':')
+        # Frame #
+        if 'remove_frame' in self.params:
+            axes.spines["top"].set_visible(False)
+            axes.spines["right"].set_visible(False)
         # Data and source extra text #
         if hasattr(self, 'dev_mode') and self.dev_mode is True:
             fig.text(0.99, 0.98, time.asctime(), horizontalalignment='right')
