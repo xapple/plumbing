@@ -54,6 +54,8 @@ class property_cached(object):
         an auto-generated documentation, it means the program making the
         documentation was unable to correctly traverse a decorated property.
         """
+        # For debugging purposes #
+        if False: print("-> property cached `%s`" % instance)
         # If called from a class #
         if instance is None: return self
         # Does a cache exist for this instance? #
