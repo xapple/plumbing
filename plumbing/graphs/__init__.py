@@ -16,23 +16,24 @@ from matplotlib import pyplot
 
 ################################################################################
 class Graph(object):
-    """A nice class to make graphs with matplotlib. Example usage:
+    """
+    A nice class to make graphs with matplotlib. Example usage:
 
-            from plumbing.graphs import Graph
+        from plumbing.graphs import Graph
 
-            class RegressionGraph(Graph):
-                formats = ('pdf', 'svg')
-                def plot(self, **kwargs):
-                    fig = pyplot.figure()
-                    seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
-                    self.save_plot(fig, **kwargs)
+        class RegressionGraph(Graph):
+            formats = ('pdf', 'svg')
+            def plot(self, **kwargs):
+                fig = pyplot.figure()
+                seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
+                self.save_plot(fig, **kwargs)
 
-            for x_name in x_names:
-                graph            = PearsonGraph(short_name = x_name)
-                graph.title      = "Regression between y and '%s'" % (x_name)
-                graph.x_data     = x_data[x_name]
-                graph.y_data     = y_data
-                graph.plot()
+        for x_name in x_names:
+            graph            = PearsonGraph(short_name = x_name)
+            graph.title      = "Regression between y and '%s'" % (x_name)
+            graph.x_data     = x_data[x_name]
+            graph.y_data     = y_data
+            graph.plot()
     """
 
     default_params = OrderedDict((
@@ -71,24 +72,30 @@ class Graph(object):
     def __init__(self, parent=None, base_dir=None, short_name=None):
         # Save parent #
         self.parent = parent
-        # If we got a file #
+        # If we got a file as base_dir #
         if isinstance(base_dir, FilePath):
             self.base_dir = base_dir.directory
             short_name    = base_dir.short_prefix
-        # If no parent and no directory #
+        # If no parent and no directory given get the calling script #
         if base_dir is None and parent is None:
             file_name     = os.path.abspath((inspect.stack()[1])[1])
             self.base_dir = os.path.dirname(os.path.abspath(file_name)) + '/'
             self.base_dir = Path(self.base_dir)
-        # If no directory but a parent is present #
+        # If no directory given but a parent is present we can guess #
         if base_dir is None:
             if hasattr(self.parent, 'p'):
                 self.base_dir = self.parent.p.graphs_dir
-            if hasattr(self.parent, 'paths'):
+            elif hasattr(self.parent, 'paths'):
                 self.base_dir = self.parent.paths.graphs_dir
-            raise Exception("Please specify a base_dir for this graph.")
+            elif hasattr(self.parent, 'autopaths'):
+                self.base_dir = self.parent.autopaths.graphs_dir
+            elif hasattr(self.parent, 'graphs_dir'):
+                self.base_dir = self.parent.graphs_dir
+            else:
+                raise Exception("Please specify a `base_dir` for this graph.")
         else:
             self.base_dir = Path(base_dir)
+        # Make sure the directory exists #
         self.base_dir.create_if_not_exists()
         # Short name #
         if short_name: self.short_name = short_name
@@ -155,8 +162,12 @@ class Graph(object):
             fig.subplots_adjust(hspace=0.0, bottom = self.params['bottom'], top   = self.params['top'],
                                             left   = self.params['left'],   right = self.params['right'])
         # Grid #
-        if 'x_grid' in self.params: axes.xaxis.grid(self.params['x_grid'], linestyle=':')
-        if 'y_grid' in self.params: axes.yaxis.grid(self.params['y_grid'], linestyle=':')
+        if 'x_grid' in self.params:
+            if self.params['x_grid']: axes.xaxis.grid(True, linestyle=':')
+            else: axes.xaxis.grid(False)
+        if 'y_grid' in self.params:
+            if self.params['y_grid']: axes.yaxis.grid(True, linestyle=':')
+            else: axes.yaxis.grid(False)
         # Frame #
         if 'remove_frame' in self.params:
             axes.spines["top"].set_visible(False)
