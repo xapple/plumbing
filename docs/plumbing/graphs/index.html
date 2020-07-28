@@ -44,23 +44,24 @@ from matplotlib import pyplot
 
 ################################################################################
 class Graph(object):
-    &#34;&#34;&#34;A nice class to make graphs with matplotlib. Example usage:
+    &#34;&#34;&#34;
+    A nice class to make graphs with matplotlib. Example usage:
 
-            from plumbing.graphs import Graph
+        from plumbing.graphs import Graph
 
-            class RegressionGraph(Graph):
-                formats = (&#39;pdf&#39;, &#39;svg&#39;)
-                def plot(self, **kwargs):
-                    fig = pyplot.figure()
-                    seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
-                    self.save_plot(fig, **kwargs)
+        class RegressionGraph(Graph):
+            formats = (&#39;pdf&#39;, &#39;svg&#39;)
+            def plot(self, **kwargs):
+                fig = pyplot.figure()
+                seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
+                self.save_plot(fig, **kwargs)
 
-            for x_name in x_names:
-                graph            = PearsonGraph(short_name = x_name)
-                graph.title      = &#34;Regression between y and &#39;%s&#39;&#34; % (x_name)
-                graph.x_data     = x_data[x_name]
-                graph.y_data     = y_data
-                graph.plot()
+        for x_name in x_names:
+            graph            = PearsonGraph(short_name = x_name)
+            graph.title      = &#34;Regression between y and &#39;%s&#39;&#34; % (x_name)
+            graph.x_data     = x_data[x_name]
+            graph.y_data     = y_data
+            graph.plot()
     &#34;&#34;&#34;
 
     default_params = OrderedDict((
@@ -99,24 +100,30 @@ class Graph(object):
     def __init__(self, parent=None, base_dir=None, short_name=None):
         # Save parent #
         self.parent = parent
-        # If we got a file #
+        # If we got a file as base_dir #
         if isinstance(base_dir, FilePath):
             self.base_dir = base_dir.directory
             short_name    = base_dir.short_prefix
-        # If no parent and no directory #
+        # If no parent and no directory given get the calling script #
         if base_dir is None and parent is None:
             file_name     = os.path.abspath((inspect.stack()[1])[1])
             self.base_dir = os.path.dirname(os.path.abspath(file_name)) + &#39;/&#39;
             self.base_dir = Path(self.base_dir)
-        # If no directory but a parent is present #
+        # If no directory given but a parent is present we can guess #
         if base_dir is None:
             if hasattr(self.parent, &#39;p&#39;):
                 self.base_dir = self.parent.p.graphs_dir
-            if hasattr(self.parent, &#39;paths&#39;):
+            elif hasattr(self.parent, &#39;paths&#39;):
                 self.base_dir = self.parent.paths.graphs_dir
-            raise Exception(&#34;Please specify a base_dir for this graph.&#34;)
+            elif hasattr(self.parent, &#39;autopaths&#39;):
+                self.base_dir = self.parent.autopaths.graphs_dir
+            elif hasattr(self.parent, &#39;graphs_dir&#39;):
+                self.base_dir = self.parent.graphs_dir
+            else:
+                raise Exception(&#34;Please specify a `base_dir` for this graph.&#34;)
         else:
             self.base_dir = Path(base_dir)
+        # Make sure the directory exists #
         self.base_dir.create_if_not_exists()
         # Short name #
         if short_name: self.short_name = short_name
@@ -183,8 +190,12 @@ class Graph(object):
             fig.subplots_adjust(hspace=0.0, bottom = self.params[&#39;bottom&#39;], top   = self.params[&#39;top&#39;],
                                             left   = self.params[&#39;left&#39;],   right = self.params[&#39;right&#39;])
         # Grid #
-        if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;], linestyle=&#39;:&#39;)
-        if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;], linestyle=&#39;:&#39;)
+        if &#39;x_grid&#39; in self.params:
+            if self.params[&#39;x_grid&#39;]: axes.xaxis.grid(True, linestyle=&#39;:&#39;)
+            else: axes.xaxis.grid(False)
+        if &#39;y_grid&#39; in self.params:
+            if self.params[&#39;y_grid&#39;]: axes.yaxis.grid(True, linestyle=&#39;:&#39;)
+            else: axes.yaxis.grid(False)
         # Frame #
         if &#39;remove_frame&#39; in self.params:
             axes.spines[&#34;top&#34;].set_visible(False)
@@ -301,45 +312,45 @@ class Graph(object):
 </code></dt>
 <dd>
 <div class="desc"><p>A nice class to make graphs with matplotlib. Example usage:</p>
-<p>from plumbing.graphs import Graph</p>
-<p>class RegressionGraph(Graph):
-formats = ('pdf', 'svg')
-def plot(self, <strong>kwargs):
-fig = pyplot.figure()
-seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
-self.save_plot(fig, </strong>kwargs)</p>
-<p>for x_name in x_names:
-graph
-= PearsonGraph(short_name = x_name)
-graph.title
-= "Regression between y and '%s'" % (x_name)
-graph.x_data
-= x_data[x_name]
-graph.y_data
-= y_data
-graph.plot()</p></div>
+<pre><code>from plumbing.graphs import Graph
+
+class RegressionGraph(Graph):
+    formats = ('pdf', 'svg')
+    def plot(self, **kwargs):
+        fig = pyplot.figure()
+        seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
+        self.save_plot(fig, **kwargs)
+
+for x_name in x_names:
+    graph            = PearsonGraph(short_name = x_name)
+    graph.title      = "Regression between y and '%s'" % (x_name)
+    graph.x_data     = x_data[x_name]
+    graph.y_data     = y_data
+    graph.plot()
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Graph(object):
-    &#34;&#34;&#34;A nice class to make graphs with matplotlib. Example usage:
+    &#34;&#34;&#34;
+    A nice class to make graphs with matplotlib. Example usage:
 
-            from plumbing.graphs import Graph
+        from plumbing.graphs import Graph
 
-            class RegressionGraph(Graph):
-                formats = (&#39;pdf&#39;, &#39;svg&#39;)
-                def plot(self, **kwargs):
-                    fig = pyplot.figure()
-                    seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
-                    self.save_plot(fig, **kwargs)
+        class RegressionGraph(Graph):
+            formats = (&#39;pdf&#39;, &#39;svg&#39;)
+            def plot(self, **kwargs):
+                fig = pyplot.figure()
+                seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
+                self.save_plot(fig, **kwargs)
 
-            for x_name in x_names:
-                graph            = PearsonGraph(short_name = x_name)
-                graph.title      = &#34;Regression between y and &#39;%s&#39;&#34; % (x_name)
-                graph.x_data     = x_data[x_name]
-                graph.y_data     = y_data
-                graph.plot()
+        for x_name in x_names:
+            graph            = PearsonGraph(short_name = x_name)
+            graph.title      = &#34;Regression between y and &#39;%s&#39;&#34; % (x_name)
+            graph.x_data     = x_data[x_name]
+            graph.y_data     = y_data
+            graph.plot()
     &#34;&#34;&#34;
 
     default_params = OrderedDict((
@@ -378,24 +389,30 @@ graph.plot()</p></div>
     def __init__(self, parent=None, base_dir=None, short_name=None):
         # Save parent #
         self.parent = parent
-        # If we got a file #
+        # If we got a file as base_dir #
         if isinstance(base_dir, FilePath):
             self.base_dir = base_dir.directory
             short_name    = base_dir.short_prefix
-        # If no parent and no directory #
+        # If no parent and no directory given get the calling script #
         if base_dir is None and parent is None:
             file_name     = os.path.abspath((inspect.stack()[1])[1])
             self.base_dir = os.path.dirname(os.path.abspath(file_name)) + &#39;/&#39;
             self.base_dir = Path(self.base_dir)
-        # If no directory but a parent is present #
+        # If no directory given but a parent is present we can guess #
         if base_dir is None:
             if hasattr(self.parent, &#39;p&#39;):
                 self.base_dir = self.parent.p.graphs_dir
-            if hasattr(self.parent, &#39;paths&#39;):
+            elif hasattr(self.parent, &#39;paths&#39;):
                 self.base_dir = self.parent.paths.graphs_dir
-            raise Exception(&#34;Please specify a base_dir for this graph.&#34;)
+            elif hasattr(self.parent, &#39;autopaths&#39;):
+                self.base_dir = self.parent.autopaths.graphs_dir
+            elif hasattr(self.parent, &#39;graphs_dir&#39;):
+                self.base_dir = self.parent.graphs_dir
+            else:
+                raise Exception(&#34;Please specify a `base_dir` for this graph.&#34;)
         else:
             self.base_dir = Path(base_dir)
+        # Make sure the directory exists #
         self.base_dir.create_if_not_exists()
         # Short name #
         if short_name: self.short_name = short_name
@@ -462,8 +479,12 @@ graph.plot()</p></div>
             fig.subplots_adjust(hspace=0.0, bottom = self.params[&#39;bottom&#39;], top   = self.params[&#39;top&#39;],
                                             left   = self.params[&#39;left&#39;],   right = self.params[&#39;right&#39;])
         # Grid #
-        if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;], linestyle=&#39;:&#39;)
-        if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;], linestyle=&#39;:&#39;)
+        if &#39;x_grid&#39; in self.params:
+            if self.params[&#39;x_grid&#39;]: axes.xaxis.grid(True, linestyle=&#39;:&#39;)
+            else: axes.xaxis.grid(False)
+        if &#39;y_grid&#39; in self.params:
+            if self.params[&#39;y_grid&#39;]: axes.yaxis.grid(True, linestyle=&#39;:&#39;)
+            else: axes.yaxis.grid(False)
         # Frame #
         if &#39;remove_frame&#39; in self.params:
             axes.spines[&#34;top&#34;].set_visible(False)
@@ -578,6 +599,8 @@ documentation was unable to correctly traverse a decorated property.</p></div>
     an auto-generated documentation, it means the program making the
     documentation was unable to correctly traverse a decorated property.
     &#34;&#34;&#34;
+    # For debugging purposes #
+    if False: print(&#34;-&gt; property cached `%s`&#34; % instance)
     # If called from a class #
     if instance is None: return self
     # Does a cache exist for this instance? #
@@ -725,8 +748,12 @@ Then the plot method has to use self.fig.</p></div>
         fig.subplots_adjust(hspace=0.0, bottom = self.params[&#39;bottom&#39;], top   = self.params[&#39;top&#39;],
                                         left   = self.params[&#39;left&#39;],   right = self.params[&#39;right&#39;])
     # Grid #
-    if &#39;x_grid&#39; in self.params: axes.xaxis.grid(self.params[&#39;x_grid&#39;], linestyle=&#39;:&#39;)
-    if &#39;y_grid&#39; in self.params: axes.yaxis.grid(self.params[&#39;y_grid&#39;], linestyle=&#39;:&#39;)
+    if &#39;x_grid&#39; in self.params:
+        if self.params[&#39;x_grid&#39;]: axes.xaxis.grid(True, linestyle=&#39;:&#39;)
+        else: axes.xaxis.grid(False)
+    if &#39;y_grid&#39; in self.params:
+        if self.params[&#39;y_grid&#39;]: axes.yaxis.grid(True, linestyle=&#39;:&#39;)
+        else: axes.yaxis.grid(False)
     # Frame #
     if &#39;remove_frame&#39; in self.params:
         axes.spines[&#34;top&#34;].set_visible(False)
