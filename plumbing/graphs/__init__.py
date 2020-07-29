@@ -60,7 +60,7 @@ class Graph(object):
         ('close'  , True),
         ('dpi'    , None),
         ('bbox'   , None),
-        ('remove_frame', False),
+        ('remove_frame', None),
     ))
 
     def __repr__(self):
