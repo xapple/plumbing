@@ -32,7 +32,7 @@ Alternatively, if you want to install it for all users of the system:
 
     $ sudo pip3 install plumbing
 
-## Extra documentation 
+## Extra documentation
 
 More documentation is available at:
 
