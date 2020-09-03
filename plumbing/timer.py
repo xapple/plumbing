@@ -22,40 +22,65 @@ class Timer(object):
             time.sleep(2)
     """
 
+    def get_now(self):
+        return datetime.now().replace(microsecond=0)
+
     def __init__(self):
-        self.start_time = datetime.now()
-        self.last_mark = datetime.now()
+        self.start_time = self.get_now()
+        self.last_mark  = self.get_now()
 
     def print_start(self):
-        print(self.prefix + "Start at: %s" % (self.start_time) + self.suffix)
+        # Parameters #
+        time = self.start_time
+        msg  = "Start at: %s" % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
 
     def print_end(self):
-        self.end_time = datetime.now()
-        print(self.prefix + "End at: %s" % (self.end_time) + self.suffix)
+        # Set #
+        self.end_time = self.get_now()
+        # Parameters #
+        time = self.end_time
+        msg  = "End at: %s" % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
 
     def print_elapsed(self, reset=True):
-        print(self.prefix + "Elapsed time: %s" % (datetime.now() - self.last_mark) + self.suffix)
-        if reset: self.last_mark = datetime.now()
+        # Parameters #
+        time = self.get_now() - self.last_mark
+        msg  = "Elapsed time: %s" % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
+        # Set #
+        if reset: self.last_mark = self.get_now()
 
     def print_total_elapsed(self, reset=True):
-        print(self.prefix + "Total elapsed time: %s" % (datetime.now() - self.start_time) + self.suffix)
-        if reset: self.last_mark = datetime.now()
+        # Parameters #
+        time = self.get_now() - self.start_time
+        msg  = "Total elapsed time: %s" % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
+        # Set #
+        if reset: self.last_mark = self.get_now()
 
     @property
     def color(self):
-        """Should we use color or not ? If we are not in a shell like ipython then not."""
+        """
+        Should we use color or not ?
+        If we are not in a shell like ipython then not.
+        """
         import __main__ as main
-        if not hasattr(main, '__file__'): return True
-        return False
+        return not hasattr(main, '__file__')
 
     @property
     def prefix(self): return "" if not self.color else Color.grn
+
     @property
     def suffix(self): return "" if not self.color else Color.end
 
     def __enter__(self):
         """Start the timer and print."""
-        self.start_time = datetime.now()
+        self.start_time = self.get_now()
         self.print_start()
         return self
 

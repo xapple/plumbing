@@ -23,10 +23,8 @@ Alternatively, use this fork of multiprocessing:
 https://github.com/uqfoundation/multiprocess
 """
 
-# Built-in modules #
+# Optionally switch to dill instead for better pickling #
 import multiprocessing
-
-# Optionally switch to dill #
 #import multiprocess as multiprocessing
 
 ################################################################################
