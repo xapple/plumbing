@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.8.3" />
+<meta name="generator" content="pdoc 0.8.4" />
 <title>plumbing.timer API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -50,40 +50,65 @@ class Timer(object):
             time.sleep(2)
     &#34;&#34;&#34;
 
+    def get_now(self):
+        return datetime.now().replace(microsecond=0)
+
     def __init__(self):
-        self.start_time = datetime.now()
-        self.last_mark = datetime.now()
+        self.start_time = self.get_now()
+        self.last_mark  = self.get_now()
 
     def print_start(self):
-        print(self.prefix + &#34;Start at: %s&#34; % (self.start_time) + self.suffix)
+        # Parameters #
+        time = self.start_time
+        msg  = &#34;Start at: %s&#34; % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
 
     def print_end(self):
-        self.end_time = datetime.now()
-        print(self.prefix + &#34;End at: %s&#34; % (self.end_time) + self.suffix)
+        # Set #
+        self.end_time = self.get_now()
+        # Parameters #
+        time = self.end_time
+        msg  = &#34;End at: %s&#34; % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
 
     def print_elapsed(self, reset=True):
-        print(self.prefix + &#34;Elapsed time: %s&#34; % (datetime.now() - self.last_mark) + self.suffix)
-        if reset: self.last_mark = datetime.now()
+        # Parameters #
+        time = self.get_now() - self.last_mark
+        msg  = &#34;Elapsed time: %s&#34; % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
+        # Set #
+        if reset: self.last_mark = self.get_now()
 
     def print_total_elapsed(self, reset=True):
-        print(self.prefix + &#34;Total elapsed time: %s&#34; % (datetime.now() - self.start_time) + self.suffix)
-        if reset: self.last_mark = datetime.now()
+        # Parameters #
+        time = self.get_now() - self.start_time
+        msg  = &#34;Total elapsed time: %s&#34; % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
+        # Set #
+        if reset: self.last_mark = self.get_now()
 
     @property
     def color(self):
-        &#34;&#34;&#34;Should we use color or not ? If we are not in a shell like ipython then not.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Should we use color or not ?
+        If we are not in a shell like ipython then not.
+        &#34;&#34;&#34;
         import __main__ as main
-        if not hasattr(main, &#39;__file__&#39;): return True
-        return False
+        return not hasattr(main, &#39;__file__&#39;)
 
     @property
     def prefix(self): return &#34;&#34; if not self.color else Color.grn
+
     @property
     def suffix(self): return &#34;&#34; if not self.color else Color.end
 
     def __enter__(self):
         &#34;&#34;&#34;Start the timer and print.&#34;&#34;&#34;
-        self.start_time = datetime.now()
+        self.start_time = self.get_now()
         self.print_start()
         return self
 
@@ -139,40 +164,65 @@ timer.print_total_elapsed()
             time.sleep(2)
     &#34;&#34;&#34;
 
+    def get_now(self):
+        return datetime.now().replace(microsecond=0)
+
     def __init__(self):
-        self.start_time = datetime.now()
-        self.last_mark = datetime.now()
+        self.start_time = self.get_now()
+        self.last_mark  = self.get_now()
 
     def print_start(self):
-        print(self.prefix + &#34;Start at: %s&#34; % (self.start_time) + self.suffix)
+        # Parameters #
+        time = self.start_time
+        msg  = &#34;Start at: %s&#34; % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
 
     def print_end(self):
-        self.end_time = datetime.now()
-        print(self.prefix + &#34;End at: %s&#34; % (self.end_time) + self.suffix)
+        # Set #
+        self.end_time = self.get_now()
+        # Parameters #
+        time = self.end_time
+        msg  = &#34;End at: %s&#34; % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
 
     def print_elapsed(self, reset=True):
-        print(self.prefix + &#34;Elapsed time: %s&#34; % (datetime.now() - self.last_mark) + self.suffix)
-        if reset: self.last_mark = datetime.now()
+        # Parameters #
+        time = self.get_now() - self.last_mark
+        msg  = &#34;Elapsed time: %s&#34; % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
+        # Set #
+        if reset: self.last_mark = self.get_now()
 
     def print_total_elapsed(self, reset=True):
-        print(self.prefix + &#34;Total elapsed time: %s&#34; % (datetime.now() - self.start_time) + self.suffix)
-        if reset: self.last_mark = datetime.now()
+        # Parameters #
+        time = self.get_now() - self.start_time
+        msg  = &#34;Total elapsed time: %s&#34; % time
+        # Print #
+        print(self.prefix + msg + self.suffix)
+        # Set #
+        if reset: self.last_mark = self.get_now()
 
     @property
     def color(self):
-        &#34;&#34;&#34;Should we use color or not ? If we are not in a shell like ipython then not.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Should we use color or not ?
+        If we are not in a shell like ipython then not.
+        &#34;&#34;&#34;
         import __main__ as main
-        if not hasattr(main, &#39;__file__&#39;): return True
-        return False
+        return not hasattr(main, &#39;__file__&#39;)
 
     @property
     def prefix(self): return &#34;&#34; if not self.color else Color.grn
+
     @property
     def suffix(self): return &#34;&#34; if not self.color else Color.end
 
     def __enter__(self):
         &#34;&#34;&#34;Start the timer and print.&#34;&#34;&#34;
-        self.start_time = datetime.now()
+        self.start_time = self.get_now()
         self.print_start()
         return self
 
@@ -185,17 +235,20 @@ timer.print_total_elapsed()
 <dl>
 <dt id="plumbing.timer.Timer.color"><code class="name">var <span class="ident">color</span></code></dt>
 <dd>
-<div class="desc"><p>Should we use color or not ? If we are not in a shell like ipython then not.</p></div>
+<div class="desc"><p>Should we use color or not ?
+If we are not in a shell like ipython then not.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def color(self):
-    &#34;&#34;&#34;Should we use color or not ? If we are not in a shell like ipython then not.&#34;&#34;&#34;
+    &#34;&#34;&#34;
+    Should we use color or not ?
+    If we are not in a shell like ipython then not.
+    &#34;&#34;&#34;
     import __main__ as main
-    if not hasattr(main, &#39;__file__&#39;): return True
-    return False</code></pre>
+    return not hasattr(main, &#39;__file__&#39;)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.timer.Timer.prefix"><code class="name">var <span class="ident">prefix</span></code></dt>
@@ -223,6 +276,19 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
 </dl>
 <h3>Methods</h3>
 <dl>
+<dt id="plumbing.timer.Timer.get_now"><code class="name flex">
+<span>def <span class="ident">get_now</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_now(self):
+    return datetime.now().replace(microsecond=0)</code></pre>
+</details>
+</dd>
 <dt id="plumbing.timer.Timer.print_elapsed"><code class="name flex">
 <span>def <span class="ident">print_elapsed</span></span>(<span>self, reset=True)</span>
 </code></dt>
@@ -233,8 +299,13 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def print_elapsed(self, reset=True):
-    print(self.prefix + &#34;Elapsed time: %s&#34; % (datetime.now() - self.last_mark) + self.suffix)
-    if reset: self.last_mark = datetime.now()</code></pre>
+    # Parameters #
+    time = self.get_now() - self.last_mark
+    msg  = &#34;Elapsed time: %s&#34; % time
+    # Print #
+    print(self.prefix + msg + self.suffix)
+    # Set #
+    if reset: self.last_mark = self.get_now()</code></pre>
 </details>
 </dd>
 <dt id="plumbing.timer.Timer.print_end"><code class="name flex">
@@ -247,8 +318,13 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def print_end(self):
-    self.end_time = datetime.now()
-    print(self.prefix + &#34;End at: %s&#34; % (self.end_time) + self.suffix)</code></pre>
+    # Set #
+    self.end_time = self.get_now()
+    # Parameters #
+    time = self.end_time
+    msg  = &#34;End at: %s&#34; % time
+    # Print #
+    print(self.prefix + msg + self.suffix)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.timer.Timer.print_start"><code class="name flex">
@@ -261,7 +337,11 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def print_start(self):
-    print(self.prefix + &#34;Start at: %s&#34; % (self.start_time) + self.suffix)</code></pre>
+    # Parameters #
+    time = self.start_time
+    msg  = &#34;Start at: %s&#34; % time
+    # Print #
+    print(self.prefix + msg + self.suffix)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.timer.Timer.print_total_elapsed"><code class="name flex">
@@ -274,8 +354,13 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def print_total_elapsed(self, reset=True):
-    print(self.prefix + &#34;Total elapsed time: %s&#34; % (datetime.now() - self.start_time) + self.suffix)
-    if reset: self.last_mark = datetime.now()</code></pre>
+    # Parameters #
+    time = self.get_now() - self.start_time
+    msg  = &#34;Total elapsed time: %s&#34; % time
+    # Print #
+    print(self.prefix + msg + self.suffix)
+    # Set #
+    if reset: self.last_mark = self.get_now()</code></pre>
 </details>
 </dd>
 </dl>
@@ -300,6 +385,7 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
 <h4><code><a title="plumbing.timer.Timer" href="#plumbing.timer.Timer">Timer</a></code></h4>
 <ul class="two-column">
 <li><code><a title="plumbing.timer.Timer.color" href="#plumbing.timer.Timer.color">color</a></code></li>
+<li><code><a title="plumbing.timer.Timer.get_now" href="#plumbing.timer.Timer.get_now">get_now</a></code></li>
 <li><code><a title="plumbing.timer.Timer.prefix" href="#plumbing.timer.Timer.prefix">prefix</a></code></li>
 <li><code><a title="plumbing.timer.Timer.print_elapsed" href="#plumbing.timer.Timer.print_elapsed">print_elapsed</a></code></li>
 <li><code><a title="plumbing.timer.Timer.print_end" href="#plumbing.timer.Timer.print_end">print_end</a></code></li>
@@ -314,7 +400,7 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.4</a>.</p>
 </footer>
 </body>
 </html>
