@@ -1,10 +1,20 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Written by Lucas Sinclair.
+MIT Licensed.
+Contact at www.sinclair.bio
+"""
+
 ################################################################################
 class Color:
-    """Shortcuts for the ANSI escape sequences to control
-       formatting, color, etc. on text terminals. Use it like this:
+    """
+    Shortcuts for the ANSI escape sequences to control
+    formatting, color, etc. on text terminals. Use it like this:
 
-            from plumbing.color import Color
-            print Color.red + "Hello world" + Color.end
+        from plumbing.color import Color
+        print Color.red + "Hello world" + Color.end
 
     An easy command to see all 256 possible colors in a terminal:
 

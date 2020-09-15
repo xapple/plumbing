@@ -12,8 +12,10 @@ from plumbing.slurm.logged import LoggedJobSLURM
 
 ###############################################################################
 class Runner(object):
-    """General purpose runner. Can execute functions on objects, via SLURM
-    or locally. You should inherit from this class."""
+    """
+    General purpose runner. Can execute functions on objects, via SLURM
+    or locally. You should inherit from this class.
+    """
     modules       = []
     job_name      = "unnamed"
     default_time  = '7-00:00:00'
