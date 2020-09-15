@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name             = 'plumbing',
-    version          = '2.9.3',
+    version          = '2.9.4',
     description      = 'Helps with plumbing-type programing in python.',
     license          = 'MIT',
     url              = 'http://github.com/xapple/plumbing/',
