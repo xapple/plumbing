@@ -127,7 +127,7 @@ class property_pickled(object):
 
     def __get__(self, instance, owner):
         """
-        If you see the current source code in a seemingly unrelated part of
+        If you see this docstring or code in a seemingly unrelated part of
         an auto-generated documentation, it means the program making the
         documentation was unable to correctly traverse a decorated property.
         """
