@@ -15,13 +15,18 @@ Contact at www.sinclair.bio
 
 ################################################################################
 # This provides extra information for certain packages #
-
 extra_clues = {
     'apt': "It is likely the `apt` command is missing because we are not "
            "currently running on the Ubuntu or Debian operating system.",
     'gsed': "The gsed package can be installed with `brew install gnu-sed`"
             " on macOS."
 }
+
+# Make a detailed message #
+msg_base = "The executable '%s' is required for this operation." \
+           " Unfortunately it cannot be found anywhere in your $PATH." \
+           " Either you need to install '%s'" \
+           " or you need to fix the $PATH environment variable."
 
 ################################################################################
 def check_cmd(cmd_name, exception=True, extra_msg=None):
@@ -34,11 +39,8 @@ def check_cmd(cmd_name, exception=True, extra_msg=None):
     from plumbing.common import which
     # Try to find it in the $PATH #
     if which(cmd_name, safe=True) is not None: return True
-    # Make a detailed message #
-    msg = f"The executable '{cmd_name}' is required for this operation." \
-          f" Unfortunately it cannot be found anywhere in your $PATH."   \
-          f" Either you need to install '{cmd_name}'"                    \
-          f" or you need to fix the $PATH environment variable."
+    # Prepare the message #
+    msg = msg_base % (cmd_name, cmd_name)
     # Add any hints #
     if cmd_name in extra_clues: msg += '\n\n' + extra_clues.get(cmd_name)
     # Add a custom extra message #
