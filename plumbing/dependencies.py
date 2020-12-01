@@ -27,9 +27,12 @@ def check_setup_py(path_of_setup):
 
     Some ideas for extracting dependency information from a `setup.py` file:
     https://stackoverflow.com/questions/24236266/
+    https://stackoverflow.com/questions/27790297/
 
-    Instead let's try the `parsesetup` package.
-    Note: The code in the setup.py will be evaluated.
+    Another option is to try the `prasesetup` package, but it is buggy
+    and won't even install via pip:
+    https://github.com/benfred/parsesetup/issues/3
+    Note: In this method, the code in the setup.py will be evaluated.
 
     Other interesting projects:
     https://pypi.org/project/requirements-parser/
@@ -39,18 +42,21 @@ def check_setup_py(path_of_setup):
         >>> from plumbing.dependencies import check_setup_py
         >>> check_setup_py('~/module_name/setup.py')
     """
-    # First let's check we have that module #
-    check_module('parsesetup')
-    import parsesetup
+    # Import packages #
+    import mock, setuptools
+    from runpy import run_path
     # Parse it #
     from autopaths.file_path import FilePath
     path_of_setup = FilePath(path_of_setup)
-    # Run it #
-    setup_args = parsesetup.parse_setup(path_of_setup, trusted=True)
-    requires = setup_args.get('install_requires', [])
-    # Parse it #
+    # Run the setup in a mock #
+    with mock.patch.object(setuptools, 'setup') as mock_setup:
+        run_path(path_of_setup)
+    # Retrieve arguments that were used in the call #
+    args, kwargs = mock_setup.call_args
+    requires     = kwargs['install_requires']
+    # Parse each requirement separately #
     requires = [re.split(r'==|>=', req) for req in requires]
-    requires = [req if len(req)==2 else (req[0], None) for req in requires]
+    requires = [req if len(req) == 2 else (req[0], None) for req in requires]
     requires = dict(requires)
     # Loop #
     for package, version in requires.items(): check_module(package, version)

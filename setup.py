@@ -10,7 +10,7 @@ setup(
     author_email     = 'lucas.sinclair@me.com',
     packages         = find_packages(),
     install_requires = ['autopaths>=1.4.2', 'six', 'pandas', 'numpy', 'matplotlib',
-                        'retry', 'tzlocal', 'packaging', 'parsesetup'],
+                        'retry', 'tzlocal', 'packaging'],
     long_description = open('README.md').read(),
     long_description_content_type = 'text/markdown',
     include_package_data = True,
