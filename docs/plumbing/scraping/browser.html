@@ -47,9 +47,6 @@ from plumbing.scraping import handle_destination
 # First party modules #
 from autopaths import Path
 
-# Third party modules #
-from selenium import webdriver
-
 ###############################################################################
 def make_driver():
     &#34;&#34;&#34;
@@ -59,6 +56,8 @@ def make_driver():
     Otherwise it will append (1) and (2) etc. to the filename before the
     extension e.g. &#39;data.zip (1).crdownload&#39;
     &#34;&#34;&#34;
+    # Import #
+    from selenium import webdriver
     # Paths #
     chrome_driver_path = shutil.which(&#39;chromedriver&#39;)
     # Start a service #
@@ -195,6 +194,8 @@ extension e.g. 'data.zip (1).crdownload'</p></div>
     Otherwise it will append (1) and (2) etc. to the filename before the
     extension e.g. &#39;data.zip (1).crdownload&#39;
     &#34;&#34;&#34;
+    # Import #
+    from selenium import webdriver
     # Paths #
     chrome_driver_path = shutil.which(&#39;chromedriver&#39;)
     # Start a service #
