@@ -28,6 +28,9 @@ Pitfalls: all the stdouts are sent back to the parent stdout, intertwined.
 
 Alternatively, use this fork of multiprocessing:
 https://github.com/uqfoundation/multiprocess
+
+See also for exceptions:
+https://stackoverflow.com/questions/15359295/
 """
 
 # Optionally switch to dill instead for better pickling #
