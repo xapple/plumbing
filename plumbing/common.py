@@ -20,6 +20,14 @@ from six import string_types
 flatter = lambda x: [item for sublist in x for item in sublist]
 
 ################################################################################
+def rich_panel_print(text, title=None):
+    """Make a pretty box around a text with the `rich` library."""
+    from rich import print as rich_print
+    from rich.panel import Panel
+    from rich.padding import Padding
+    rich_print(Padding(Panel(text, title=title, padding=2, expand=False), (2,10)))
+
+################################################################################
 def ascii(text):
     """Make a safe, ASCII version a string. For instance for use on the web."""
     return unicodedata.normalize('NFKD', unicode(text)).encode('ASCII', 'ignore')
@@ -423,7 +431,7 @@ class GenWithLength(object):
 
 ###############################################################################
 class Password(object):
-    """A password object that will only prompt the user once per session"""
+    """A password object that will only prompt the user once per session."""
     def __str__(self): return self.value
     def __init__(self, prompt=None):
         self._value = None
@@ -431,14 +439,14 @@ class Password(object):
 
     @property
     def value(self):
-        if self._value == None: self._value = getpass.getpass(self.prompt)
+        if self._value is None: self._value = getpass.getpass(self.prompt)
         return self._value
 
 ################################################################################
 class OrderedSet(collections.OrderedDict, collections.abc.MutableSet):
     """
     A recipe for an ordered set.
-    http://stackoverflow.com/a/1653978/287297
+    https://stackoverflow.com/a/1653978/287297
     """
 
     def update(self, *args, **kwargs):
@@ -583,7 +591,7 @@ def which(cmd_name, safe=False):
     `safe` is set to False.
     Note: Python 3.3 and above also offers `shutil.which()`.
     Based on the package at: https://github.com/jc0n/python-which
-    And the answers at: http://stackoverflow.com/questions/377017
+    And the answers at: https://stackoverflow.com/questions/377017
     """
     # The name of the command cannot contain separators #
     assert os.sep not in cmd_name
