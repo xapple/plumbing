@@ -32,6 +32,7 @@ def check_setup_py(path_of_setup):
     Another option is to try the `prasesetup` package, but it is buggy
     and won't even install via pip:
     https://github.com/benfred/parsesetup/issues/3
+
     Note: In this method, the code in the setup.py will be evaluated.
 
     Other interesting projects:
