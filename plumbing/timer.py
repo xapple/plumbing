@@ -19,6 +19,7 @@ class Timer(object):
 
     Use it like this:
 
+        from plumbing.timer import Timer
         timer = Timer()
         timer.print_start()
         timer.print_elapsed()
@@ -32,9 +33,14 @@ class Timer(object):
     """
 
     def get_now(self):
-        return datetime.now().replace(microsecond=0)
+        # What precision to use #
+        if self.high_precision:
+            return datetime.now()
+        else:
+            return datetime.now().replace(microsecond=0)
 
-    def __init__(self):
+    def __init__(self, high_precision=False):
+        self.high_precision = high_precision
         self.start_time = self.get_now()
         self.last_mark  = self.get_now()
 
@@ -66,7 +72,8 @@ class Timer(object):
     def print_total_elapsed(self, reset=True):
         # Parameters #
         time = self.get_now() - self.start_time
-        msg  = "Total elapsed time: %s" % time
+        msg = "Total elapsed time: %s"
+        msg = msg % time
         # Print #
         print(self.prefix + msg + self.suffix)
         # Set #
