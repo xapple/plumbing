@@ -28,8 +28,10 @@ def create_file_logger(name, path, file_level='debug', console_level='error'):
     #TODO: what if the console has a higher level than the file?
     logger.setLevel(getattr(logging, file_level.upper()))
     # Choose the format of each #
-    c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-    f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    c_format = '%(name)s - %(levelname)s - %(message)s'
+    f_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    c_format = logging.Formatter(c_format)
+    f_format = logging.Formatter(f_format)
     c_handler.setFormatter(c_format)
     f_handler.setFormatter(f_format)
     # No need to display Exceptions on the console #

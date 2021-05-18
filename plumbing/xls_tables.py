@@ -23,12 +23,15 @@ class MultiDataFrameXLS:
     """
     Takes several dataframes and writes them to an XLS file.
     The dataframes are spread through different work sheets.
-    But in addition, each work sheet can contain an arbitrary number
+
+    In addition, each work sheet can contain an arbitrary number
     of dataframes.
+
     You have to provide a dictionary where:
 
     * Each key is the name of a given work sheet in the final XLS as a string.
     * Each value is a list containing an arbitrary number of dictionaries.
+
     * Each one of these dictionaries must contain a DataFrame in the
       'dataframe' key, as well as optional extra labels as seen below.
 

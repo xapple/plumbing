@@ -95,8 +95,10 @@ class Node(object):
             self.children = OrderedDict()
 
     def mend(self, length):
-        """Cut all branches from this node to its children and adopt
-        all nodes at certain level."""
+        """
+        Cut all branches from this node to its children and adopt
+        all nodes at certain level.
+        """
         if length == 0: raise Exception("Can't mend the root !")
         if length == 1: return
         self.children = OrderedDict((node.name, node) for node in self.get_level(length))

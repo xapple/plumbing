@@ -16,7 +16,8 @@ import pandas
 
 ################################################################################
 class AccessDatabase(FilePath):
-    """A wrapper for a Microsoft Access database via pyodbc.
+    """
+    A wrapper for a Microsoft Access database via pyodbc.
     On Ubuntu 18 you would install the dependencies like this:
 
         $ sudo apt install python3-pip
@@ -24,7 +25,7 @@ class AccessDatabase(FilePath):
         $ pip install --user pyodbc
     """
 
-    # Enable this to change ThisName to this_name on all columns #
+    # Enable this to change `ThisName` to `this_name` on all columns #
     convert_col_names_to_snake = False
 
     # ------------------------------ Constructor ---------------------------- #
@@ -140,7 +141,8 @@ class AccessDatabase(FilePath):
             raise Exception("The table '%s' does not seem to exist." % table_name)
 
     def table_as_df(self, table_name):
-        """Return a table as a dataframe.
+        """
+        Return a table as a dataframe.
         There is a library that can do this, but it has a bug.
         See https://github.com/jbn/pandas_access/issues/3
 

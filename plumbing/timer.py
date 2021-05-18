@@ -15,7 +15,8 @@ from plumbing.color import Color
 
 ################################################################################
 class Timer(object):
-    """Useful for timing the different steps in a pipeline.
+    """
+    Useful for timing the different steps in a pipeline.
 
     Use it like this:
 

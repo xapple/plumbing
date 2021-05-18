@@ -11,4 +11,4 @@ inputs = [(5,5), (2,2), (20,30)]
 
 results = prll_map(add, inputs)
 
-print results
+print(results)

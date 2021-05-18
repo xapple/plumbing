@@ -25,9 +25,9 @@ class SQLiteDatabase(FilePath):
         * The factory option enables you to change how results are returned.
         * The text_fact option enables you to change text factory (useful for BLOB).
         * The Isolation source can be `None` for autocommit mode or one of:
-        'DEFERRED', 'IMMEDIATE' or 'EXCLUSIVE'.
+          'DEFERRED', 'IMMEDIATE' or 'EXCLUSIVE'.
         * The retrieve option is an URL at which the database will be downloaded
-        if it was not found at the `path` given.
+          if it was not found at the `path` given.
         * The md5 option is used to check the integrity of a database."""
         self.path      = path
         self.text_fact = text_fact
@@ -140,9 +140,11 @@ class SQLiteDatabase(FilePath):
         return con
 
     def prepare(self):
-        """Check that the file exists, optionally downloads it.
+        """
+        Check that the file exists, optionally downloads it.
         Checks that the file is indeed an SQLite3 database.
-        Optionally check the MD5."""
+        Optionally check the MD5.
+        """
         if not os.path.exists(self.path):
             if self.retrieve:
                 print("Downloading SQLite3 database...")
@@ -172,8 +174,10 @@ class SQLiteDatabase(FilePath):
             self.add_table(self.main_table, columns=columns, type_map=type_map)
 
     def add_table(self, name, columns, type_map=None, if_not_exists=False):
-        """Add add a new table to the database.  For instance you could do this:
-        self.add_table('data', {'id':'integer', 'source':'text', 'pubmed':'integer'})"""
+        """
+        Add add a new table to the database.  For instance you could do this:
+        self.add_table('data', {'id':'integer', 'source':'text', 'pubmed':'integer'})
+        """
         # Check types mapping #
         if type_map is None and isinstance(columns, dict): types = columns
         if type_map is None:                               types = {}
@@ -189,8 +193,10 @@ class SQLiteDatabase(FilePath):
         return self.cursor.execute(*args, **kwargs)
 
     def get_columns_of_table(self, table=None):
-        """Return the list of columns for a particular table
-        by querying the SQL for the complete list of column names."""
+        """
+        Return the list of columns for a particular table
+        by querying the SQL for the complete list of column names.
+        """
         # Check the table exists #
         if table is None: table = self.main_table
         if not table in self.tables: return []
@@ -201,8 +207,10 @@ class SQLiteDatabase(FilePath):
         return columns
 
     def add(self, entries, table=None, columns=None, ignore=False):
-        """Add entries to a table.
-        The *entries* variable should be an iterable."""
+        """
+        Add entries to a table.
+        The *entries* variable should be an iterable.
+        """
         # Default table and columns #
         if table is None:   table   = self.main_table
         if columns is None: columns = self.get_columns_of_table(table)
@@ -253,8 +261,10 @@ class SQLiteDatabase(FilePath):
         return message1 + message2 + message3 + message4
 
     def add_by_steps(self, entries_by_step, table=None, columns=None):
-        """Add entries to the main table.
-        The *entries* variable should be an iterable yielding iterables."""
+        """
+        Add entries to the main table.
+        The *entries* variable should be an iterable yielding iterables.
+        """
         for entries in entries_by_step: self.add(entries, table=table, columns=columns)
 
     def count_entries(self, table=None):

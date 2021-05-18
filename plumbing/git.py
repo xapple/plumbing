@@ -48,13 +48,14 @@ class GitRepo(DirectoryPath):
     #------------------------------- Properties ------------------------------#
     @property
     def is_a_repos(self):
-        """Check there is a `.git` directory and this is in fact a repository.'"""
+        """Check there is a `.git` directory and this is in fact a repo."""
         return os.path.exists(self.git_dir)
 
     @property
     def tag(self):
         """For instance: u'1.0.3-69-gf0c796d-dirty'"""
-        tag = self.git(self.default + ["describe", "--tags", "--dirty", "--always"])
+        tag = self.git(self.default + ["describe", "--tags", "--dirty",
+                                       "--always"])
         return tag.strip('\n')
 
     @property
@@ -84,7 +85,8 @@ class GitRepo(DirectoryPath):
     @property
     def remote_branch(self):
         """For instance: u'origin/master'"""
-        result = self.git(self.default + ['rev-parse', '--symbolic-full-name', '--abbrev-ref', '@{u}'])
+        result = self.git(self.default + ['rev-parse', '--symbolic-full-name',
+                                          '--abbrev-ref', '@{u}'])
         return result.strip('\n')
 
     @property
@@ -134,5 +136,6 @@ class GitRepo(DirectoryPath):
         # Command #
         command = self.default + ['pull']
         # Show on shell #
-        if shell: return self.git(command, _out=sys.stdout, _err=sys.stderr, _bg=thread)
+        if shell: return self.git(command, _out=sys.stdout,_err=sys.stderr,
+                                           _bg=thread)
         else:     return self.git(command, _bg=thread)

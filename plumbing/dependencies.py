@@ -16,7 +16,7 @@ module_names = {
     "ipython":      "IPython",
     "scikit-learn": "sklearn",
     "scikit-bio":   "skbio",
-    "biom-formt":   "biom",
+    "biom-format":  "biom",
 }
 
 ################################################################################

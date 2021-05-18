@@ -235,6 +235,7 @@ def expiry_every(seconds=0):
 ###############################################################################
 class LazyString(object):
     """A string-like object that will only compute its value once, when accessed."""
+
     def __str__(self): return self.value
 
     def __init__(self, function):
@@ -249,6 +250,7 @@ class LazyString(object):
 ###############################################################################
 class LazyDict(object):
     """A dictionary-like object that will only compute its value once, when accessed."""
+
     def __getitem__(self, item): return self.value[item]
 
     def __init__(self, function):
@@ -263,6 +265,7 @@ class LazyDict(object):
 ###############################################################################
 class LazyList(object):
     """A list-like object that will only compute its value once, when accessed."""
+
     def __iter__(self): return iter(self.value)
     def __len__(self):  return len(self.value)
 
@@ -277,7 +280,9 @@ class LazyList(object):
 
 ###############################################################################
 class class_property(property):
-    """You can use this like this:
+    """
+    You can use this like this:
+
         class Foo(object):
             @class_property
             @classmethod
@@ -285,6 +290,7 @@ class class_property(property):
             def bar(cls):
                 return 1+1
     """
+
     def __get__(self, cls, owner):
         return self.fget.__get__(None, owner)()
 

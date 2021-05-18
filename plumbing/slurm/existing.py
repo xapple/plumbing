@@ -57,6 +57,7 @@ class ExistingJobs(object):
 ################################################################################
 class ExistingProjects(object):
     """Parses the output of `projinfo` on Uppmax"""
+
     params = ['name', 'used', 'allowed']
 
     def __iter__(self): return iter(self.status)

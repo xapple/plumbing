@@ -3,7 +3,7 @@
 Threads and parallelism
 =======================
 
-The ``thread`` module provides some convenience functions
+The `thread` module provides some convenience functions
 for using threads in python.
 """
 
@@ -13,6 +13,7 @@ import threading
 ################################################################################
 class ReturnThread(threading.Thread):
     """Like a normal thread, but the target function's return value is captured."""
+
     def __init__(self, group=None, target=None, name=None, args=(), kwargs={}, verbose=None):
         threading.Thread.__init__(self, group, target, name, args, kwargs, verbose)
         self._return = None
@@ -30,9 +31,10 @@ class ReturnThread(threading.Thread):
 
 ################################################################################
 def non_blocking(func):
-    """Decorator to run a function in a different thread.
+    """
+    Decorator to run a function in a different thread.
     It can be used to execute a command in a non-blocking way
-    like this::
+    like this:
 
         @non_blocking
         def add_one(n):

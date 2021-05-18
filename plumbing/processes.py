@@ -31,6 +31,8 @@ https://github.com/uqfoundation/multiprocess
 
 See also for exceptions:
 https://stackoverflow.com/questions/15359295/
+
+Note: This module is superseded by `p_tqdm`.
 """
 
 # Optionally switch to dill instead for better pickling #

@@ -3,7 +3,8 @@
 
 """
 Written by Lucas Sinclair.
-MIT Licenced.
+MIT Licensed.
+Contact at www.sinclair.bio
 """
 
 # Built-in modules #

@@ -14,9 +14,11 @@ import dateutil.tz
 
 ################################################################################
 class LoggedJobSLURM(JobSLURM):
-    """Takes care of running a python job through SLURM and logs results.
+    """
+    Takes care of running a python job through SLURM and logs results.
     Will run it remotely in a new interpreter with a static copy of all
-    required modules."""
+    required modules.
+    """
 
     def __init__(self, command,
                  language = 'python',

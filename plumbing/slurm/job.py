@@ -20,7 +20,8 @@ hostname = platform.node()
 
 ################################################################################
 class JobSLURM(object):
-    """Makes launching SLURM jobs easy to write and easy to use. Here are some
+    """
+    Makes launching SLURM jobs easy to write and easy to use. Here are some
     examples on how to use this class:
 
         for command in ['print "hi"', 'print "hello"']:

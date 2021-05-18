@@ -4,7 +4,7 @@ import sys
 ################################################################################
 class RedirectStdStreams(object):
     """
-    See file plumbing/test/redirect/test_redirect.py
+    See file `plumbing/test/redirect/test_redirect.py`
     """
 
     def __init__(self, stdout=None, stderr=None):
@@ -52,11 +52,11 @@ class SuppressAllOutput(object):
         sys.stdout.flush()
         sys.stdout = self.old_stdout
 
-    #def test():
-    #    print("printing to stdout before suppression", file=sys.stdout, flush=True)
-    #    print("printing to stderr before suppression", file=sys.stderr, flush=True)
-    #    with SuppressAllOutput():
-    #        print("printing to stdout during suppression", file=sys.stdout, flush=True)
-    #        print("printing to stderr during suppression", file=sys.stderr, flush=True)
-    #    print("printing to stdout after suppression", file=sys.stdout, flush=True)
-    #    print("printing to stderr after suppression", file=sys.stderr, flush=True)
+    def example(self):
+        print("printing to stdout before suppression", file=sys.stdout, flush=True)
+        print("printing to stderr before suppression", file=sys.stderr, flush=True)
+        with SuppressAllOutput():
+            print("printing to stdout during suppression", file=sys.stdout, flush=True)
+            print("printing to stderr during suppression", file=sys.stderr, flush=True)
+        print("printing to stdout after suppression", file=sys.stdout, flush=True)
+        print("printing to stderr after suppression", file=sys.stderr, flush=True)
