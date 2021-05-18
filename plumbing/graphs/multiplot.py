@@ -10,8 +10,7 @@ from plumbing.graphs import Graph
 from plumbing.cache import property_cached
 
 # Third party modules #
-import matplotlib, numpy
-from matplotlib import pyplot
+import numpy
 
 ###############################################################################
 class Multiplot(Graph):
@@ -41,6 +40,7 @@ class Multiplot(Graph):
         width  = self.n_cols * 5 if self.width is None else self.width
         height = self.n_rows * 5 if self.height is None else self.height
         # Create #
+        from matplotlib import pyplot
         fig, axes = pyplot.subplots(nrows   = self.n_rows,
                                     ncols   = self.n_cols,
                                     sharex  = self.share_x,
@@ -100,6 +100,7 @@ class Multiplot(Graph):
 
     def y_max_two_decimals(self):
         """Force maximum two decimals for y axis."""
+        import matplotlib
         str_formatter = matplotlib.ticker.FormatStrFormatter('%.2f')
         fn = lambda axes: axes.yaxis.set_major_formatter(str_formatter)
         self.iterate_all_axes(fn)

@@ -9,8 +9,7 @@
 from plumbing.graphs import Graph
 
 # Third party modules #
-import numpy, matplotlib
-from matplotlib import pyplot
+import numpy
 
 ###############################################################################
 class SoloLegend(Graph):
@@ -28,6 +27,9 @@ class SoloLegend(Graph):
         raise NotImplementedError()
 
     def plot(self, **kwargs):
+        # Import #
+        import matplotlib
+        from matplotlib import pyplot
         # Plot #
         fig  = pyplot.figure()
         axes = fig.add_subplot(111)

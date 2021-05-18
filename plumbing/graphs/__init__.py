@@ -11,8 +11,7 @@ from autopaths           import Path
 from autopaths.file_path import FilePath
 
 # Third party modules #
-import numpy, matplotlib
-from matplotlib import pyplot
+import numpy
 
 ################################################################################
 class Graph(object):
@@ -119,6 +118,8 @@ class Graph(object):
         return self.path
 
     def save_plot(self, fig=None, axes=None, **kwargs):
+        # Import #
+        from matplotlib import pyplot
         # Missing figure #
         if fig is None:   fig = pyplot.gcf()
         # Missing axes #
@@ -179,6 +180,7 @@ class Graph(object):
             user_msg = 'user: %s, job: %s' % (getpass.getuser(), job_name)
             fig.text(0.01, 0.98, user_msg, horizontalalignment='left')
         # Nice digit grouping #
+        import matplotlib
         if 'x' in self.params['sep']:
             separate = lambda x,pos: split_thousands(x)
             axes.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
@@ -213,6 +215,7 @@ class Graph(object):
         Used when the plot method defined does not create a figure nor calls save_plot
         Then the plot method has to use self.fig.
         """
+        from matplotlib import pyplot
         self.fig = pyplot.figure()
         self.plot()
         self.axes = pyplot.gca()
@@ -229,6 +232,7 @@ class Graph(object):
             bins = list(numpy.logspace(start=start, stop=stop, num=bins))
             bins.insert(0, 0)
         # Plot #
+        from matplotlib import pyplot
         fig = pyplot.figure()
         pyplot.hist(counts, bins=bins, color='gray')
         axes = pyplot.gca()
