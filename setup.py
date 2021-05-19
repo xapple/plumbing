@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 setup(
     name             = 'plumbing',
@@ -8,7 +8,7 @@ setup(
     url              = 'http://github.com/xapple/plumbing/',
     author           = 'Lucas Sinclair',
     author_email     = 'lucas.sinclair@me.com',
-    packages         = find_packages(),
+    packages         = find_namespace_packages(),
     install_requires = ['autopaths>=1.4.2', 'six', 'pandas', 'numpy', 'matplotlib',
                         'retry', 'tzlocal', 'packaging', 'requests'],
     long_description = open('README.md').read(),
