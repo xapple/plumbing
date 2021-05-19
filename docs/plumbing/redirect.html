@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>plumbing.redirect API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -32,7 +32,7 @@ import sys
 ################################################################################
 class RedirectStdStreams(object):
     &#34;&#34;&#34;
-    See file plumbing/test/redirect/test_redirect.py
+    See file `plumbing/test/redirect/test_redirect.py`
     &#34;&#34;&#34;
 
     def __init__(self, stdout=None, stderr=None):
@@ -80,14 +80,14 @@ class SuppressAllOutput(object):
         sys.stdout.flush()
         sys.stdout = self.old_stdout
 
-    #def test():
-    #    print(&#34;printing to stdout before suppression&#34;, file=sys.stdout, flush=True)
-    #    print(&#34;printing to stderr before suppression&#34;, file=sys.stderr, flush=True)
-    #    with SuppressAllOutput():
-    #        print(&#34;printing to stdout during suppression&#34;, file=sys.stdout, flush=True)
-    #        print(&#34;printing to stderr during suppression&#34;, file=sys.stderr, flush=True)
-    #    print(&#34;printing to stdout after suppression&#34;, file=sys.stdout, flush=True)
-    #    print(&#34;printing to stderr after suppression&#34;, file=sys.stderr, flush=True)</code></pre>
+    def example(self):
+        print(&#34;printing to stdout before suppression&#34;, file=sys.stdout, flush=True)
+        print(&#34;printing to stderr before suppression&#34;, file=sys.stderr, flush=True)
+        with SuppressAllOutput():
+            print(&#34;printing to stdout during suppression&#34;, file=sys.stdout, flush=True)
+            print(&#34;printing to stderr during suppression&#34;, file=sys.stderr, flush=True)
+        print(&#34;printing to stdout after suppression&#34;, file=sys.stdout, flush=True)
+        print(&#34;printing to stderr after suppression&#34;, file=sys.stderr, flush=True)</code></pre>
 </details>
 </section>
 <section>
@@ -104,14 +104,14 @@ class SuppressAllOutput(object):
 <span>(</span><span>stdout=None, stderr=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>See file plumbing/test/redirect/test_redirect.py</p></div>
+<div class="desc"><p>See file <code>plumbing/test/redirect/test_redirect.py</code></p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class RedirectStdStreams(object):
     &#34;&#34;&#34;
-    See file plumbing/test/redirect/test_redirect.py
+    See file `plumbing/test/redirect/test_redirect.py`
     &#34;&#34;&#34;
 
     def __init__(self, stdout=None, stderr=None):
@@ -166,8 +166,39 @@ class SuppressAllOutput(object):
         sys.stderr = self.old_stderr
         # Standard out #
         sys.stdout.flush()
-        sys.stdout = self.old_stdout</code></pre>
+        sys.stdout = self.old_stdout
+
+    def example(self):
+        print(&#34;printing to stdout before suppression&#34;, file=sys.stdout, flush=True)
+        print(&#34;printing to stderr before suppression&#34;, file=sys.stderr, flush=True)
+        with SuppressAllOutput():
+            print(&#34;printing to stdout during suppression&#34;, file=sys.stdout, flush=True)
+            print(&#34;printing to stderr during suppression&#34;, file=sys.stderr, flush=True)
+        print(&#34;printing to stdout after suppression&#34;, file=sys.stdout, flush=True)
+        print(&#34;printing to stderr after suppression&#34;, file=sys.stderr, flush=True)</code></pre>
 </details>
+<h3>Methods</h3>
+<dl>
+<dt id="plumbing.redirect.SuppressAllOutput.example"><code class="name flex">
+<span>def <span class="ident">example</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def example(self):
+    print(&#34;printing to stdout before suppression&#34;, file=sys.stdout, flush=True)
+    print(&#34;printing to stderr before suppression&#34;, file=sys.stderr, flush=True)
+    with SuppressAllOutput():
+        print(&#34;printing to stdout during suppression&#34;, file=sys.stdout, flush=True)
+        print(&#34;printing to stderr during suppression&#34;, file=sys.stderr, flush=True)
+    print(&#34;printing to stdout after suppression&#34;, file=sys.stdout, flush=True)
+    print(&#34;printing to stderr after suppression&#34;, file=sys.stderr, flush=True)</code></pre>
+</details>
+</dd>
+</dl>
 </dd>
 </dl>
 </section>
@@ -190,6 +221,9 @@ class SuppressAllOutput(object):
 </li>
 <li>
 <h4><code><a title="plumbing.redirect.SuppressAllOutput" href="#plumbing.redirect.SuppressAllOutput">SuppressAllOutput</a></code></h4>
+<ul class="">
+<li><code><a title="plumbing.redirect.SuppressAllOutput.example" href="#plumbing.redirect.SuppressAllOutput.example">example</a></code></li>
+</ul>
 </li>
 </ul>
 </li>
@@ -197,7 +231,7 @@ class SuppressAllOutput(object):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>plumbing.databases.sqlite_database API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -53,9 +53,9 @@ class SQLiteDatabase(FilePath):
         * The factory option enables you to change how results are returned.
         * The text_fact option enables you to change text factory (useful for BLOB).
         * The Isolation source can be `None` for autocommit mode or one of:
-        &#39;DEFERRED&#39;, &#39;IMMEDIATE&#39; or &#39;EXCLUSIVE&#39;.
+          &#39;DEFERRED&#39;, &#39;IMMEDIATE&#39; or &#39;EXCLUSIVE&#39;.
         * The retrieve option is an URL at which the database will be downloaded
-        if it was not found at the `path` given.
+          if it was not found at the `path` given.
         * The md5 option is used to check the integrity of a database.&#34;&#34;&#34;
         self.path      = path
         self.text_fact = text_fact
@@ -168,9 +168,11 @@ class SQLiteDatabase(FilePath):
         return con
 
     def prepare(self):
-        &#34;&#34;&#34;Check that the file exists, optionally downloads it.
+        &#34;&#34;&#34;
+        Check that the file exists, optionally downloads it.
         Checks that the file is indeed an SQLite3 database.
-        Optionally check the MD5.&#34;&#34;&#34;
+        Optionally check the MD5.
+        &#34;&#34;&#34;
         if not os.path.exists(self.path):
             if self.retrieve:
                 print(&#34;Downloading SQLite3 database...&#34;)
@@ -200,8 +202,10 @@ class SQLiteDatabase(FilePath):
             self.add_table(self.main_table, columns=columns, type_map=type_map)
 
     def add_table(self, name, columns, type_map=None, if_not_exists=False):
-        &#34;&#34;&#34;Add add a new table to the database.  For instance you could do this:
-        self.add_table(&#39;data&#39;, {&#39;id&#39;:&#39;integer&#39;, &#39;source&#39;:&#39;text&#39;, &#39;pubmed&#39;:&#39;integer&#39;})&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Add add a new table to the database.  For instance you could do this:
+        self.add_table(&#39;data&#39;, {&#39;id&#39;:&#39;integer&#39;, &#39;source&#39;:&#39;text&#39;, &#39;pubmed&#39;:&#39;integer&#39;})
+        &#34;&#34;&#34;
         # Check types mapping #
         if type_map is None and isinstance(columns, dict): types = columns
         if type_map is None:                               types = {}
@@ -217,8 +221,10 @@ class SQLiteDatabase(FilePath):
         return self.cursor.execute(*args, **kwargs)
 
     def get_columns_of_table(self, table=None):
-        &#34;&#34;&#34;Return the list of columns for a particular table
-        by querying the SQL for the complete list of column names.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Return the list of columns for a particular table
+        by querying the SQL for the complete list of column names.
+        &#34;&#34;&#34;
         # Check the table exists #
         if table is None: table = self.main_table
         if not table in self.tables: return []
@@ -229,8 +235,10 @@ class SQLiteDatabase(FilePath):
         return columns
 
     def add(self, entries, table=None, columns=None, ignore=False):
-        &#34;&#34;&#34;Add entries to a table.
-        The *entries* variable should be an iterable.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Add entries to a table.
+        The *entries* variable should be an iterable.
+        &#34;&#34;&#34;
         # Default table and columns #
         if table is None:   table   = self.main_table
         if columns is None: columns = self.get_columns_of_table(table)
@@ -281,8 +289,10 @@ class SQLiteDatabase(FilePath):
         return message1 + message2 + message3 + message4
 
     def add_by_steps(self, entries_by_step, table=None, columns=None):
-        &#34;&#34;&#34;Add entries to the main table.
-        The *entries* variable should be an iterable yielding iterables.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Add entries to the main table.
+        The *entries* variable should be an iterable yielding iterables.
+        &#34;&#34;&#34;
         for entries in entries_by_step: self.add(entries, table=table, columns=columns)
 
     def count_entries(self, table=None):
@@ -425,9 +435,9 @@ if it was not found at the <code>path</code> given.</li>
         * The factory option enables you to change how results are returned.
         * The text_fact option enables you to change text factory (useful for BLOB).
         * The Isolation source can be `None` for autocommit mode or one of:
-        &#39;DEFERRED&#39;, &#39;IMMEDIATE&#39; or &#39;EXCLUSIVE&#39;.
+          &#39;DEFERRED&#39;, &#39;IMMEDIATE&#39; or &#39;EXCLUSIVE&#39;.
         * The retrieve option is an URL at which the database will be downloaded
-        if it was not found at the `path` given.
+          if it was not found at the `path` given.
         * The md5 option is used to check the integrity of a database.&#34;&#34;&#34;
         self.path      = path
         self.text_fact = text_fact
@@ -540,9 +550,11 @@ if it was not found at the <code>path</code> given.</li>
         return con
 
     def prepare(self):
-        &#34;&#34;&#34;Check that the file exists, optionally downloads it.
+        &#34;&#34;&#34;
+        Check that the file exists, optionally downloads it.
         Checks that the file is indeed an SQLite3 database.
-        Optionally check the MD5.&#34;&#34;&#34;
+        Optionally check the MD5.
+        &#34;&#34;&#34;
         if not os.path.exists(self.path):
             if self.retrieve:
                 print(&#34;Downloading SQLite3 database...&#34;)
@@ -572,8 +584,10 @@ if it was not found at the <code>path</code> given.</li>
             self.add_table(self.main_table, columns=columns, type_map=type_map)
 
     def add_table(self, name, columns, type_map=None, if_not_exists=False):
-        &#34;&#34;&#34;Add add a new table to the database.  For instance you could do this:
-        self.add_table(&#39;data&#39;, {&#39;id&#39;:&#39;integer&#39;, &#39;source&#39;:&#39;text&#39;, &#39;pubmed&#39;:&#39;integer&#39;})&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Add add a new table to the database.  For instance you could do this:
+        self.add_table(&#39;data&#39;, {&#39;id&#39;:&#39;integer&#39;, &#39;source&#39;:&#39;text&#39;, &#39;pubmed&#39;:&#39;integer&#39;})
+        &#34;&#34;&#34;
         # Check types mapping #
         if type_map is None and isinstance(columns, dict): types = columns
         if type_map is None:                               types = {}
@@ -589,8 +603,10 @@ if it was not found at the <code>path</code> given.</li>
         return self.cursor.execute(*args, **kwargs)
 
     def get_columns_of_table(self, table=None):
-        &#34;&#34;&#34;Return the list of columns for a particular table
-        by querying the SQL for the complete list of column names.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Return the list of columns for a particular table
+        by querying the SQL for the complete list of column names.
+        &#34;&#34;&#34;
         # Check the table exists #
         if table is None: table = self.main_table
         if not table in self.tables: return []
@@ -601,8 +617,10 @@ if it was not found at the <code>path</code> given.</li>
         return columns
 
     def add(self, entries, table=None, columns=None, ignore=False):
-        &#34;&#34;&#34;Add entries to a table.
-        The *entries* variable should be an iterable.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Add entries to a table.
+        The *entries* variable should be an iterable.
+        &#34;&#34;&#34;
         # Default table and columns #
         if table is None:   table   = self.main_table
         if columns is None: columns = self.get_columns_of_table(table)
@@ -653,8 +671,10 @@ if it was not found at the <code>path</code> given.</li>
         return message1 + message2 + message3 + message4
 
     def add_by_steps(self, entries_by_step, table=None, columns=None):
-        &#34;&#34;&#34;Add entries to the main table.
-        The *entries* variable should be an iterable yielding iterables.&#34;&#34;&#34;
+        &#34;&#34;&#34;
+        Add entries to the main table.
+        The *entries* variable should be an iterable yielding iterables.
+        &#34;&#34;&#34;
         for entries in entries_by_step: self.add(entries, table=table, columns=columns)
 
     def count_entries(self, table=None):
@@ -857,7 +877,8 @@ def first(self):
 <pre><code class="python">@property
 def frame(self):
     &#34;&#34;&#34;The main table as a blaze data structure. Not ready yet.&#34;&#34;&#34;
-    pass</code></pre>
+    pass
+    #return blaze.Data(&#39;sqlite:///%s::%s&#39;) % (self.path, self.main_table)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.last"><code class="name">var <span class="ident">last</span></code></dt>
@@ -996,8 +1017,10 @@ The <em>entries</em> variable should be an iterable.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def add(self, entries, table=None, columns=None, ignore=False):
-    &#34;&#34;&#34;Add entries to a table.
-    The *entries* variable should be an iterable.&#34;&#34;&#34;
+    &#34;&#34;&#34;
+    Add entries to a table.
+    The *entries* variable should be an iterable.
+    &#34;&#34;&#34;
     # Default table and columns #
     if table is None:   table   = self.main_table
     if columns is None: columns = self.get_columns_of_table(table)
@@ -1034,8 +1057,10 @@ The <em>entries</em> variable should be an iterable yielding iterables.</p></div
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def add_by_steps(self, entries_by_step, table=None, columns=None):
-    &#34;&#34;&#34;Add entries to the main table.
-    The *entries* variable should be an iterable yielding iterables.&#34;&#34;&#34;
+    &#34;&#34;&#34;
+    Add entries to the main table.
+    The *entries* variable should be an iterable yielding iterables.
+    &#34;&#34;&#34;
     for entries in entries_by_step: self.add(entries, table=table, columns=columns)</code></pre>
 </details>
 </dd>
@@ -1065,8 +1090,10 @@ self.add_table('data', {'id':'integer', 'source':'text', 'pubmed':'integer'})</p
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def add_table(self, name, columns, type_map=None, if_not_exists=False):
-    &#34;&#34;&#34;Add add a new table to the database.  For instance you could do this:
-    self.add_table(&#39;data&#39;, {&#39;id&#39;:&#39;integer&#39;, &#39;source&#39;:&#39;text&#39;, &#39;pubmed&#39;:&#39;integer&#39;})&#34;&#34;&#34;
+    &#34;&#34;&#34;
+    Add add a new table to the database.  For instance you could do this:
+    self.add_table(&#39;data&#39;, {&#39;id&#39;:&#39;integer&#39;, &#39;source&#39;:&#39;text&#39;, &#39;pubmed&#39;:&#39;integer&#39;})
+    &#34;&#34;&#34;
     # Check types mapping #
     if type_map is None and isinstance(columns, dict): types = columns
     if type_map is None:                               types = {}
@@ -1230,7 +1257,9 @@ self.add_table('data', {'id':'integer', 'source':'text', 'pubmed':'integer'})</p
     &#34;&#34;&#34;
     ordered = &#39;,&#39;.join(map(str,ids))
     rowids  = &#39;\n&#39;.join(&#34;WHEN &#39;%s&#39; THEN %s&#34; % (row,i) for i,row in enumerate(ids))
-    command = command % (ordered, rowids)</code></pre>
+    command = command % (ordered, rowids)
+    # This could have worked but sqlite3 was too old on the server
+    # ORDER BY instr(&#39;,%s,&#39;, &#39;,&#39; || id || &#39;,&#39;)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.get_columns_of_table"><code class="name flex">
@@ -1244,8 +1273,10 @@ by querying the SQL for the complete list of column names.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_columns_of_table(self, table=None):
-    &#34;&#34;&#34;Return the list of columns for a particular table
-    by querying the SQL for the complete list of column names.&#34;&#34;&#34;
+    &#34;&#34;&#34;
+    Return the list of columns for a particular table
+    by querying the SQL for the complete list of column names.
+    &#34;&#34;&#34;
     # Check the table exists #
     if table is None: table = self.main_table
     if not table in self.tables: return []
@@ -1424,9 +1455,11 @@ Optionally check the MD5.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def prepare(self):
-    &#34;&#34;&#34;Check that the file exists, optionally downloads it.
+    &#34;&#34;&#34;
+    Check that the file exists, optionally downloads it.
     Checks that the file is indeed an SQLite3 database.
-    Optionally check the MD5.&#34;&#34;&#34;
+    Optionally check the MD5.
+    &#34;&#34;&#34;
     if not os.path.exists(self.path):
         if self.retrieve:
             print(&#34;Downloading SQLite3 database...&#34;)
@@ -1530,7 +1563,7 @@ Optionally check the MD5.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>

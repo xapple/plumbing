@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>plumbing.scraping API documentation</title>
 <meta name="description" content="Written by Lucas Sinclair.
-MIT Licenced." />
+MIT Licensed.
+Contact at www.sinclair.bio" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -24,7 +25,8 @@ MIT Licenced." />
 </header>
 <section id="section-intro">
 <p>Written by Lucas Sinclair.
-MIT Licenced.</p>
+MIT Licensed.
+Contact at www.sinclair.bio</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -34,10 +36,12 @@ MIT Licenced.</p>
 
 &#34;&#34;&#34;
 Written by Lucas Sinclair.
-MIT Licenced.
+MIT Licensed.
+Contact at www.sinclair.bio
 &#34;&#34;&#34;
 
 # Built-in modules #
+import os
 
 # Internal modules #
 from plumbing.scraping.headers import make_headers
@@ -51,18 +55,37 @@ import requests
 from retry import retry
 
 ###############################################################################
-def retrieve_from_url(url, user_agent=1, **kwargs):
+@retry(requests.exceptions.HTTPError, tries=8, delay=1, backoff=2)
+def request(url,
+            header   = None,
+            text     = False,
+            content  = False,
+            response = False,
+            **kwargs):
+    # Get #
+    resp = requests.get(url, headers=header, **kwargs)
+    # This will be caught by the decorator #
+    resp.raise_for_status()
+    # Pick what to return #
+    if text:     return resp.text
+    if content:  return resp.content
+    if response: return resp
+
+###############################################################################
+def retrieve_from_url(url, user_agent=None, **kwargs):
     &#34;&#34;&#34;
     Return the text content of a resource (e.g. the HTML).
     By default we will retry if an HTTP error arises.
     &#34;&#34;&#34;
     # Custom user agent if needed #
-    header = make_headers(user_agent)
+    if user_agent is not None: header = make_headers(user_agent)
+    else: header = &#34;&#34;
     # Download #
     content = request(url, header, text=True, **kwargs)
     # Return #
     return content
 
+###############################################################################
 def stream_from_url(*args, **kwargs):
     &#34;&#34;&#34;
     Save the resource as a file on disk iteratively by first asking
@@ -80,42 +103,72 @@ def download_from_url(url,
                       user_agent  = 1,
                       stream      = False,
                       progress    = False,
+                      desc        = None,
                       **kwargs):
     &#34;&#34;&#34;
     Save the resource as a file on disk.
     &#34;&#34;&#34;
     # Custom user agent if needed #
-    header = make_headers(user_agent)
+    if user_agent is not None: header = make_headers(user_agent)
+    else: header = &#34;&#34;
     # Download #
     if stream: response = request(url, header, response=True, stream=True, **kwargs)
     else:      content  = request(url, header, content=True, **kwargs)
     # Get total size #
     if stream:
         total_size = int(response.headers.get(&#39;content-length&#39;, -1))
-        block_size = int(total_size/1024)
+        num_blocks = 1500
+        block_size = int(total_size/num_blocks)
     # Sometimes we don&#39;t get content-length #
     if stream and total_size &lt; 0:
         return download_from_url(url, destination, uncompress, user_agent,
                                  False, False, **kwargs)
     # Choose the right option for destination #
     destination = handle_destination(url, destination)
-    # Write streaming #
-    with open(destination, &#34;wb&#34;) as handle:
+    # How the progress bar should look like #
+    bar = &#39;{l_bar}{bar}| {n_fmt}/{total_fmt} [{remaining}, &#39; \
+          &#39;{rate_fmt}{postfix}]&#39;
+    # Delete the destination if there is any exception or a ctrl-c #
+    try:
+        # With streaming #
         if stream:
             generator = response.iter_content(chunk_size=block_size)
             if progress:
-                import tqdm
-                for data in tqdm.tqdm(generator, total=1024):
-                    handle.write(data)
+                # In the future replace with `from tqdm.rich import tqdm`
+                from tqdm import tqdm
+                bar = tqdm(bar_format   = bar,
+                           desc         = desc,
+                           total        = total_size,
+                           unit         = &#39;iB&#39;,
+                           unit_scale   = True)
+                with open(destination, &#34;wb&#34;) as handle:
+                    for data in generator:
+                        handle.write(data)
+                        bar.update(len(data))
+                    bar.close()
             else:
-                for data in generator:
-                    handle.write(data)
-        else:
-            handle.write(content)
-    # Uncompress #
+                with open(destination, &#34;wb&#34;) as handle:
+                    for data in generator: handle.write(data)
+        # Without streaming #
+        if not stream:
+            with open(destination, &#34;wb&#34;) as handle: handle.write(content)
+    except:
+        if os.path.exists(destination): os.remove(destination)
+        raise
+    # Uncompress the result #
     if uncompress:
-        with open(destination, &#39;rb&#39;) as f: header = f.read(4)
-        if header == b&#34;PK\x03\x04&#34;: destination.unzip_to(inplace=True)
+        # To detect tar.gz we rely on the extension #
+        if destination.endswith(&#39;.tar.gz&#39;):
+            return destination.untargz_to()
+        # Otherwise read the magic number #
+        with open(destination, &#39;rb&#39;) as f:
+            header = f.read(4)
+        # If it&#39;s a zip file #
+        if header == b&#34;PK\x03\x04&#34;:
+            return destination.unzip_to(inplace=True)
+        # If it&#39;s a gzip file #
+        elif header[:3] == b&#34;\x1f\x8b\x08&#34;:
+            return destination.ungzip_to()
     # Return #
     return destination
 
@@ -138,23 +191,7 @@ def handle_destination(url, destination):
         destination = Path(destination)
         destination.directory.create_if_not_exists()
     # Return #
-    return destination
-
-###############################################################################
-@retry(requests.exceptions.HTTPError, tries=8, delay=1, backoff=2)
-def request(url,
-            header   = None,
-            text     = False,
-            content  = False,
-            response = False,
-            **kwargs):
-    # Get #
-    resp = requests.get(url, headers=header, **kwargs)
-    resp.raise_for_status()
-    # Pick what to return #
-    if text:     return resp.text
-    if content:  return resp.content
-    if response: return resp</code></pre>
+    return destination</code></pre>
 </details>
 </section>
 <section>
@@ -163,22 +200,26 @@ def request(url,
 <dt><code class="name"><a title="plumbing.scraping.blockers" href="blockers.html">plumbing.scraping.blockers</a></code></dt>
 <dd>
 <div class="desc"><p>Written by Lucas Sinclair.
-MIT Licenced.</p></div>
+MIT Licensed.
+Contact at www.sinclair.bio</p></div>
 </dd>
 <dt><code class="name"><a title="plumbing.scraping.browser" href="browser.html">plumbing.scraping.browser</a></code></dt>
 <dd>
 <div class="desc"><p>Written by Lucas Sinclair.
-MIT Licenced.</p></div>
+MIT Licensed.
+Contact at www.sinclair.bio</p></div>
 </dd>
 <dt><code class="name"><a title="plumbing.scraping.headers" href="headers.html">plumbing.scraping.headers</a></code></dt>
 <dd>
 <div class="desc"><p>Written by Lucas Sinclair.
-MIT Licenced.</p></div>
+MIT Licensed.
+Contact at www.sinclair.bio</p></div>
 </dd>
 <dt><code class="name"><a title="plumbing.scraping.run_get_user_agents" href="run_get_user_agents.html">plumbing.scraping.run_get_user_agents</a></code></dt>
 <dd>
 <div class="desc"><p>Written by Lucas Sinclair.
-MIT Licenced.</p></div>
+MIT Licensed.
+Contact at www.sinclair.bio</p></div>
 </dd>
 </dl>
 </section>
@@ -188,7 +229,7 @@ MIT Licenced.</p></div>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="plumbing.scraping.download_from_url"><code class="name flex">
-<span>def <span class="ident">download_from_url</span></span>(<span>url, destination=None, uncompress=False, user_agent=1, stream=False, progress=False, **kwargs)</span>
+<span>def <span class="ident">download_from_url</span></span>(<span>url, destination=None, uncompress=False, user_agent=1, stream=False, progress=False, desc=None, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Save the resource as a file on disk.</p></div>
@@ -202,42 +243,72 @@ MIT Licenced.</p></div>
                       user_agent  = 1,
                       stream      = False,
                       progress    = False,
+                      desc        = None,
                       **kwargs):
     &#34;&#34;&#34;
     Save the resource as a file on disk.
     &#34;&#34;&#34;
     # Custom user agent if needed #
-    header = make_headers(user_agent)
+    if user_agent is not None: header = make_headers(user_agent)
+    else: header = &#34;&#34;
     # Download #
     if stream: response = request(url, header, response=True, stream=True, **kwargs)
     else:      content  = request(url, header, content=True, **kwargs)
     # Get total size #
     if stream:
         total_size = int(response.headers.get(&#39;content-length&#39;, -1))
-        block_size = int(total_size/1024)
+        num_blocks = 1500
+        block_size = int(total_size/num_blocks)
     # Sometimes we don&#39;t get content-length #
     if stream and total_size &lt; 0:
         return download_from_url(url, destination, uncompress, user_agent,
                                  False, False, **kwargs)
     # Choose the right option for destination #
     destination = handle_destination(url, destination)
-    # Write streaming #
-    with open(destination, &#34;wb&#34;) as handle:
+    # How the progress bar should look like #
+    bar = &#39;{l_bar}{bar}| {n_fmt}/{total_fmt} [{remaining}, &#39; \
+          &#39;{rate_fmt}{postfix}]&#39;
+    # Delete the destination if there is any exception or a ctrl-c #
+    try:
+        # With streaming #
         if stream:
             generator = response.iter_content(chunk_size=block_size)
             if progress:
-                import tqdm
-                for data in tqdm.tqdm(generator, total=1024):
-                    handle.write(data)
+                # In the future replace with `from tqdm.rich import tqdm`
+                from tqdm import tqdm
+                bar = tqdm(bar_format   = bar,
+                           desc         = desc,
+                           total        = total_size,
+                           unit         = &#39;iB&#39;,
+                           unit_scale   = True)
+                with open(destination, &#34;wb&#34;) as handle:
+                    for data in generator:
+                        handle.write(data)
+                        bar.update(len(data))
+                    bar.close()
             else:
-                for data in generator:
-                    handle.write(data)
-        else:
-            handle.write(content)
-    # Uncompress #
+                with open(destination, &#34;wb&#34;) as handle:
+                    for data in generator: handle.write(data)
+        # Without streaming #
+        if not stream:
+            with open(destination, &#34;wb&#34;) as handle: handle.write(content)
+    except:
+        if os.path.exists(destination): os.remove(destination)
+        raise
+    # Uncompress the result #
     if uncompress:
-        with open(destination, &#39;rb&#39;) as f: header = f.read(4)
-        if header == b&#34;PK\x03\x04&#34;: destination.unzip_to(inplace=True)
+        # To detect tar.gz we rely on the extension #
+        if destination.endswith(&#39;.tar.gz&#39;):
+            return destination.untargz_to()
+        # Otherwise read the magic number #
+        with open(destination, &#39;rb&#39;) as f:
+            header = f.read(4)
+        # If it&#39;s a zip file #
+        if header == b&#34;PK\x03\x04&#34;:
+            return destination.unzip_to(inplace=True)
+        # If it&#39;s a gzip file #
+        elif header[:3] == b&#34;\x1f\x8b\x08&#34;:
+            return destination.ungzip_to()
     # Return #
     return destination</code></pre>
 </details>
@@ -291,6 +362,7 @@ def request(url,
             **kwargs):
     # Get #
     resp = requests.get(url, headers=header, **kwargs)
+    # This will be caught by the decorator #
     resp.raise_for_status()
     # Pick what to return #
     if text:     return resp.text
@@ -299,7 +371,7 @@ def request(url,
 </details>
 </dd>
 <dt id="plumbing.scraping.retrieve_from_url"><code class="name flex">
-<span>def <span class="ident">retrieve_from_url</span></span>(<span>url, user_agent=1, **kwargs)</span>
+<span>def <span class="ident">retrieve_from_url</span></span>(<span>url, user_agent=None, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Return the text content of a resource (e.g. the HTML).
@@ -308,13 +380,14 @@ By default we will retry if an HTTP error arises.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def retrieve_from_url(url, user_agent=1, **kwargs):
+<pre><code class="python">def retrieve_from_url(url, user_agent=None, **kwargs):
     &#34;&#34;&#34;
     Return the text content of a resource (e.g. the HTML).
     By default we will retry if an HTTP error arises.
     &#34;&#34;&#34;
     # Custom user agent if needed #
-    header = make_headers(user_agent)
+    if user_agent is not None: header = make_headers(user_agent)
+    else: header = &#34;&#34;
     # Download #
     content = request(url, header, text=True, **kwargs)
     # Return #
@@ -382,7 +455,7 @@ By default we will uncompress a downloaded file if it is zipped.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>

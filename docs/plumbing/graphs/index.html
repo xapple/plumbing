@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>plumbing.graphs API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -39,8 +39,7 @@ from autopaths           import Path
 from autopaths.file_path import FilePath
 
 # Third party modules #
-import numpy, matplotlib
-from matplotlib import pyplot
+import numpy
 
 ################################################################################
 class Graph(object):
@@ -147,6 +146,8 @@ class Graph(object):
         return self.path
 
     def save_plot(self, fig=None, axes=None, **kwargs):
+        # Import #
+        from matplotlib import pyplot
         # Missing figure #
         if fig is None:   fig = pyplot.gcf()
         # Missing axes #
@@ -207,6 +208,7 @@ class Graph(object):
             user_msg = &#39;user: %s, job: %s&#39; % (getpass.getuser(), job_name)
             fig.text(0.01, 0.98, user_msg, horizontalalignment=&#39;left&#39;)
         # Nice digit grouping #
+        import matplotlib
         if &#39;x&#39; in self.params[&#39;sep&#39;]:
             separate = lambda x,pos: split_thousands(x)
             axes.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
@@ -241,6 +243,7 @@ class Graph(object):
         Used when the plot method defined does not create a figure nor calls save_plot
         Then the plot method has to use self.fig.
         &#34;&#34;&#34;
+        from matplotlib import pyplot
         self.fig = pyplot.figure()
         self.plot()
         self.axes = pyplot.gca()
@@ -257,6 +260,7 @@ class Graph(object):
             bins = list(numpy.logspace(start=start, stop=stop, num=bins))
             bins.insert(0, 0)
         # Plot #
+        from matplotlib import pyplot
         fig = pyplot.figure()
         pyplot.hist(counts, bins=bins, color=&#39;gray&#39;)
         axes = pyplot.gca()
@@ -436,6 +440,8 @@ for x_name in x_names:
         return self.path
 
     def save_plot(self, fig=None, axes=None, **kwargs):
+        # Import #
+        from matplotlib import pyplot
         # Missing figure #
         if fig is None:   fig = pyplot.gcf()
         # Missing axes #
@@ -496,6 +502,7 @@ for x_name in x_names:
             user_msg = &#39;user: %s, job: %s&#39; % (getpass.getuser(), job_name)
             fig.text(0.01, 0.98, user_msg, horizontalalignment=&#39;left&#39;)
         # Nice digit grouping #
+        import matplotlib
         if &#39;x&#39; in self.params[&#39;sep&#39;]:
             separate = lambda x,pos: split_thousands(x)
             axes.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
@@ -530,6 +537,7 @@ for x_name in x_names:
         Used when the plot method defined does not create a figure nor calls save_plot
         Then the plot method has to use self.fig.
         &#34;&#34;&#34;
+        from matplotlib import pyplot
         self.fig = pyplot.figure()
         self.plot()
         self.axes = pyplot.gca()
@@ -546,6 +554,7 @@ for x_name in x_names:
             bins = list(numpy.logspace(start=start, stop=stop, num=bins))
             bins.insert(0, 0)
         # Plot #
+        from matplotlib import pyplot
         fig = pyplot.figure()
         pyplot.hist(counts, bins=bins, color=&#39;gray&#39;)
         axes = pyplot.gca()
@@ -638,6 +647,7 @@ documentation was unable to correctly traverse a decorated property.</p></div>
         bins = list(numpy.logspace(start=start, stop=stop, num=bins))
         bins.insert(0, 0)
     # Plot #
+    from matplotlib import pyplot
     fig = pyplot.figure()
     pyplot.hist(counts, bins=bins, color=&#39;gray&#39;)
     axes = pyplot.gca()
@@ -668,6 +678,7 @@ Then the plot method has to use self.fig.</p></div>
     Used when the plot method defined does not create a figure nor calls save_plot
     Then the plot method has to use self.fig.
     &#34;&#34;&#34;
+    from matplotlib import pyplot
     self.fig = pyplot.figure()
     self.plot()
     self.axes = pyplot.gca()
@@ -705,6 +716,8 @@ Then the plot method has to use self.fig.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def save_plot(self, fig=None, axes=None, **kwargs):
+    # Import #
+    from matplotlib import pyplot
     # Missing figure #
     if fig is None:   fig = pyplot.gcf()
     # Missing axes #
@@ -765,6 +778,7 @@ Then the plot method has to use self.fig.</p></div>
         user_msg = &#39;user: %s, job: %s&#39; % (getpass.getuser(), job_name)
         fig.text(0.01, 0.98, user_msg, horizontalalignment=&#39;left&#39;)
     # Nice digit grouping #
+    import matplotlib
     if &#39;x&#39; in self.params[&#39;sep&#39;]:
         separate = lambda x,pos: split_thousands(x)
         axes.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(separate))
@@ -837,7 +851,7 @@ Then the plot method has to use self.fig.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>
