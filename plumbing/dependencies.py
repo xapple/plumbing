@@ -44,7 +44,8 @@ def check_setup_py(path_of_setup):
         >>> check_setup_py('~/module_name/setup.py')
     """
     # Import packages #
-    import mock, setuptools
+    from unittest import mock
+    import setuptools
     from runpy import run_path
     # Parse it #
     from autopaths.file_path import FilePath
