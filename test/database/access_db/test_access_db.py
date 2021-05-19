@@ -30,8 +30,8 @@ orig_db.copy(testing_db)
 db = AccessDatabase(testing_db)
 
 # Test #
-print db.tables
-print db['tblClassifierSets']
+print(db.tables)
+print(db['tblClassifierSets'])
 
 # Create df #
 df = pandas.DataFrame({'A': ['A0', 'A1', 'A2', 'A3'],

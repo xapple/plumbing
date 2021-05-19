@@ -19,7 +19,6 @@ from plumbing.databases.access_database import AccessDatabase
 from autopaths.file_path import FilePath
 
 # Third party modules #
-import pandas
 
 # Constants #
 file_name = inspect.getframeinfo(inspect.currentframe()).filename
