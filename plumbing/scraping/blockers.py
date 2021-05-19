@@ -14,15 +14,14 @@ Contact at www.sinclair.bio
 # First party modules #
 from autopaths.file_path import FilePath
 
-# Third party modules #
-from lxml import etree
-
 ################################################################################
 def check_blocked_request(tree):
     """
     Check if the request was denied by the server.
     And raise an exception if it was.
     """
+    # Modules #
+    from lxml import etree
     # Did we get a filepath? #
     if isinstance(tree, FilePath):
         if tree.count_bytes > 1000000: return
