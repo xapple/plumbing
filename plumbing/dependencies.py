@@ -78,7 +78,7 @@ def check_module(mod_name, min_version=None):
 
         ImportError: The minimum version required for the "lxml" package is
         <4.5.3>. You have version <4.5.2> installed. Please update the package
-         to the latest version and try again.
+        to the latest version and try again.
     """
     # Special cases with modules that change names #
     if mod_name in module_names:

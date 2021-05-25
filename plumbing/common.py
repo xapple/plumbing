@@ -13,9 +13,6 @@ import getpass, hashlib, collections
 import unicodedata
 from itertools import compress, product
 
-# Third party modules #
-from six import string_types
-
 # One liners #
 flatter = lambda x: [item for sublist in x for item in sublist]
 
@@ -391,7 +388,7 @@ def split_thousands(s):
     # Check input #
     if s is None: return "0"
     # If it's a string #
-    if isinstance(s, string_types): s = float(s)
+    if isinstance(s, str): s = float(s)
     # If it's a float that should be an int #
     if isinstance(s, float) and s.is_integer(): s = int(s)
     # Use python built-in #

@@ -9,7 +9,6 @@
 from plumbing.graphs import Graph
 
 # Third party modules #
-import numpy
 
 ###############################################################################
 class SoloLegend(Graph):
@@ -54,6 +53,7 @@ class SoloLegend(Graph):
         # Remove the axes #
         axes.axis('off')
         # Find the bounding box to remove useless white space #
+        import numpy
         fig.canvas.draw()
         expand = [-10, -10, 10, 10]
         bbox   = leg.get_window_extent()

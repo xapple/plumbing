@@ -1,6 +1,6 @@
 # Built-in modules #
 import os, platform, base64, shutil, gzip
-from six import StringIO
+from io import StringIO
 
 # Internal modules #
 from plumbing.common import camel_to_snake

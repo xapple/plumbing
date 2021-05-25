@@ -8,15 +8,14 @@ Contact at www.sinclair.bio
 """
 
 # Built-in modules #
-from six import StringIO
-
-# Internal modules #
+from io import StringIO
 
 # Third party modules #
-import pandas, numpy
+import pandas
 
 ################################################################################
 def r_matrix_to_dataframe(matrix):
+    import numpy
     cols = list(matrix.colnames)
     rows = list(matrix.rownames)
     return pandas.DataFrame(numpy.array(matrix), index=rows, columns=cols)

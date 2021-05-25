@@ -10,9 +10,6 @@ from plumbing.cache  import property_cached
 from autopaths           import Path
 from autopaths.file_path import FilePath
 
-# Third party modules #
-import numpy
-
 ################################################################################
 class Graph(object):
     """
@@ -224,6 +221,8 @@ class Graph(object):
 
     def plot(self, bins=250, **kwargs):
         """An example plot function. You have to subclass this method."""
+        # Import #
+        import numpy
         # Data #
         counts = [sum(map(len, b.contigs)) for b in self.parent.bins]
         # Linear bins in logarithmic space #

@@ -9,9 +9,6 @@
 from plumbing.graphs import Graph
 from plumbing.cache import property_cached
 
-# Third party modules #
-import numpy
-
 ###############################################################################
 class Multiplot(Graph):
     """
@@ -57,6 +54,7 @@ class Multiplot(Graph):
 
     #--------------------------- Convenience ---------------------------------#
     def iterate_all_axes(self, fn):
+        import numpy
         for axes in numpy.nditer(self.axes, flags=['refs_ok']): fn(axes[()])
 
     def x_grid_on(self):
