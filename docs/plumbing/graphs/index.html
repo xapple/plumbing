@@ -38,9 +38,6 @@ from plumbing.cache  import property_cached
 from autopaths           import Path
 from autopaths.file_path import FilePath
 
-# Third party modules #
-import numpy
-
 ################################################################################
 class Graph(object):
     &#34;&#34;&#34;
@@ -252,6 +249,8 @@ class Graph(object):
 
     def plot(self, bins=250, **kwargs):
         &#34;&#34;&#34;An example plot function. You have to subclass this method.&#34;&#34;&#34;
+        # Import #
+        import numpy
         # Data #
         counts = [sum(map(len, b.contigs)) for b in self.parent.bins]
         # Linear bins in logarithmic space #
@@ -546,6 +545,8 @@ for x_name in x_names:
 
     def plot(self, bins=250, **kwargs):
         &#34;&#34;&#34;An example plot function. You have to subclass this method.&#34;&#34;&#34;
+        # Import #
+        import numpy
         # Data #
         counts = [sum(map(len, b.contigs)) for b in self.parent.bins]
         # Linear bins in logarithmic space #
@@ -639,6 +640,8 @@ documentation was unable to correctly traverse a decorated property.</p></div>
 </summary>
 <pre><code class="python">def plot(self, bins=250, **kwargs):
     &#34;&#34;&#34;An example plot function. You have to subclass this method.&#34;&#34;&#34;
+    # Import #
+    import numpy
     # Data #
     counts = [sum(map(len, b.contigs)) for b in self.parent.bins]
     # Linear bins in logarithmic space #

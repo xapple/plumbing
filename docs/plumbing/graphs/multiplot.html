@@ -37,9 +37,6 @@
 from plumbing.graphs import Graph
 from plumbing.cache import property_cached
 
-# Third party modules #
-import numpy
-
 ###############################################################################
 class Multiplot(Graph):
     &#34;&#34;&#34;
@@ -85,6 +82,7 @@ class Multiplot(Graph):
 
     #--------------------------- Convenience ---------------------------------#
     def iterate_all_axes(self, fn):
+        import numpy
         for axes in numpy.nditer(self.axes, flags=[&#39;refs_ok&#39;]): fn(axes[()])
 
     def x_grid_on(self):
@@ -239,6 +237,7 @@ ourselves with <code>matplotlib</code>.</p></div>
 
     #--------------------------- Convenience ---------------------------------#
     def iterate_all_axes(self, fn):
+        import numpy
         for axes in numpy.nditer(self.axes, flags=[&#39;refs_ok&#39;]): fn(axes[()])
 
     def x_grid_on(self):
@@ -468,6 +467,7 @@ documentation was unable to correctly traverse a decorated property.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def iterate_all_axes(self, fn):
+    import numpy
     for axes in numpy.nditer(self.axes, flags=[&#39;refs_ok&#39;]): fn(axes[()])</code></pre>
 </details>
 </dd>

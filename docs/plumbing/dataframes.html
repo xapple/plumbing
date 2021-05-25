@@ -41,15 +41,14 @@ Contact at www.sinclair.bio
 &#34;&#34;&#34;
 
 # Built-in modules #
-
-# Internal modules #
+from io import StringIO
 
 # Third party modules #
-from six import StringIO
-import pandas, numpy
+import pandas
 
 ################################################################################
 def r_matrix_to_dataframe(matrix):
+    import numpy
     cols = list(matrix.colnames)
     rows = list(matrix.rownames)
     return pandas.DataFrame(numpy.array(matrix), index=rows, columns=cols)
@@ -432,6 +431,7 @@ in R or N, but are missing its particular value.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def r_matrix_to_dataframe(matrix):
+    import numpy
     cols = list(matrix.colnames)
     rows = list(matrix.rownames)
     return pandas.DataFrame(numpy.array(matrix), index=rows, columns=cols)</code></pre>
