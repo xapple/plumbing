@@ -28,7 +28,6 @@
 </summary>
 <pre><code class="python"># Built-in modules #
 import os, platform, base64, shutil, gzip
-from six import StringIO
 
 # Internal modules #
 from plumbing.common import camel_to_snake
@@ -40,6 +39,7 @@ from autopaths.file_path import FilePath
 from autopaths.tmp_path  import new_temp_path
 
 # Third party modules #
+from six import StringIO
 import pandas
 
 ################################################################################
