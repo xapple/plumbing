@@ -26,7 +26,7 @@ setup(
     author           = 'Lucas Sinclair',
     author_email     = 'lucas.sinclair@me.com',
     packages         = find_namespace_packages(exclude=['testing']),
-    install_requires = ['autopaths>=1.4.12', 'pandas', 'retry', 'requests'],
+    install_requires = ['autopaths>=1.5.0', 'pandas', 'retry', 'requests'],
     extras_require   = {'pretty_now':   ['tzlocal'],
                         'graphs':       ['matplotlib', 'numpy'],
                         'check_module': ['packaging']},
