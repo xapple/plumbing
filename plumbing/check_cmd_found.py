@@ -25,11 +25,11 @@ extra_clues = {
 # Make a detailed message #
 msg_base = "The executable '%s' is required for this operation." \
            " Unfortunately it cannot be found anywhere in your $PATH." \
-           " Either you need to install '%s'" \
+           " Either you need to install '%s' on your system" \
            " or you need to fix the $PATH environment variable."
 
 ################################################################################
-def check_cmd(cmd_name, exception=True, extra_msg=None):
+def check_cmd(cmd_name, exception=True, extra_msg=None, fancy_box=True):
     """
     Checks if the given executable is found in the path.
     Optionally, raises an exception if the executable `cmd_name` is not found.
@@ -45,6 +45,11 @@ def check_cmd(cmd_name, exception=True, extra_msg=None):
     if cmd_name in extra_clues: msg += '\n\n' + extra_clues.get(cmd_name)
     # Add a custom extra message #
     if extra_msg: msg += '\n\n' + extra_msg
+    # If we want to print it with style in a box #
+    if fancy_box:
+        from plumbing.common import rich_panel_print
+        rich_panel_print(msg, "Command Not Found")
+        msg = "The executable '%s' cannot be found." % cmd_name
     # Raise an exception #
     if exception: raise Exception(msg)
     # Return #
