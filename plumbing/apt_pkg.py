@@ -8,7 +8,7 @@ Contact at www.sinclair.bio
 """
 
 # Built-in modules #
-import sys
+import sys, platform
 
 # Internal modules #
 from plumbing.check_cmd_found import check_cmd
@@ -34,6 +34,10 @@ def check_apt_pkg(pkg_name, exception=False):
     current system.
     Optionally, raises an exception if the package is not found.
     """
+    # Check the current OS #
+    if platform.system() != 'Linux':
+        msg = "The check_apt_pkg function is only designed to work on Linux"
+        raise Exception(msg)
     # Call command #
     cmd = sh.Command('dpkg-query')
     result = cmd('-W', "--showformat='${Status}\\n'", pkg_name, _ok_code=[0,1])
@@ -70,7 +74,11 @@ def check_apt_exists(exception=True):
     Checks that the aptitude package manager is accessible on the current
     system.
     """
+    # The message #
     msg = "You have encountered this error because we have attempted" \
-          "the automatic installation of certain packages but are only" \
-          "able do this using the `apt` package manager on supported OSes."
+          " the automatic installation of certain packages but are only" \
+          " able do this using the `apt` package manager on supported OSes."
+    # Check the current operating system #
+    if platform.system() != 'Linux': raise Exception(msg)
+    # Check the apt command exists #
     return check_cmd('apt', exception, msg)

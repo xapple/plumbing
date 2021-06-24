@@ -296,8 +296,9 @@ def sum_vectors_with_padding(vectors):
 
 ###############################################################################
 def moving_average(interval, windowsize, borders=None):
-    """This is essentially a convolution operation
-     Several option exist for dealing with the border cases.
+    """
+    This is essentially a convolution operation
+    Several option exist for dealing with the border cases.
 
         * None: Here the returned signal will be smaller than the inputted interval.
 
