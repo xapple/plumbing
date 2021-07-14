@@ -52,16 +52,25 @@ class SoloLegend(Graph):
                              fancybox  = True)
         # Remove the axes #
         axes.axis('off')
-        # Find the bounding box to remove useless white space #
-        import numpy
+        # Draw #
         fig.canvas.draw()
-        expand = [-10, -10, 10, 10]
-        bbox   = leg.get_window_extent()
-        bbox   = bbox.from_extents(*(bbox.extents + numpy.array(expand)))
-        bbox   = bbox.transformed(fig.dpi_scale_trans.inverted())
+        # This sometimes doesn't work, because of an old macOS backend #
+        try:
+            bbox = leg.get_window_extent()
+        except AttributeError:
+            print("Skipping the whitespace removal on '%s'" % self)
+            remove_whitespace = False
+        else:
+            remove_whitespace = True
+        # Find the bounding box to remove useless white space #
+        if remove_whitespace:
+            import numpy
+            expand = [-10, -10, 10, 10]
+            bbox   = bbox.from_extents(*(bbox.extents + numpy.array(expand)))
+            bbox   = bbox.transformed(fig.dpi_scale_trans.inverted())
+            self.bbox = bbox
         # Save #
-        self.dpi  = 'figure'
-        self.bbox = bbox
+        self.dpi = 'figure'
         self.save_plot(**kwargs)
         # Return for display in notebooks for instance #
         return fig
