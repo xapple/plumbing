@@ -11,6 +11,7 @@ Contact at www.sinclair.bio
 from datetime import datetime
 
 # Internal modules #
+from plumbing.cache import property_cached
 from plumbing.color import Color
 
 ################################################################################
@@ -50,7 +51,7 @@ class Timer(object):
         time = self.start_time
         msg  = "Start at: %s" % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
 
     def print_end(self):
         # Set #
@@ -59,14 +60,14 @@ class Timer(object):
         time = self.end_time
         msg  = "End at: %s" % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
 
     def print_elapsed(self, reset=True):
         # Parameters #
         time = self.get_now() - self.last_mark
         msg  = "Elapsed time: %s" % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
         # Set #
         if reset: self.last_mark = self.get_now()
 
@@ -76,11 +77,11 @@ class Timer(object):
         msg = "Total elapsed time: %s"
         msg = msg % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
         # Set #
         if reset: self.last_mark = self.get_now()
 
-    @property
+    @property_cached
     def color(self):
         """
         Should we use color or not ?
@@ -105,3 +106,21 @@ class Timer(object):
         """Stop the timer and print."""
         self.print_end()
         self.print_total_elapsed()
+
+    def print(self, *args, **kwargs):
+        print(*args, **kwargs)
+
+################################################################################
+class LogTimer(Timer):
+    """
+    Same as a Timer, except the messages go to a logger object instead of
+    being printed to the standard out.
+    """
+
+    def __init__(self, log, high_precision=False):
+        super(LogTimer, self).__init__(high_precision)
+        self.color = False
+        self.log = log
+
+    def print(self, msg):
+        self.log.info(msg)
