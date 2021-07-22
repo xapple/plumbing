@@ -58,11 +58,11 @@ extra_clues = {
 # Make a detailed message #
 msg_base = &#34;The executable &#39;%s&#39; is required for this operation.&#34; \
            &#34; Unfortunately it cannot be found anywhere in your $PATH.&#34; \
-           &#34; Either you need to install &#39;%s&#39;&#34; \
+           &#34; Either you need to install &#39;%s&#39; on your system&#34; \
            &#34; or you need to fix the $PATH environment variable.&#34;
 
 ################################################################################
-def check_cmd(cmd_name, exception=True, extra_msg=None):
+def check_cmd(cmd_name, exception=True, extra_msg=None, fancy_box=True):
     &#34;&#34;&#34;
     Checks if the given executable is found in the path.
     Optionally, raises an exception if the executable `cmd_name` is not found.
@@ -78,6 +78,11 @@ def check_cmd(cmd_name, exception=True, extra_msg=None):
     if cmd_name in extra_clues: msg += &#39;\n\n&#39; + extra_clues.get(cmd_name)
     # Add a custom extra message #
     if extra_msg: msg += &#39;\n\n&#39; + extra_msg
+    # If we want to print it with style in a box #
+    if fancy_box:
+        from plumbing.common import rich_panel_print
+        rich_panel_print(msg, &#34;Command Not Found&#34;)
+        msg = &#34;The executable &#39;%s&#39; cannot be found.&#34; % cmd_name
     # Raise an exception #
     if exception: raise Exception(msg)
     # Return #
@@ -92,7 +97,7 @@ def check_cmd(cmd_name, exception=True, extra_msg=None):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="plumbing.check_cmd_found.check_cmd"><code class="name flex">
-<span>def <span class="ident">check_cmd</span></span>(<span>cmd_name, exception=True, extra_msg=None)</span>
+<span>def <span class="ident">check_cmd</span></span>(<span>cmd_name, exception=True, extra_msg=None, fancy_box=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks if the given executable is found in the path.
@@ -102,7 +107,7 @@ Optionally, print an extra message as a string alongside the exception.</p></div
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def check_cmd(cmd_name, exception=True, extra_msg=None):
+<pre><code class="python">def check_cmd(cmd_name, exception=True, extra_msg=None, fancy_box=True):
     &#34;&#34;&#34;
     Checks if the given executable is found in the path.
     Optionally, raises an exception if the executable `cmd_name` is not found.
@@ -118,6 +123,11 @@ Optionally, print an extra message as a string alongside the exception.</p></div
     if cmd_name in extra_clues: msg += &#39;\n\n&#39; + extra_clues.get(cmd_name)
     # Add a custom extra message #
     if extra_msg: msg += &#39;\n\n&#39; + extra_msg
+    # If we want to print it with style in a box #
+    if fancy_box:
+        from plumbing.common import rich_panel_print
+        rich_panel_print(msg, &#34;Command Not Found&#34;)
+        msg = &#34;The executable &#39;%s&#39; cannot be found.&#34; % cmd_name
     # Raise an exception #
     if exception: raise Exception(msg)
     # Return #

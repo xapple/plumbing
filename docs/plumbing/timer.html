@@ -44,6 +44,7 @@ Contact at www.sinclair.bio
 from datetime import datetime
 
 # Internal modules #
+from plumbing.cache import property_cached
 from plumbing.color import Color
 
 ################################################################################
@@ -83,7 +84,7 @@ class Timer(object):
         time = self.start_time
         msg  = &#34;Start at: %s&#34; % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
 
     def print_end(self):
         # Set #
@@ -92,14 +93,14 @@ class Timer(object):
         time = self.end_time
         msg  = &#34;End at: %s&#34; % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
 
     def print_elapsed(self, reset=True):
         # Parameters #
         time = self.get_now() - self.last_mark
         msg  = &#34;Elapsed time: %s&#34; % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
         # Set #
         if reset: self.last_mark = self.get_now()
 
@@ -109,11 +110,11 @@ class Timer(object):
         msg = &#34;Total elapsed time: %s&#34;
         msg = msg % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
         # Set #
         if reset: self.last_mark = self.get_now()
 
-    @property
+    @property_cached
     def color(self):
         &#34;&#34;&#34;
         Should we use color or not ?
@@ -137,7 +138,25 @@ class Timer(object):
     def __exit__(self, exc_type, exc_value, exc_traceback):
         &#34;&#34;&#34;Stop the timer and print.&#34;&#34;&#34;
         self.print_end()
-        self.print_total_elapsed()</code></pre>
+        self.print_total_elapsed()
+
+    def print(self, *args, **kwargs):
+        print(*args, **kwargs)
+
+################################################################################
+class LogTimer(Timer):
+    &#34;&#34;&#34;
+    Same as a Timer, except the messages go to a logger object instead of
+    being printed to the standard out.
+    &#34;&#34;&#34;
+
+    def __init__(self, log, high_precision=False):
+        super(LogTimer, self).__init__(high_precision)
+        self.color = False
+        self.log = log
+
+    def print(self, msg):
+        self.log.info(msg)</code></pre>
 </details>
 </section>
 <section>
@@ -149,6 +168,60 @@ class Timer(object):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
+<dt id="plumbing.timer.LogTimer"><code class="flex name class">
+<span>class <span class="ident">LogTimer</span></span>
+<span>(</span><span>log, high_precision=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Same as a Timer, except the messages go to a logger object instead of
+being printed to the standard out.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LogTimer(Timer):
+    &#34;&#34;&#34;
+    Same as a Timer, except the messages go to a logger object instead of
+    being printed to the standard out.
+    &#34;&#34;&#34;
+
+    def __init__(self, log, high_precision=False):
+        super(LogTimer, self).__init__(high_precision)
+        self.color = False
+        self.log = log
+
+    def print(self, msg):
+        self.log.info(msg)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="plumbing.timer.Timer" href="#plumbing.timer.Timer">Timer</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="plumbing.timer.LogTimer.print"><code class="name flex">
+<span>def <span class="ident">print</span></span>(<span>self, msg)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print(self, msg):
+    self.log.info(msg)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="plumbing.timer.Timer" href="#plumbing.timer.Timer">Timer</a></b></code>:
+<ul class="hlist">
+<li><code><a title="plumbing.timer.Timer.color" href="#plumbing.timer.Timer.color">color</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
 <dt id="plumbing.timer.Timer"><code class="flex name class">
 <span>class <span class="ident">Timer</span></span>
 <span>(</span><span>high_precision=False)</span>
@@ -207,7 +280,7 @@ timer.print_total_elapsed()
         time = self.start_time
         msg  = &#34;Start at: %s&#34; % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
 
     def print_end(self):
         # Set #
@@ -216,14 +289,14 @@ timer.print_total_elapsed()
         time = self.end_time
         msg  = &#34;End at: %s&#34; % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
 
     def print_elapsed(self, reset=True):
         # Parameters #
         time = self.get_now() - self.last_mark
         msg  = &#34;Elapsed time: %s&#34; % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
         # Set #
         if reset: self.last_mark = self.get_now()
 
@@ -233,11 +306,11 @@ timer.print_total_elapsed()
         msg = &#34;Total elapsed time: %s&#34;
         msg = msg % time
         # Print #
-        print(self.prefix + msg + self.suffix)
+        self.print(self.prefix + msg + self.suffix)
         # Set #
         if reset: self.last_mark = self.get_now()
 
-    @property
+    @property_cached
     def color(self):
         &#34;&#34;&#34;
         Should we use color or not ?
@@ -261,8 +334,15 @@ timer.print_total_elapsed()
     def __exit__(self, exc_type, exc_value, exc_traceback):
         &#34;&#34;&#34;Stop the timer and print.&#34;&#34;&#34;
         self.print_end()
-        self.print_total_elapsed()</code></pre>
+        self.print_total_elapsed()
+
+    def print(self, *args, **kwargs):
+        print(*args, **kwargs)</code></pre>
 </details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="plumbing.timer.LogTimer" href="#plumbing.timer.LogTimer">LogTimer</a></li>
+</ul>
 <h3>Instance variables</h3>
 <dl>
 <dt id="plumbing.timer.Timer.color"><code class="name">var <span class="ident">color</span></code></dt>
@@ -273,14 +353,27 @@ If we are not in a shell like ipython then not.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@property
-def color(self):
+<pre><code class="python">def __get__(self, instance, owner):
     &#34;&#34;&#34;
-    Should we use color or not ?
-    If we are not in a shell like ipython then not.
+    If you see the current source code in a seemingly unrelated part of
+    an auto-generated documentation, it means the program making the
+    documentation was unable to correctly traverse a decorated property.
     &#34;&#34;&#34;
-    import __main__ as main
-    return not hasattr(main, &#39;__file__&#39;)</code></pre>
+    # For debugging purposes #
+    if False: print(&#34;-&gt; property cached `%s`&#34; % instance)
+    # If called from a class #
+    if instance is None: return self
+    # Does a cache exist for this instance? #
+    self.check_cache(instance)
+    # Is the answer in the cache? #
+    if self.name in instance.__cache__: return instance.__cache__[self.name]
+    # If not we will compute it #
+    if inspect.isgeneratorfunction(self.func): result = tuple(self.func(instance))
+    else:                                      result = self.func(instance)
+    # Let&#39;s store the answer for later #
+    instance.__cache__[self.name] = result
+    # Return #
+    return result</code></pre>
 </details>
 </dd>
 <dt id="plumbing.timer.Timer.prefix"><code class="name">var <span class="ident">prefix</span></code></dt>
@@ -325,6 +418,19 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
         return datetime.now().replace(microsecond=0)</code></pre>
 </details>
 </dd>
+<dt id="plumbing.timer.Timer.print"><code class="name flex">
+<span>def <span class="ident">print</span></span>(<span>self, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print(self, *args, **kwargs):
+    print(*args, **kwargs)</code></pre>
+</details>
+</dd>
 <dt id="plumbing.timer.Timer.print_elapsed"><code class="name flex">
 <span>def <span class="ident">print_elapsed</span></span>(<span>self, reset=True)</span>
 </code></dt>
@@ -339,7 +445,7 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
     time = self.get_now() - self.last_mark
     msg  = &#34;Elapsed time: %s&#34; % time
     # Print #
-    print(self.prefix + msg + self.suffix)
+    self.print(self.prefix + msg + self.suffix)
     # Set #
     if reset: self.last_mark = self.get_now()</code></pre>
 </details>
@@ -360,7 +466,7 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
     time = self.end_time
     msg  = &#34;End at: %s&#34; % time
     # Print #
-    print(self.prefix + msg + self.suffix)</code></pre>
+    self.print(self.prefix + msg + self.suffix)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.timer.Timer.print_start"><code class="name flex">
@@ -377,7 +483,7 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
     time = self.start_time
     msg  = &#34;Start at: %s&#34; % time
     # Print #
-    print(self.prefix + msg + self.suffix)</code></pre>
+    self.print(self.prefix + msg + self.suffix)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.timer.Timer.print_total_elapsed"><code class="name flex">
@@ -395,7 +501,7 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
     msg = &#34;Total elapsed time: %s&#34;
     msg = msg % time
     # Print #
-    print(self.prefix + msg + self.suffix)
+    self.print(self.prefix + msg + self.suffix)
     # Set #
     if reset: self.last_mark = self.get_now()</code></pre>
 </details>
@@ -419,11 +525,18 @@ def suffix(self): return &#34;&#34; if not self.color else Color.end</code></pre
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
+<h4><code><a title="plumbing.timer.LogTimer" href="#plumbing.timer.LogTimer">LogTimer</a></code></h4>
+<ul class="">
+<li><code><a title="plumbing.timer.LogTimer.print" href="#plumbing.timer.LogTimer.print">print</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="plumbing.timer.Timer" href="#plumbing.timer.Timer">Timer</a></code></h4>
 <ul class="two-column">
 <li><code><a title="plumbing.timer.Timer.color" href="#plumbing.timer.Timer.color">color</a></code></li>
 <li><code><a title="plumbing.timer.Timer.get_now" href="#plumbing.timer.Timer.get_now">get_now</a></code></li>
 <li><code><a title="plumbing.timer.Timer.prefix" href="#plumbing.timer.Timer.prefix">prefix</a></code></li>
+<li><code><a title="plumbing.timer.Timer.print" href="#plumbing.timer.Timer.print">print</a></code></li>
 <li><code><a title="plumbing.timer.Timer.print_elapsed" href="#plumbing.timer.Timer.print_elapsed">print_elapsed</a></code></li>
 <li><code><a title="plumbing.timer.Timer.print_end" href="#plumbing.timer.Timer.print_end">print_end</a></code></li>
 <li><code><a title="plumbing.timer.Timer.print_start" href="#plumbing.timer.Timer.print_start">print_start</a></code></li>

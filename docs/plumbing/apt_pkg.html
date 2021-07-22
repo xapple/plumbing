@@ -41,7 +41,7 @@ Contact at www.sinclair.bio
 &#34;&#34;&#34;
 
 # Built-in modules #
-import sys
+import sys, platform
 
 # Internal modules #
 from plumbing.check_cmd_found import check_cmd
@@ -67,6 +67,10 @@ def check_apt_pkg(pkg_name, exception=False):
     current system.
     Optionally, raises an exception if the package is not found.
     &#34;&#34;&#34;
+    # Check the current OS #
+    if platform.system() != &#39;Linux&#39;:
+        msg = &#34;The check_apt_pkg function is only designed to work on Linux&#34;
+        raise Exception(msg)
     # Call command #
     cmd = sh.Command(&#39;dpkg-query&#39;)
     result = cmd(&#39;-W&#39;, &#34;--showformat=&#39;${Status}\\n&#39;&#34;, pkg_name, _ok_code=[0,1])
@@ -103,9 +107,13 @@ def check_apt_exists(exception=True):
     Checks that the aptitude package manager is accessible on the current
     system.
     &#34;&#34;&#34;
+    # The message #
     msg = &#34;You have encountered this error because we have attempted&#34; \
-          &#34;the automatic installation of certain packages but are only&#34; \
-          &#34;able do this using the `apt` package manager on supported OSes.&#34;
+          &#34; the automatic installation of certain packages but are only&#34; \
+          &#34; able do this using the `apt` package manager on supported OSes.&#34;
+    # Check the current operating system #
+    if platform.system() != &#39;Linux&#39;: raise Exception(msg)
+    # Check the apt command exists #
     return check_cmd(&#39;apt&#39;, exception, msg)</code></pre>
 </details>
 </section>
@@ -131,9 +139,13 @@ system.</p></div>
     Checks that the aptitude package manager is accessible on the current
     system.
     &#34;&#34;&#34;
+    # The message #
     msg = &#34;You have encountered this error because we have attempted&#34; \
-          &#34;the automatic installation of certain packages but are only&#34; \
-          &#34;able do this using the `apt` package manager on supported OSes.&#34;
+          &#34; the automatic installation of certain packages but are only&#34; \
+          &#34; able do this using the `apt` package manager on supported OSes.&#34;
+    # Check the current operating system #
+    if platform.system() != &#39;Linux&#39;: raise Exception(msg)
+    # Check the apt command exists #
     return check_cmd(&#39;apt&#39;, exception, msg)</code></pre>
 </details>
 </dd>
@@ -154,6 +166,10 @@ Optionally, raises an exception if the package is not found.</p></div>
     current system.
     Optionally, raises an exception if the package is not found.
     &#34;&#34;&#34;
+    # Check the current OS #
+    if platform.system() != &#39;Linux&#39;:
+        msg = &#34;The check_apt_pkg function is only designed to work on Linux&#34;
+        raise Exception(msg)
     # Call command #
     cmd = sh.Command(&#39;dpkg-query&#39;)
     result = cmd(&#39;-W&#39;, &#34;--showformat=&#39;${Status}\\n&#39;&#34;, pkg_name, _ok_code=[0,1])

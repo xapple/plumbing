@@ -329,8 +329,9 @@ def sum_vectors_with_padding(vectors):
 
 ###############################################################################
 def moving_average(interval, windowsize, borders=None):
-    &#34;&#34;&#34;This is essentially a convolution operation
-     Several option exist for dealing with the border cases.
+    &#34;&#34;&#34;
+    This is essentially a convolution operation
+    Several option exist for dealing with the border cases.
 
         * None: Here the returned signal will be smaller than the inputted interval.
 
@@ -1130,45 +1131,37 @@ Can be useful for the visualization of text version of trees.</p></div>
 <dd>
 <div class="desc"><p>This is essentially a convolution operation
 Several option exist for dealing with the border cases.</p>
-<ul>
-<li>
-<p>None: Here the returned signal will be smaller than the inputted interval.</p>
-</li>
-<li>
-<p>zero_padding: Here the returned signal will be larger than the inputted
+<pre><code>* None: Here the returned signal will be smaller than the inputted interval.
+
+* zero_padding: Here the returned signal will be larger than the inputted
 interval and we will add zeros to the original interval before operating
-the convolution.</p>
-</li>
-<li>
-<p>zero_padding_and_cut: Same as above only the result is truncated to be
-the same size as the original input.</p>
-</li>
-<li>
-<p>copy_padding: Here the returned signal will be larger than the inputted
-interval and we will use the right and leftmost values for padding before
-operating the convolution.</p>
-</li>
-<li>
-<p>copy_padding_and_cut: Same as above only the result is truncated to be
-the same size as the original input.</p>
-</li>
-<li>
-<p>zero_stretching: Here we will compute the convolution only in the valid domain,
-then add zeros to the result so that the output is the same size as the input.</p>
-</li>
-<li>
-<p>copy_stretching: Here we will compute the convolution only in the valid domain,
-then copy the right and leftmost values so that the output is the same
-size as the input.</p>
-</li>
-</ul></div>
+ the convolution.
+
+* zero_padding_and_cut: Same as above only the result is truncated to be
+ the same size as the original input.
+
+* copy_padding: Here the returned signal will be larger than the inputted
+ interval and we will use the right and leftmost values for padding before
+  operating the convolution.
+
+* copy_padding_and_cut: Same as above only the result is truncated to be
+ the same size as the original input.
+
+* zero_stretching: Here we will compute the convolution only in the valid domain,
+ then add zeros to the result so that the output is the same size as the input.
+
+* copy_stretching: Here we will compute the convolution only in the valid domain,
+ then copy the right and leftmost values so that the output is the same
+  size as the input.
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def moving_average(interval, windowsize, borders=None):
-    &#34;&#34;&#34;This is essentially a convolution operation
-     Several option exist for dealing with the border cases.
+    &#34;&#34;&#34;
+    This is essentially a convolution operation
+    Several option exist for dealing with the border cases.
 
         * None: Here the returned signal will be smaller than the inputted interval.
 

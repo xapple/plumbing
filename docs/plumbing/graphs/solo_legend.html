@@ -80,16 +80,25 @@ class SoloLegend(Graph):
                              fancybox  = True)
         # Remove the axes #
         axes.axis(&#39;off&#39;)
-        # Find the bounding box to remove useless white space #
-        import numpy
+        # Draw #
         fig.canvas.draw()
-        expand = [-10, -10, 10, 10]
-        bbox   = leg.get_window_extent()
-        bbox   = bbox.from_extents(*(bbox.extents + numpy.array(expand)))
-        bbox   = bbox.transformed(fig.dpi_scale_trans.inverted())
+        # This sometimes doesn&#39;t work, because of an old macOS backend #
+        try:
+            bbox = leg.get_window_extent()
+        except AttributeError:
+            print(&#34;Skipping the whitespace removal on &#39;%s&#39;&#34; % self)
+            remove_whitespace = False
+        else:
+            remove_whitespace = True
+        # Find the bounding box to remove useless white space #
+        if remove_whitespace:
+            import numpy
+            expand = [-10, -10, 10, 10]
+            bbox   = bbox.from_extents(*(bbox.extents + numpy.array(expand)))
+            bbox   = bbox.transformed(fig.dpi_scale_trans.inverted())
+            self.bbox = bbox
         # Save #
-        self.dpi  = &#39;figure&#39;
-        self.bbox = bbox
+        self.dpi = &#39;figure&#39;
         self.save_plot(**kwargs)
         # Return for display in notebooks for instance #
         return fig</code></pre>
@@ -156,16 +165,25 @@ with the other graphs.</p></div>
                              fancybox  = True)
         # Remove the axes #
         axes.axis(&#39;off&#39;)
-        # Find the bounding box to remove useless white space #
-        import numpy
+        # Draw #
         fig.canvas.draw()
-        expand = [-10, -10, 10, 10]
-        bbox   = leg.get_window_extent()
-        bbox   = bbox.from_extents(*(bbox.extents + numpy.array(expand)))
-        bbox   = bbox.transformed(fig.dpi_scale_trans.inverted())
+        # This sometimes doesn&#39;t work, because of an old macOS backend #
+        try:
+            bbox = leg.get_window_extent()
+        except AttributeError:
+            print(&#34;Skipping the whitespace removal on &#39;%s&#39;&#34; % self)
+            remove_whitespace = False
+        else:
+            remove_whitespace = True
+        # Find the bounding box to remove useless white space #
+        if remove_whitespace:
+            import numpy
+            expand = [-10, -10, 10, 10]
+            bbox   = bbox.from_extents(*(bbox.extents + numpy.array(expand)))
+            bbox   = bbox.transformed(fig.dpi_scale_trans.inverted())
+            self.bbox = bbox
         # Save #
-        self.dpi  = &#39;figure&#39;
-        self.bbox = bbox
+        self.dpi = &#39;figure&#39;
         self.save_plot(**kwargs)
         # Return for display in notebooks for instance #
         return fig</code></pre>
