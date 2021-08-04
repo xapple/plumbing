@@ -50,13 +50,20 @@ class SQLiteDatabase(FilePath):
                        known_md5 = None):
         &#34;&#34;&#34;
         * The path of the database comes first.
+
         * The factory option enables you to change how results are returned.
-        * The text_fact option enables you to change text factory (useful for BLOB).
-        * The Isolation source can be `None` for autocommit mode or one of:
+
+        * The text_fact option enables you to change text factory
+          (useful for BLOB).
+
+        * The isolation source can be `None` for autocommit mode or one of:
           &#39;DEFERRED&#39;, &#39;IMMEDIATE&#39; or &#39;EXCLUSIVE&#39;.
+
         * The retrieve option is an URL at which the database will be downloaded
           if it was not found at the `path` given.
-        * The md5 option is used to check the integrity of a database.&#34;&#34;&#34;
+
+        * The md5 option is used to check the integrity of a database.
+        &#34;&#34;&#34;
         self.path      = path
         self.text_fact = text_fact
         self.factory   = factory
@@ -74,9 +81,11 @@ class SQLiteDatabase(FilePath):
         return self
 
     def __exit__(self, errtype, value, traceback):
-        &#34;&#34;&#34;Called when exiting the &#39;with&#39; statement.
+        &#34;&#34;&#34;
+        Called when exiting the &#39;with&#39; statement.
         Enables us to close the database properly, even when
-        exceptions are raised.&#34;&#34;&#34;
+        exceptions are raised.
+        &#34;&#34;&#34;
         self.close()
 
     def __iter__(self):
@@ -95,7 +104,7 @@ class SQLiteDatabase(FilePath):
         &#34;&#34;&#34;Called when evaluating ``len(database)``.&#34;&#34;&#34;
         return self.count_entries()
 
-    def __nonzero__(self):
+    def __bool__(self):
         &#34;&#34;&#34;Called when evaluating ``if database: pass``.&#34;&#34;&#34;
         return True if len(self) != 0 else False
 
@@ -111,7 +120,7 @@ class SQLiteDatabase(FilePath):
 
     @property_cached
     def own_connection(self):
-        &#34;&#34;&#34;To be used internally in this object.&#34;&#34;&#34;
+        &#34;&#34;&#34;To be used internally in the methods of this class.&#34;&#34;&#34;
         return self.new_connection()
 
     @property_cached
@@ -121,7 +130,7 @@ class SQLiteDatabase(FilePath):
 
     @property_cached
     def own_cursor(self):
-        &#34;&#34;&#34;To be used internally in this object.&#34;&#34;&#34;
+        &#34;&#34;&#34;To be used internally in the methods of this class.&#34;&#34;&#34;
         return self.own_connection.cursor()
 
     @property
@@ -135,6 +144,7 @@ class SQLiteDatabase(FilePath):
 
     @property_cached
     def main_table(self):
+        &#34;&#34;&#34;The user can change this property.&#34;&#34;&#34;
         return &#39;data&#39;
 
     @property
@@ -153,18 +163,22 @@ class SQLiteDatabase(FilePath):
         return self.get_last()
 
     @property
-    def frame(self):
-        &#34;&#34;&#34;The main table as a blaze data structure. Not ready yet.&#34;&#34;&#34;
+    def df(self):
+        &#34;&#34;&#34;The main table as a pandas dataframe.&#34;&#34;&#34;
         pass
-        #return blaze.Data(&#39;sqlite:///%s::%s&#39;) % (self.path, self.main_table)
 
     # ------------------------------- Methods ------------------------------- #
     def new_connection(self):
-        &#34;&#34;&#34;Make a new connection.&#34;&#34;&#34;
+        &#34;&#34;&#34;Make a new connection and return it.&#34;&#34;&#34;
+        # Check different things #
         if not self.prepared: self.prepare()
+        # Open connection #
         con = sqlite3.connect(self.path, isolation_level=self.isolation)
-        con.row_factory = self.factory
+        # Set the factory #
+        if self.factory: con.row_factory = self.factory
+        # Set the text factory #
         if self.text_fact: con.text_factory = self.text_fact
+        # Return #
         return con
 
     def prepare(self):
@@ -173,20 +187,27 @@ class SQLiteDatabase(FilePath):
         Checks that the file is indeed an SQLite3 database.
         Optionally check the MD5.
         &#34;&#34;&#34;
+        # Download the file #
         if not os.path.exists(self.path):
             if self.retrieve:
                 print(&#34;Downloading SQLite3 database...&#34;)
                 download_from_url(self.retrieve, self.path, progress=True)
-            else: raise Exception(&#34;The file &#39;&#34; + self.path + &#34;&#39; does not exist.&#34;)
+            else:
+                msg = &#34;The file &#39;&#34; + self.path + &#34;&#39; does not exist.&#34;
+                raise Exception(msg)
+        # Check the file header #
         self.check_format()
+        # Check the MD5 #
         if self.known_md5: assert self.known_md5 == self.md5
+        # Set attribute to True #
         self.prepared = True
 
     def check_format(self):
         if self.count_bytes == 0: return
-        with open(self.path, &#39;r&#39;) as f: header = f.read(15)
-        if header != &#39;SQLite format 3&#39;:
-            raise Exception(&#34;The file &#39;&#34; + self.path + &#34;&#39; is not an SQLite database.&#34;)
+        with open(self.path, &#39;rb&#39;) as f: header = f.read(15)
+        if header != b&#39;SQLite format 3&#39;:
+            msg = &#34;The file &#39;&#34; + self.path + &#34;&#39; is not an SQLite database.&#34;
+            raise Exception(msg)
 
     def create(self, columns=None, type_map=None, overwrite=False):
         &#34;&#34;&#34;Create a new database with a certain schema.&#34;&#34;&#34;
@@ -203,8 +224,10 @@ class SQLiteDatabase(FilePath):
 
     def add_table(self, name, columns, type_map=None, if_not_exists=False):
         &#34;&#34;&#34;
-        Add add a new table to the database.  For instance you could do this:
-        self.add_table(&#39;data&#39;, {&#39;id&#39;:&#39;integer&#39;, &#39;source&#39;:&#39;text&#39;, &#39;pubmed&#39;:&#39;integer&#39;})
+        Add add a new table to the database. For instance you could do this:
+
+            &gt;&gt;&gt; data = {&#39;id&#39;: &#39;integer&#39;, &#39;source&#39;: &#39;text&#39;, &#39;pubmed&#39;: &#39;integer&#39;}
+            &gt;&gt;&gt; self.add_table(&#39;data&#39;, data)
         &#34;&#34;&#34;
         # Check types mapping #
         if type_map is None and isinstance(columns, dict): types = columns
@@ -327,15 +350,18 @@ class SQLiteDatabase(FilePath):
     def get_number(self, num, table=None):
         &#34;&#34;&#34;Get a specific entry by its number.&#34;&#34;&#34;
         if table is None: table = self.main_table
-        self.own_cursor.execute(&#39;SELECT * from &#34;%s&#34; LIMIT 1 OFFSET %i;&#39; % (self.main_table, num))
+        query = &#39;SELECT * from &#34;%s&#34; LIMIT 1 OFFSET %i;&#39; % (table, num)
+        self.own_cursor.execute(query)
         return self.own_cursor.fetchone()
 
-    def get(self, table, column, key): return self.get_entry(key, column, table)
+    def get(self, table, column, key):
+        return self.get_entry(key, column, table)
+
     def get_entry(self, key, column=None, table=None):
         &#34;&#34;&#34;Get a specific entry.&#34;&#34;&#34;
         if table is None:  table  = self.main_table
         if column is None: column = &#34;id&#34;
-        if isinstance(key, basestring): key = key.replace(&#34;&#39;&#34;,&#34;&#39;&#39;&#34;)
+        if isinstance(key, str): key = key.replace(&#34;&#39;&#34;,&#34;&#39;&#39;&#34;)
         query = &#39;SELECT * from &#34;%s&#34; where &#34;%s&#34;==&#34;%s&#34; LIMIT 1;&#39;
         query = query % (table, column, key)
         self.own_cursor.execute(query)
@@ -351,9 +377,31 @@ class SQLiteDatabase(FilePath):
         self.own_cursor.close()
         self.own_connection.close()
 
-    def insert_df(self, table_name, df):
-        &#34;&#34;&#34;Create a table and populate it with data from a dataframe.&#34;&#34;&#34;
-        df.to_sql(table_name, con=self.own_connection)
+    # ------------------------------- Pandas -------------------------------- #
+    def write_df(self, df, table=None, *args, **kwargs):
+        &#34;&#34;&#34;
+        Create a table and populate it with content from a dataframe.
+        If the table already exists it is dropped before being overwritten.
+        &#34;&#34;&#34;
+        # Default value for table #
+        if table is None: table = self.main_table
+        # Call pandas function #
+        return df.to_sql(table,
+                         con = self.own_connection,
+                         if_exists = &#39;replace&#39;,
+                         *args, **kwargs)
+
+    def read_df(self, table=None):
+        &#34;&#34;&#34;
+        Read a table and return dataframe.
+        Using `pandas.read_sql_table()` requires SQLAlchemy.
+        &#34;&#34;&#34;
+        # Default value for table #
+        if table is None: table = self.main_table
+        # Make the query to avoid SQLAlchemy dependency #
+        query = &#39;SELECT * FROM &#34;%s&#34;;&#39; % table
+        # Call pandas function #
+        return pandas.read_sql_query(query, con = self.own_connection)
 
     # ----------------------------- Unfinished ------------------------------ #
     def add_column(self, name, kind=None, table=None):
@@ -384,7 +432,7 @@ class SQLiteDatabase(FilePath):
         # This could have worked but sqlite3 was too old on the server
         # ORDER BY instr(&#39;,%s,&#39;, &#39;,&#39; || id || &#39;,&#39;)
 
-    # ---------------------------- Multidatabase ---------------------------- #
+    # ---------------------------- Multi-database --------------------------- #
     def import_table(self, source, table_name):
         &#34;&#34;&#34;Copy a table from another SQLite database to this one.&#34;&#34;&#34;
         query = &#34;SELECT * FROM `%s`&#34; % table_name.lower()
@@ -408,14 +456,27 @@ class SQLiteDatabase(FilePath):
 <dd>
 <div class="desc"><p>A wrapper for an SQLite3 database.</p>
 <ul>
-<li>The path of the database comes first.</li>
-<li>The factory option enables you to change how results are returned.</li>
-<li>The text_fact option enables you to change text factory (useful for BLOB).</li>
-<li>The Isolation source can be <code>None</code> for autocommit mode or one of:
-'DEFERRED', 'IMMEDIATE' or 'EXCLUSIVE'.</li>
-<li>The retrieve option is an URL at which the database will be downloaded
-if it was not found at the <code>path</code> given.</li>
-<li>The md5 option is used to check the integrity of a database.</li>
+<li>
+<p>The path of the database comes first.</p>
+</li>
+<li>
+<p>The factory option enables you to change how results are returned.</p>
+</li>
+<li>
+<p>The text_fact option enables you to change text factory
+(useful for BLOB).</p>
+</li>
+<li>
+<p>The isolation source can be <code>None</code> for autocommit mode or one of:
+'DEFERRED', 'IMMEDIATE' or 'EXCLUSIVE'.</p>
+</li>
+<li>
+<p>The retrieve option is an URL at which the database will be downloaded
+if it was not found at the <code>path</code> given.</p>
+</li>
+<li>
+<p>The md5 option is used to check the integrity of a database.</p>
+</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -432,13 +493,20 @@ if it was not found at the <code>path</code> given.</li>
                        known_md5 = None):
         &#34;&#34;&#34;
         * The path of the database comes first.
+
         * The factory option enables you to change how results are returned.
-        * The text_fact option enables you to change text factory (useful for BLOB).
-        * The Isolation source can be `None` for autocommit mode or one of:
+
+        * The text_fact option enables you to change text factory
+          (useful for BLOB).
+
+        * The isolation source can be `None` for autocommit mode or one of:
           &#39;DEFERRED&#39;, &#39;IMMEDIATE&#39; or &#39;EXCLUSIVE&#39;.
+
         * The retrieve option is an URL at which the database will be downloaded
           if it was not found at the `path` given.
-        * The md5 option is used to check the integrity of a database.&#34;&#34;&#34;
+
+        * The md5 option is used to check the integrity of a database.
+        &#34;&#34;&#34;
         self.path      = path
         self.text_fact = text_fact
         self.factory   = factory
@@ -456,9 +524,11 @@ if it was not found at the <code>path</code> given.</li>
         return self
 
     def __exit__(self, errtype, value, traceback):
-        &#34;&#34;&#34;Called when exiting the &#39;with&#39; statement.
+        &#34;&#34;&#34;
+        Called when exiting the &#39;with&#39; statement.
         Enables us to close the database properly, even when
-        exceptions are raised.&#34;&#34;&#34;
+        exceptions are raised.
+        &#34;&#34;&#34;
         self.close()
 
     def __iter__(self):
@@ -477,7 +547,7 @@ if it was not found at the <code>path</code> given.</li>
         &#34;&#34;&#34;Called when evaluating ``len(database)``.&#34;&#34;&#34;
         return self.count_entries()
 
-    def __nonzero__(self):
+    def __bool__(self):
         &#34;&#34;&#34;Called when evaluating ``if database: pass``.&#34;&#34;&#34;
         return True if len(self) != 0 else False
 
@@ -493,7 +563,7 @@ if it was not found at the <code>path</code> given.</li>
 
     @property_cached
     def own_connection(self):
-        &#34;&#34;&#34;To be used internally in this object.&#34;&#34;&#34;
+        &#34;&#34;&#34;To be used internally in the methods of this class.&#34;&#34;&#34;
         return self.new_connection()
 
     @property_cached
@@ -503,7 +573,7 @@ if it was not found at the <code>path</code> given.</li>
 
     @property_cached
     def own_cursor(self):
-        &#34;&#34;&#34;To be used internally in this object.&#34;&#34;&#34;
+        &#34;&#34;&#34;To be used internally in the methods of this class.&#34;&#34;&#34;
         return self.own_connection.cursor()
 
     @property
@@ -517,6 +587,7 @@ if it was not found at the <code>path</code> given.</li>
 
     @property_cached
     def main_table(self):
+        &#34;&#34;&#34;The user can change this property.&#34;&#34;&#34;
         return &#39;data&#39;
 
     @property
@@ -535,18 +606,22 @@ if it was not found at the <code>path</code> given.</li>
         return self.get_last()
 
     @property
-    def frame(self):
-        &#34;&#34;&#34;The main table as a blaze data structure. Not ready yet.&#34;&#34;&#34;
+    def df(self):
+        &#34;&#34;&#34;The main table as a pandas dataframe.&#34;&#34;&#34;
         pass
-        #return blaze.Data(&#39;sqlite:///%s::%s&#39;) % (self.path, self.main_table)
 
     # ------------------------------- Methods ------------------------------- #
     def new_connection(self):
-        &#34;&#34;&#34;Make a new connection.&#34;&#34;&#34;
+        &#34;&#34;&#34;Make a new connection and return it.&#34;&#34;&#34;
+        # Check different things #
         if not self.prepared: self.prepare()
+        # Open connection #
         con = sqlite3.connect(self.path, isolation_level=self.isolation)
-        con.row_factory = self.factory
+        # Set the factory #
+        if self.factory: con.row_factory = self.factory
+        # Set the text factory #
         if self.text_fact: con.text_factory = self.text_fact
+        # Return #
         return con
 
     def prepare(self):
@@ -555,20 +630,27 @@ if it was not found at the <code>path</code> given.</li>
         Checks that the file is indeed an SQLite3 database.
         Optionally check the MD5.
         &#34;&#34;&#34;
+        # Download the file #
         if not os.path.exists(self.path):
             if self.retrieve:
                 print(&#34;Downloading SQLite3 database...&#34;)
                 download_from_url(self.retrieve, self.path, progress=True)
-            else: raise Exception(&#34;The file &#39;&#34; + self.path + &#34;&#39; does not exist.&#34;)
+            else:
+                msg = &#34;The file &#39;&#34; + self.path + &#34;&#39; does not exist.&#34;
+                raise Exception(msg)
+        # Check the file header #
         self.check_format()
+        # Check the MD5 #
         if self.known_md5: assert self.known_md5 == self.md5
+        # Set attribute to True #
         self.prepared = True
 
     def check_format(self):
         if self.count_bytes == 0: return
-        with open(self.path, &#39;r&#39;) as f: header = f.read(15)
-        if header != &#39;SQLite format 3&#39;:
-            raise Exception(&#34;The file &#39;&#34; + self.path + &#34;&#39; is not an SQLite database.&#34;)
+        with open(self.path, &#39;rb&#39;) as f: header = f.read(15)
+        if header != b&#39;SQLite format 3&#39;:
+            msg = &#34;The file &#39;&#34; + self.path + &#34;&#39; is not an SQLite database.&#34;
+            raise Exception(msg)
 
     def create(self, columns=None, type_map=None, overwrite=False):
         &#34;&#34;&#34;Create a new database with a certain schema.&#34;&#34;&#34;
@@ -585,8 +667,10 @@ if it was not found at the <code>path</code> given.</li>
 
     def add_table(self, name, columns, type_map=None, if_not_exists=False):
         &#34;&#34;&#34;
-        Add add a new table to the database.  For instance you could do this:
-        self.add_table(&#39;data&#39;, {&#39;id&#39;:&#39;integer&#39;, &#39;source&#39;:&#39;text&#39;, &#39;pubmed&#39;:&#39;integer&#39;})
+        Add add a new table to the database. For instance you could do this:
+
+            &gt;&gt;&gt; data = {&#39;id&#39;: &#39;integer&#39;, &#39;source&#39;: &#39;text&#39;, &#39;pubmed&#39;: &#39;integer&#39;}
+            &gt;&gt;&gt; self.add_table(&#39;data&#39;, data)
         &#34;&#34;&#34;
         # Check types mapping #
         if type_map is None and isinstance(columns, dict): types = columns
@@ -709,15 +793,18 @@ if it was not found at the <code>path</code> given.</li>
     def get_number(self, num, table=None):
         &#34;&#34;&#34;Get a specific entry by its number.&#34;&#34;&#34;
         if table is None: table = self.main_table
-        self.own_cursor.execute(&#39;SELECT * from &#34;%s&#34; LIMIT 1 OFFSET %i;&#39; % (self.main_table, num))
+        query = &#39;SELECT * from &#34;%s&#34; LIMIT 1 OFFSET %i;&#39; % (table, num)
+        self.own_cursor.execute(query)
         return self.own_cursor.fetchone()
 
-    def get(self, table, column, key): return self.get_entry(key, column, table)
+    def get(self, table, column, key):
+        return self.get_entry(key, column, table)
+
     def get_entry(self, key, column=None, table=None):
         &#34;&#34;&#34;Get a specific entry.&#34;&#34;&#34;
         if table is None:  table  = self.main_table
         if column is None: column = &#34;id&#34;
-        if isinstance(key, basestring): key = key.replace(&#34;&#39;&#34;,&#34;&#39;&#39;&#34;)
+        if isinstance(key, str): key = key.replace(&#34;&#39;&#34;,&#34;&#39;&#39;&#34;)
         query = &#39;SELECT * from &#34;%s&#34; where &#34;%s&#34;==&#34;%s&#34; LIMIT 1;&#39;
         query = query % (table, column, key)
         self.own_cursor.execute(query)
@@ -733,9 +820,31 @@ if it was not found at the <code>path</code> given.</li>
         self.own_cursor.close()
         self.own_connection.close()
 
-    def insert_df(self, table_name, df):
-        &#34;&#34;&#34;Create a table and populate it with data from a dataframe.&#34;&#34;&#34;
-        df.to_sql(table_name, con=self.own_connection)
+    # ------------------------------- Pandas -------------------------------- #
+    def write_df(self, df, table=None, *args, **kwargs):
+        &#34;&#34;&#34;
+        Create a table and populate it with content from a dataframe.
+        If the table already exists it is dropped before being overwritten.
+        &#34;&#34;&#34;
+        # Default value for table #
+        if table is None: table = self.main_table
+        # Call pandas function #
+        return df.to_sql(table,
+                         con = self.own_connection,
+                         if_exists = &#39;replace&#39;,
+                         *args, **kwargs)
+
+    def read_df(self, table=None):
+        &#34;&#34;&#34;
+        Read a table and return dataframe.
+        Using `pandas.read_sql_table()` requires SQLAlchemy.
+        &#34;&#34;&#34;
+        # Default value for table #
+        if table is None: table = self.main_table
+        # Make the query to avoid SQLAlchemy dependency #
+        query = &#39;SELECT * FROM &#34;%s&#34;;&#39; % table
+        # Call pandas function #
+        return pandas.read_sql_query(query, con = self.own_connection)
 
     # ----------------------------- Unfinished ------------------------------ #
     def add_column(self, name, kind=None, table=None):
@@ -766,7 +875,7 @@ if it was not found at the <code>path</code> given.</li>
         # This could have worked but sqlite3 was too old on the server
         # ORDER BY instr(&#39;,%s,&#39;, &#39;,&#39; || id || &#39;,&#39;)
 
-    # ---------------------------- Multidatabase ---------------------------- #
+    # ---------------------------- Multi-database --------------------------- #
     def import_table(self, source, table_name):
         &#34;&#34;&#34;Copy a table from another SQLite database to this one.&#34;&#34;&#34;
         query = &#34;SELECT * FROM `%s`&#34; % table_name.lower()
@@ -854,6 +963,19 @@ def columns(self):
     return result</code></pre>
 </details>
 </dd>
+<dt id="plumbing.databases.sqlite_database.SQLiteDatabase.df"><code class="name">var <span class="ident">df</span></code></dt>
+<dd>
+<div class="desc"><p>The main table as a pandas dataframe.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def df(self):
+    &#34;&#34;&#34;The main table as a pandas dataframe.&#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.first"><code class="name">var <span class="ident">first</span></code></dt>
 <dd>
 <div class="desc"><p>Just the first entry.</p></div>
@@ -865,20 +987,6 @@ def columns(self):
 def first(self):
     &#34;&#34;&#34;Just the first entry.&#34;&#34;&#34;
     return self.get_first()</code></pre>
-</details>
-</dd>
-<dt id="plumbing.databases.sqlite_database.SQLiteDatabase.frame"><code class="name">var <span class="ident">frame</span></code></dt>
-<dd>
-<div class="desc"><p>The main table as a blaze data structure. Not ready yet.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def frame(self):
-    &#34;&#34;&#34;The main table as a blaze data structure. Not ready yet.&#34;&#34;&#34;
-    pass
-    #return blaze.Data(&#39;sqlite:///%s::%s&#39;) % (self.path, self.main_table)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.last"><code class="name">var <span class="ident">last</span></code></dt>
@@ -896,9 +1004,7 @@ def last(self):
 </dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.main_table"><code class="name">var <span class="ident">main_table</span></code></dt>
 <dd>
-<div class="desc"><p>If you see the current source code in a seemingly unrelated part of
-an auto-generated documentation, it means the program making the
-documentation was unable to correctly traverse a decorated property.</p></div>
+<div class="desc"><p>The user can change this property.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -928,7 +1034,7 @@ documentation was unable to correctly traverse a decorated property.</p></div>
 </dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.own_connection"><code class="name">var <span class="ident">own_connection</span></code></dt>
 <dd>
-<div class="desc"><p>To be used internally in this object.</p></div>
+<div class="desc"><p>To be used internally in the methods of this class.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -958,7 +1064,7 @@ documentation was unable to correctly traverse a decorated property.</p></div>
 </dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.own_cursor"><code class="name">var <span class="ident">own_cursor</span></code></dt>
 <dd>
-<div class="desc"><p>To be used internally in this object.</p></div>
+<div class="desc"><p>To be used internally in the methods of this class.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1082,17 +1188,20 @@ The <em>entries</em> variable should be an iterable yielding iterables.</p></div
 <span>def <span class="ident">add_table</span></span>(<span>self, name, columns, type_map=None, if_not_exists=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Add add a new table to the database.
-For instance you could do this:
-self.add_table('data', {'id':'integer', 'source':'text', 'pubmed':'integer'})</p></div>
+<div class="desc"><p>Add add a new table to the database. For instance you could do this:</p>
+<pre><code>&gt;&gt;&gt; data = {'id': 'integer', 'source': 'text', 'pubmed': 'integer'}
+&gt;&gt;&gt; self.add_table('data', data)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def add_table(self, name, columns, type_map=None, if_not_exists=False):
     &#34;&#34;&#34;
-    Add add a new table to the database.  For instance you could do this:
-    self.add_table(&#39;data&#39;, {&#39;id&#39;:&#39;integer&#39;, &#39;source&#39;:&#39;text&#39;, &#39;pubmed&#39;:&#39;integer&#39;})
+    Add add a new table to the database. For instance you could do this:
+
+        &gt;&gt;&gt; data = {&#39;id&#39;: &#39;integer&#39;, &#39;source&#39;: &#39;text&#39;, &#39;pubmed&#39;: &#39;integer&#39;}
+        &gt;&gt;&gt; self.add_table(&#39;data&#39;, data)
     &#34;&#34;&#34;
     # Check types mapping #
     if type_map is None and isinstance(columns, dict): types = columns
@@ -1116,9 +1225,10 @@ self.add_table('data', {'id':'integer', 'source':'text', 'pubmed':'integer'})</p
 </summary>
 <pre><code class="python">def check_format(self):
     if self.count_bytes == 0: return
-    with open(self.path, &#39;r&#39;) as f: header = f.read(15)
-    if header != &#39;SQLite format 3&#39;:
-        raise Exception(&#34;The file &#39;&#34; + self.path + &#34;&#39; is not an SQLite database.&#34;)</code></pre>
+    with open(self.path, &#39;rb&#39;) as f: header = f.read(15)
+    if header != b&#39;SQLite format 3&#39;:
+        msg = &#34;The file &#39;&#34; + self.path + &#34;&#39; is not an SQLite database.&#34;
+        raise Exception(msg)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.close"><code class="name flex">
@@ -1234,7 +1344,8 @@ self.add_table('data', {'id':'integer', 'source':'text', 'pubmed':'integer'})</p
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get(self, table, column, key): return self.get_entry(key, column, table)</code></pre>
+<pre><code class="python">def get(self, table, column, key):
+    return self.get_entry(key, column, table)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.get_and_order"><code class="name flex">
@@ -1300,7 +1411,7 @@ by querying the SQL for the complete list of column names.</p></div>
     &#34;&#34;&#34;Get a specific entry.&#34;&#34;&#34;
     if table is None:  table  = self.main_table
     if column is None: column = &#34;id&#34;
-    if isinstance(key, basestring): key = key.replace(&#34;&#39;&#34;,&#34;&#39;&#39;&#34;)
+    if isinstance(key, str): key = key.replace(&#34;&#39;&#34;,&#34;&#39;&#39;&#34;)
     query = &#39;SELECT * from &#34;%s&#34; where &#34;%s&#34;==&#34;%s&#34; LIMIT 1;&#39;
     query = query % (table, column, key)
     self.own_cursor.execute(query)
@@ -1351,7 +1462,8 @@ by querying the SQL for the complete list of column names.</p></div>
 <pre><code class="python">def get_number(self, num, table=None):
     &#34;&#34;&#34;Get a specific entry by its number.&#34;&#34;&#34;
     if table is None: table = self.main_table
-    self.own_cursor.execute(&#39;SELECT * from &#34;%s&#34; LIMIT 1 OFFSET %i;&#39; % (self.main_table, num))
+    query = &#39;SELECT * from &#34;%s&#34; LIMIT 1 OFFSET %i;&#39; % (table, num)
+    self.own_cursor.execute(query)
     return self.own_cursor.fetchone()</code></pre>
 </details>
 </dd>
@@ -1397,35 +1509,26 @@ arguments start and end are interpreted as in slice notation.</p>
         raise err</code></pre>
 </details>
 </dd>
-<dt id="plumbing.databases.sqlite_database.SQLiteDatabase.insert_df"><code class="name flex">
-<span>def <span class="ident">insert_df</span></span>(<span>self, table_name, df)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Create a table and populate it with data from a dataframe.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def insert_df(self, table_name, df):
-    &#34;&#34;&#34;Create a table and populate it with data from a dataframe.&#34;&#34;&#34;
-    df.to_sql(table_name, con=self.own_connection)</code></pre>
-</details>
-</dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.new_connection"><code class="name flex">
 <span>def <span class="ident">new_connection</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Make a new connection.</p></div>
+<div class="desc"><p>Make a new connection and return it.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def new_connection(self):
-    &#34;&#34;&#34;Make a new connection.&#34;&#34;&#34;
+    &#34;&#34;&#34;Make a new connection and return it.&#34;&#34;&#34;
+    # Check different things #
     if not self.prepared: self.prepare()
+    # Open connection #
     con = sqlite3.connect(self.path, isolation_level=self.isolation)
-    con.row_factory = self.factory
+    # Set the factory #
+    if self.factory: con.row_factory = self.factory
+    # Set the text factory #
     if self.text_fact: con.text_factory = self.text_fact
+    # Return #
     return con</code></pre>
 </details>
 </dd>
@@ -1460,14 +1563,43 @@ Optionally check the MD5.</p></div>
     Checks that the file is indeed an SQLite3 database.
     Optionally check the MD5.
     &#34;&#34;&#34;
+    # Download the file #
     if not os.path.exists(self.path):
         if self.retrieve:
             print(&#34;Downloading SQLite3 database...&#34;)
             download_from_url(self.retrieve, self.path, progress=True)
-        else: raise Exception(&#34;The file &#39;&#34; + self.path + &#34;&#39; does not exist.&#34;)
+        else:
+            msg = &#34;The file &#39;&#34; + self.path + &#34;&#39; does not exist.&#34;
+            raise Exception(msg)
+    # Check the file header #
     self.check_format()
+    # Check the MD5 #
     if self.known_md5: assert self.known_md5 == self.md5
+    # Set attribute to True #
     self.prepared = True</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.sqlite_database.SQLiteDatabase.read_df"><code class="name flex">
+<span>def <span class="ident">read_df</span></span>(<span>self, table=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read a table and return dataframe.
+Using <code>pandas.read_sql_table()</code> requires SQLAlchemy.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_df(self, table=None):
+    &#34;&#34;&#34;
+    Read a table and return dataframe.
+    Using `pandas.read_sql_table()` requires SQLAlchemy.
+    &#34;&#34;&#34;
+    # Default value for table #
+    if table is None: table = self.main_table
+    # Make the query to avoid SQLAlchemy dependency #
+    query = &#39;SELECT * FROM &#34;%s&#34;;&#39; % table
+    # Call pandas function #
+    return pandas.read_sql_query(query, con = self.own_connection)</code></pre>
 </details>
 </dd>
 <dt id="plumbing.databases.sqlite_database.SQLiteDatabase.uniquify"><code class="name flex">
@@ -1497,6 +1629,30 @@ Optionally check the MD5.</p></div>
 <pre><code class="python">def vacuum(self):
     &#34;&#34;&#34;Compact the database, remove old transactions.&#34;&#34;&#34;
     self.own_cursor.execute(&#34;VACUUM&#34;)</code></pre>
+</details>
+</dd>
+<dt id="plumbing.databases.sqlite_database.SQLiteDatabase.write_df"><code class="name flex">
+<span>def <span class="ident">write_df</span></span>(<span>self, df, table=None, *args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a table and populate it with content from a dataframe.
+If the table already exists it is dropped before being overwritten.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_df(self, df, table=None, *args, **kwargs):
+    &#34;&#34;&#34;
+    Create a table and populate it with content from a dataframe.
+    If the table already exists it is dropped before being overwritten.
+    &#34;&#34;&#34;
+    # Default value for table #
+    if table is None: table = self.main_table
+    # Call pandas function #
+    return df.to_sql(table,
+                     con = self.own_connection,
+                     if_exists = &#39;replace&#39;,
+                     *args, **kwargs)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1532,9 +1688,9 @@ Optionally check the MD5.</p></div>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.create" href="#plumbing.databases.sqlite_database.SQLiteDatabase.create">create</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.cursor" href="#plumbing.databases.sqlite_database.SQLiteDatabase.cursor">cursor</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.detailed_error" href="#plumbing.databases.sqlite_database.SQLiteDatabase.detailed_error">detailed_error</a></code></li>
+<li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.df" href="#plumbing.databases.sqlite_database.SQLiteDatabase.df">df</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.execute" href="#plumbing.databases.sqlite_database.SQLiteDatabase.execute">execute</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.first" href="#plumbing.databases.sqlite_database.SQLiteDatabase.first">first</a></code></li>
-<li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.frame" href="#plumbing.databases.sqlite_database.SQLiteDatabase.frame">frame</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.get" href="#plumbing.databases.sqlite_database.SQLiteDatabase.get">get</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.get_and_order" href="#plumbing.databases.sqlite_database.SQLiteDatabase.get_and_order">get_and_order</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.get_columns_of_table" href="#plumbing.databases.sqlite_database.SQLiteDatabase.get_columns_of_table">get_columns_of_table</a></code></li>
@@ -1544,7 +1700,6 @@ Optionally check the MD5.</p></div>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.get_number" href="#plumbing.databases.sqlite_database.SQLiteDatabase.get_number">get_number</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.import_table" href="#plumbing.databases.sqlite_database.SQLiteDatabase.import_table">import_table</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.index" href="#plumbing.databases.sqlite_database.SQLiteDatabase.index">index</a></code></li>
-<li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.insert_df" href="#plumbing.databases.sqlite_database.SQLiteDatabase.insert_df">insert_df</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.last" href="#plumbing.databases.sqlite_database.SQLiteDatabase.last">last</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.main_table" href="#plumbing.databases.sqlite_database.SQLiteDatabase.main_table">main_table</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.new_connection" href="#plumbing.databases.sqlite_database.SQLiteDatabase.new_connection">new_connection</a></code></li>
@@ -1552,9 +1707,11 @@ Optionally check the MD5.</p></div>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.own_connection" href="#plumbing.databases.sqlite_database.SQLiteDatabase.own_connection">own_connection</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.own_cursor" href="#plumbing.databases.sqlite_database.SQLiteDatabase.own_cursor">own_cursor</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.prepare" href="#plumbing.databases.sqlite_database.SQLiteDatabase.prepare">prepare</a></code></li>
+<li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.read_df" href="#plumbing.databases.sqlite_database.SQLiteDatabase.read_df">read_df</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.tables" href="#plumbing.databases.sqlite_database.SQLiteDatabase.tables">tables</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.uniquify" href="#plumbing.databases.sqlite_database.SQLiteDatabase.uniquify">uniquify</a></code></li>
 <li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.vacuum" href="#plumbing.databases.sqlite_database.SQLiteDatabase.vacuum">vacuum</a></code></li>
+<li><code><a title="plumbing.databases.sqlite_database.SQLiteDatabase.write_df" href="#plumbing.databases.sqlite_database.SQLiteDatabase.write_df">write_df</a></code></li>
 </ul>
 </li>
 </ul>
