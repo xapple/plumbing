@@ -22,13 +22,20 @@ class SQLiteDatabase(FilePath):
                        known_md5 = None):
         """
         * The path of the database comes first.
+
         * The factory option enables you to change how results are returned.
-        * The text_fact option enables you to change text factory (useful for BLOB).
-        * The Isolation source can be `None` for autocommit mode or one of:
+
+        * The text_fact option enables you to change text factory
+          (useful for BLOB).
+
+        * The isolation source can be `None` for autocommit mode or one of:
           'DEFERRED', 'IMMEDIATE' or 'EXCLUSIVE'.
+
         * The retrieve option is an URL at which the database will be downloaded
           if it was not found at the `path` given.
-        * The md5 option is used to check the integrity of a database."""
+
+        * The md5 option is used to check the integrity of a database.
+        """
         self.path      = path
         self.text_fact = text_fact
         self.factory   = factory
@@ -46,9 +53,11 @@ class SQLiteDatabase(FilePath):
         return self
 
     def __exit__(self, errtype, value, traceback):
-        """Called when exiting the 'with' statement.
+        """
+        Called when exiting the 'with' statement.
         Enables us to close the database properly, even when
-        exceptions are raised."""
+        exceptions are raised.
+        """
         self.close()
 
     def __iter__(self):
@@ -67,7 +76,7 @@ class SQLiteDatabase(FilePath):
         """Called when evaluating ``len(database)``."""
         return self.count_entries()
 
-    def __nonzero__(self):
+    def __bool__(self):
         """Called when evaluating ``if database: pass``."""
         return True if len(self) != 0 else False
 
@@ -83,7 +92,7 @@ class SQLiteDatabase(FilePath):
 
     @property_cached
     def own_connection(self):
-        """To be used internally in this object."""
+        """To be used internally in the methods of this class."""
         return self.new_connection()
 
     @property_cached
@@ -93,7 +102,7 @@ class SQLiteDatabase(FilePath):
 
     @property_cached
     def own_cursor(self):
-        """To be used internally in this object."""
+        """To be used internally in the methods of this class."""
         return self.own_connection.cursor()
 
     @property
@@ -107,6 +116,7 @@ class SQLiteDatabase(FilePath):
 
     @property_cached
     def main_table(self):
+        """The user can change this property."""
         return 'data'
 
     @property
@@ -125,18 +135,22 @@ class SQLiteDatabase(FilePath):
         return self.get_last()
 
     @property
-    def frame(self):
-        """The main table as a blaze data structure. Not ready yet."""
+    def df(self):
+        """The main table as a pandas dataframe."""
         pass
-        #return blaze.Data('sqlite:///%s::%s') % (self.path, self.main_table)
 
     # ------------------------------- Methods ------------------------------- #
     def new_connection(self):
-        """Make a new connection."""
+        """Make a new connection and return it."""
+        # Check different things #
         if not self.prepared: self.prepare()
+        # Open connection #
         con = sqlite3.connect(self.path, isolation_level=self.isolation)
-        con.row_factory = self.factory
+        # Set the factory #
+        if self.factory: con.row_factory = self.factory
+        # Set the text factory #
         if self.text_fact: con.text_factory = self.text_fact
+        # Return #
         return con
 
     def prepare(self):
@@ -145,20 +159,27 @@ class SQLiteDatabase(FilePath):
         Checks that the file is indeed an SQLite3 database.
         Optionally check the MD5.
         """
+        # Download the file #
         if not os.path.exists(self.path):
             if self.retrieve:
                 print("Downloading SQLite3 database...")
                 download_from_url(self.retrieve, self.path, progress=True)
-            else: raise Exception("The file '" + self.path + "' does not exist.")
+            else:
+                msg = "The file '" + self.path + "' does not exist."
+                raise Exception(msg)
+        # Check the file header #
         self.check_format()
+        # Check the MD5 #
         if self.known_md5: assert self.known_md5 == self.md5
+        # Set attribute to True #
         self.prepared = True
 
     def check_format(self):
         if self.count_bytes == 0: return
-        with open(self.path, 'r') as f: header = f.read(15)
-        if header != 'SQLite format 3':
-            raise Exception("The file '" + self.path + "' is not an SQLite database.")
+        with open(self.path, 'rb') as f: header = f.read(15)
+        if header != b'SQLite format 3':
+            msg = "The file '" + self.path + "' is not an SQLite database."
+            raise Exception(msg)
 
     def create(self, columns=None, type_map=None, overwrite=False):
         """Create a new database with a certain schema."""
@@ -175,8 +196,10 @@ class SQLiteDatabase(FilePath):
 
     def add_table(self, name, columns, type_map=None, if_not_exists=False):
         """
-        Add add a new table to the database.  For instance you could do this:
-        self.add_table('data', {'id':'integer', 'source':'text', 'pubmed':'integer'})
+        Add add a new table to the database. For instance you could do this:
+
+            >>> data = {'id': 'integer', 'source': 'text', 'pubmed': 'integer'}
+            >>> self.add_table('data', data)
         """
         # Check types mapping #
         if type_map is None and isinstance(columns, dict): types = columns
@@ -299,15 +322,18 @@ class SQLiteDatabase(FilePath):
     def get_number(self, num, table=None):
         """Get a specific entry by its number."""
         if table is None: table = self.main_table
-        self.own_cursor.execute('SELECT * from "%s" LIMIT 1 OFFSET %i;' % (self.main_table, num))
+        query = 'SELECT * from "%s" LIMIT 1 OFFSET %i;' % (table, num)
+        self.own_cursor.execute(query)
         return self.own_cursor.fetchone()
 
-    def get(self, table, column, key): return self.get_entry(key, column, table)
+    def get(self, table, column, key):
+        return self.get_entry(key, column, table)
+
     def get_entry(self, key, column=None, table=None):
         """Get a specific entry."""
         if table is None:  table  = self.main_table
         if column is None: column = "id"
-        if isinstance(key, basestring): key = key.replace("'","''")
+        if isinstance(key, str): key = key.replace("'","''")
         query = 'SELECT * from "%s" where "%s"=="%s" LIMIT 1;'
         query = query % (table, column, key)
         self.own_cursor.execute(query)
@@ -323,9 +349,31 @@ class SQLiteDatabase(FilePath):
         self.own_cursor.close()
         self.own_connection.close()
 
-    def insert_df(self, table_name, df):
-        """Create a table and populate it with data from a dataframe."""
-        df.to_sql(table_name, con=self.own_connection)
+    # ------------------------------- Pandas -------------------------------- #
+    def write_df(self, df, table=None, *args, **kwargs):
+        """
+        Create a table and populate it with content from a dataframe.
+        If the table already exists it is dropped before being overwritten.
+        """
+        # Default value for table #
+        if table is None: table = self.main_table
+        # Call pandas function #
+        return df.to_sql(table,
+                         con = self.own_connection,
+                         if_exists = 'replace',
+                         *args, **kwargs)
+
+    def read_df(self, table=None):
+        """
+        Read a table and return dataframe.
+        Using `pandas.read_sql_table()` requires SQLAlchemy.
+        """
+        # Default value for table #
+        if table is None: table = self.main_table
+        # Make the query to avoid SQLAlchemy dependency #
+        query = 'SELECT * FROM "%s";' % table
+        # Call pandas function #
+        return pandas.read_sql_query(query, con = self.own_connection)
 
     # ----------------------------- Unfinished ------------------------------ #
     def add_column(self, name, kind=None, table=None):
@@ -356,7 +404,7 @@ class SQLiteDatabase(FilePath):
         # This could have worked but sqlite3 was too old on the server
         # ORDER BY instr(',%s,', ',' || id || ',')
 
-    # ---------------------------- Multidatabase ---------------------------- #
+    # ---------------------------- Multi-database --------------------------- #
     def import_table(self, source, table_name):
         """Copy a table from another SQLite database to this one."""
         query = "SELECT * FROM `%s`" % table_name.lower()
