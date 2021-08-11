@@ -1,6 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/plumbing.svg)](https://badge.fury.io/py/plumbing)
 
-# `plumbing` version 2.10.8
+# `plumbing` version 2.10.9
 
 This project contains functions and classes that help with plumbing-type programing and pipeline building.
 
