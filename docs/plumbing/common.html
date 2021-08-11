@@ -85,7 +85,8 @@ def sanitize_text(text):
 ################################################################################
 def camel_to_snake(text):
     &#34;&#34;&#34;
-    Will convert CamelCaseStrings to snake_case_strings.
+    Will convert CamelCaseStrings to snake_case_strings. Examples:
+
     &gt;&gt;&gt; camel_to_snake(&#39;CamelCase&#39;)
     &#39;camel_case&#39;
     &gt;&gt;&gt; camel_to_snake(&#39;CamelCamelCase&#39;)
@@ -106,6 +107,8 @@ def camel_to_snake(text):
     &#39;sw_merch&#39;
     &gt;&gt;&gt; camel_to_snake(&#39;Odd/Characters&#39;)
     &#39;odd_characters&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;With Spaces&#39;)
+    &#39;with_spaces&#39;
     &#34;&#34;&#34;
     # Load #
     result = text
@@ -122,10 +125,13 @@ def camel_to_snake(text):
     # Lower case the rest #
     result = result.lower()
     # Eliminate remaining spaces #
-    result = result.replace(&#39; &#39;, &#39;&#39;)
+    result = result.replace(&#39; &#39;, &#39;_&#39;)
     # Eliminate quote characters #
     result = result.replace(&#39;&#34;&#39;, &#39;&#39;)
     result = result.replace(&#34;&#39;&#34;, &#39;&#39;)
+    # Eliminate parenthesis #
+    result = result.replace(&#34;(&#34;, &#39;&#39;)
+    result = result.replace(&#34;)&#34;, &#39;&#39;)
     # Eliminate special characters #
     result = result.replace(&#39;/&#39;, &#39;_&#39;)
     # Eliminate double underscore #
@@ -135,11 +141,13 @@ def camel_to_snake(text):
 
 ################################################################################
 def bool_to_unicode(b):
-    &#34;&#34;&#34;Different possibilities for True: ☑️✔︎✓✅👍✔️
-       Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴&#34;&#34;&#34;
+    &#34;&#34;&#34;
+    Different possibilities for True: ☑️✔︎✓✅👍✔️
+    Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴
+    &#34;&#34;&#34;
     b = bool(b)
     if b is True:  return u&#34;✅&#34;
-    if b is False: return u&#34;❎&#34;
+    if b is False: return u&#34;🔴&#34;
 
 ###############################################################################
 def access_dict_like_obj(obj, prop, new_value=None):
@@ -817,18 +825,20 @@ Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def bool_to_unicode(b):
-    &#34;&#34;&#34;Different possibilities for True: ☑️✔︎✓✅👍✔️
-       Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴&#34;&#34;&#34;
+    &#34;&#34;&#34;
+    Different possibilities for True: ☑️✔︎✓✅👍✔️
+    Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴
+    &#34;&#34;&#34;
     b = bool(b)
     if b is True:  return u&#34;✅&#34;
-    if b is False: return u&#34;❎&#34;</code></pre>
+    if b is False: return u&#34;🔴&#34;</code></pre>
 </details>
 </dd>
 <dt id="plumbing.common.camel_to_snake"><code class="name flex">
 <span>def <span class="ident">camel_to_snake</span></span>(<span>text)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Will convert CamelCaseStrings to snake_case_strings.</p>
+<div class="desc"><p>Will convert CamelCaseStrings to snake_case_strings. Examples:</p>
 <pre><code class="language-python-repl">&gt;&gt;&gt; camel_to_snake('CamelCase')
 'camel_case'
 &gt;&gt;&gt; camel_to_snake('CamelCamelCase')
@@ -849,6 +859,8 @@ Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴
 'sw_merch'
 &gt;&gt;&gt; camel_to_snake('Odd/Characters')
 'odd_characters'
+&gt;&gt;&gt; camel_to_snake('With Spaces')
+'with_spaces'
 </code></pre></div>
 <details class="source">
 <summary>
@@ -856,7 +868,8 @@ Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴
 </summary>
 <pre><code class="python">def camel_to_snake(text):
     &#34;&#34;&#34;
-    Will convert CamelCaseStrings to snake_case_strings.
+    Will convert CamelCaseStrings to snake_case_strings. Examples:
+
     &gt;&gt;&gt; camel_to_snake(&#39;CamelCase&#39;)
     &#39;camel_case&#39;
     &gt;&gt;&gt; camel_to_snake(&#39;CamelCamelCase&#39;)
@@ -877,6 +890,8 @@ Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴
     &#39;sw_merch&#39;
     &gt;&gt;&gt; camel_to_snake(&#39;Odd/Characters&#39;)
     &#39;odd_characters&#39;
+    &gt;&gt;&gt; camel_to_snake(&#39;With Spaces&#39;)
+    &#39;with_spaces&#39;
     &#34;&#34;&#34;
     # Load #
     result = text
@@ -893,10 +908,13 @@ Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴
     # Lower case the rest #
     result = result.lower()
     # Eliminate remaining spaces #
-    result = result.replace(&#39; &#39;, &#39;&#39;)
+    result = result.replace(&#39; &#39;, &#39;_&#39;)
     # Eliminate quote characters #
     result = result.replace(&#39;&#34;&#39;, &#39;&#39;)
     result = result.replace(&#34;&#39;&#34;, &#39;&#39;)
+    # Eliminate parenthesis #
+    result = result.replace(&#34;(&#34;, &#39;&#39;)
+    result = result.replace(&#34;)&#34;, &#39;&#39;)
     # Eliminate special characters #
     result = result.replace(&#39;/&#39;, &#39;_&#39;)
     # Eliminate double underscore #
