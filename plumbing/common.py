@@ -52,7 +52,8 @@ def sanitize_text(text):
 ################################################################################
 def camel_to_snake(text):
     """
-    Will convert CamelCaseStrings to snake_case_strings.
+    Will convert CamelCaseStrings to snake_case_strings. Examples:
+
     >>> camel_to_snake('CamelCase')
     'camel_case'
     >>> camel_to_snake('CamelCamelCase')
@@ -73,6 +74,8 @@ def camel_to_snake(text):
     'sw_merch'
     >>> camel_to_snake('Odd/Characters')
     'odd_characters'
+    >>> camel_to_snake('With Spaces')
+    'with_spaces'
     """
     # Load #
     result = text
@@ -89,10 +92,13 @@ def camel_to_snake(text):
     # Lower case the rest #
     result = result.lower()
     # Eliminate remaining spaces #
-    result = result.replace(' ', '')
+    result = result.replace(' ', '_')
     # Eliminate quote characters #
     result = result.replace('"', '')
     result = result.replace("'", '')
+    # Eliminate parenthesis #
+    result = result.replace("(", '')
+    result = result.replace(")", '')
     # Eliminate special characters #
     result = result.replace('/', '_')
     # Eliminate double underscore #
@@ -102,11 +108,13 @@ def camel_to_snake(text):
 
 ################################################################################
 def bool_to_unicode(b):
-    """Different possibilities for True: ☑️✔︎✓✅👍✔️
-       Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴"""
+    """
+    Different possibilities for True: ☑️✔︎✓✅👍✔️
+    Different possibilities for False: ✕✖︎✗✘✖️❌⛔️❎👎🛑🔴
+    """
     b = bool(b)
     if b is True:  return u"✅"
-    if b is False: return u"❎"
+    if b is False: return u"🔴"
 
 ###############################################################################
 def access_dict_like_obj(obj, prop, new_value=None):

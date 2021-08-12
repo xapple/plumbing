@@ -1,2 +1,2 @@
 # Special variables #
-__version__ = '2.10.9'
+__version__ = '2.11.0'
