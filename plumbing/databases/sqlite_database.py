@@ -1,5 +1,5 @@
 # Built-in modules #
-import os, sqlite3
+import os, sqlite3, types
 
 # Internal modules #
 from plumbing.color      import Color
@@ -109,7 +109,8 @@ class SQLiteDatabase(FilePath):
     def tables(self):
         """The complete list of SQL tables."""
         self.own_connection.row_factory = sqlite3.Row
-        self.own_cursor.execute('SELECT name from sqlite_master where type="table";')
+        query = 'SELECT name from sqlite_master where type="table";'
+        self.own_cursor.execute(query)
         result = [x[0].encode('ascii') for x in self.own_cursor.fetchall()]
         self.own_connection.row_factory = self.factory
         return result
@@ -222,7 +223,7 @@ class SQLiteDatabase(FilePath):
         """
         # Check the table exists #
         if table is None: table = self.main_table
-        if not table in self.tables: return []
+        if table not in self.tables: return []
         # A PRAGMA statement will implicitly issue a commit, don't use #
         self.own_cursor.execute('SELECT * from "%s" LIMIT 1;' % table)
         columns = [x[0] for x in self.own_cursor.description]
