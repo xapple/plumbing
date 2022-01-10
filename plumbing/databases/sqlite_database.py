@@ -360,8 +360,9 @@ class SQLiteDatabase(FilePath):
         if table is None: table = self.main_table
         # Call pandas function #
         return df.to_sql(table,
-                         con = self.own_connection,
+                         con       = self.own_connection,
                          if_exists = 'replace',
+                         index     = False,
                          *args, **kwargs)
 
     def read_df(self, table=None):
