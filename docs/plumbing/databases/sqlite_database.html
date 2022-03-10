@@ -27,7 +27,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python"># Built-in modules #
-import os, sqlite3
+import os, sqlite3, types
 
 # Internal modules #
 from plumbing.color      import Color
@@ -137,7 +137,8 @@ class SQLiteDatabase(FilePath):
     def tables(self):
         &#34;&#34;&#34;The complete list of SQL tables.&#34;&#34;&#34;
         self.own_connection.row_factory = sqlite3.Row
-        self.own_cursor.execute(&#39;SELECT name from sqlite_master where type=&#34;table&#34;;&#39;)
+        query = &#39;SELECT name from sqlite_master where type=&#34;table&#34;;&#39;
+        self.own_cursor.execute(query)
         result = [x[0].encode(&#39;ascii&#39;) for x in self.own_cursor.fetchall()]
         self.own_connection.row_factory = self.factory
         return result
@@ -250,7 +251,7 @@ class SQLiteDatabase(FilePath):
         &#34;&#34;&#34;
         # Check the table exists #
         if table is None: table = self.main_table
-        if not table in self.tables: return []
+        if table not in self.tables: return []
         # A PRAGMA statement will implicitly issue a commit, don&#39;t use #
         self.own_cursor.execute(&#39;SELECT * from &#34;%s&#34; LIMIT 1;&#39; % table)
         columns = [x[0] for x in self.own_cursor.description]
@@ -387,8 +388,9 @@ class SQLiteDatabase(FilePath):
         if table is None: table = self.main_table
         # Call pandas function #
         return df.to_sql(table,
-                         con = self.own_connection,
+                         con       = self.own_connection,
                          if_exists = &#39;replace&#39;,
+                         index     = False,
                          *args, **kwargs)
 
     def read_df(self, table=None):
@@ -580,7 +582,8 @@ if it was not found at the <code>path</code> given.</p>
     def tables(self):
         &#34;&#34;&#34;The complete list of SQL tables.&#34;&#34;&#34;
         self.own_connection.row_factory = sqlite3.Row
-        self.own_cursor.execute(&#39;SELECT name from sqlite_master where type=&#34;table&#34;;&#39;)
+        query = &#39;SELECT name from sqlite_master where type=&#34;table&#34;;&#39;
+        self.own_cursor.execute(query)
         result = [x[0].encode(&#39;ascii&#39;) for x in self.own_cursor.fetchall()]
         self.own_connection.row_factory = self.factory
         return result
@@ -693,7 +696,7 @@ if it was not found at the <code>path</code> given.</p>
         &#34;&#34;&#34;
         # Check the table exists #
         if table is None: table = self.main_table
-        if not table in self.tables: return []
+        if table not in self.tables: return []
         # A PRAGMA statement will implicitly issue a commit, don&#39;t use #
         self.own_cursor.execute(&#39;SELECT * from &#34;%s&#34; LIMIT 1;&#39; % table)
         columns = [x[0] for x in self.own_cursor.description]
@@ -830,8 +833,9 @@ if it was not found at the <code>path</code> given.</p>
         if table is None: table = self.main_table
         # Call pandas function #
         return df.to_sql(table,
-                         con = self.own_connection,
+                         con       = self.own_connection,
                          if_exists = &#39;replace&#39;,
+                         index     = False,
                          *args, **kwargs)
 
     def read_df(self, table=None):
@@ -1103,7 +1107,8 @@ def last(self):
 def tables(self):
     &#34;&#34;&#34;The complete list of SQL tables.&#34;&#34;&#34;
     self.own_connection.row_factory = sqlite3.Row
-    self.own_cursor.execute(&#39;SELECT name from sqlite_master where type=&#34;table&#34;;&#39;)
+    query = &#39;SELECT name from sqlite_master where type=&#34;table&#34;;&#39;
+    self.own_cursor.execute(query)
     result = [x[0].encode(&#39;ascii&#39;) for x in self.own_cursor.fetchall()]
     self.own_connection.row_factory = self.factory
     return result</code></pre>
@@ -1390,7 +1395,7 @@ by querying the SQL for the complete list of column names.</p></div>
     &#34;&#34;&#34;
     # Check the table exists #
     if table is None: table = self.main_table
-    if not table in self.tables: return []
+    if table not in self.tables: return []
     # A PRAGMA statement will implicitly issue a commit, don&#39;t use #
     self.own_cursor.execute(&#39;SELECT * from &#34;%s&#34; LIMIT 1;&#39; % table)
     columns = [x[0] for x in self.own_cursor.description]
@@ -1650,8 +1655,9 @@ If the table already exists it is dropped before being overwritten.</p></div>
     if table is None: table = self.main_table
     # Call pandas function #
     return df.to_sql(table,
-                     con = self.own_connection,
+                     con       = self.own_connection,
                      if_exists = &#39;replace&#39;,
+                     index     = False,
                      *args, **kwargs)</code></pre>
 </details>
 </dd>

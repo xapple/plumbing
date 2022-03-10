@@ -19,7 +19,7 @@ with open(readme_path, encoding='utf-8') as handle: readme = handle.read()
 # Call setup #
 setup(
     name             = 'plumbing',
-    version          = '2.11.1',
+    version          = '2.11.2',
     description      = 'Helps with plumbing-type programing in python.',
     license          = 'MIT',
     url              = 'http://github.com/xapple/plumbing/',
