@@ -32,29 +32,39 @@ class property_cached(object):
 
     In other words, it's like `@property` but memoized.
 
-        from plumbing.cache import property_cached
-
-        class Square:
-            def __init__(self, size):
-                self.size = size
-
-            @property_cached
-            def area(self):
-                print("Evaluating...")
-                return self.size * self.size
-
-        shape = Square(5)
-        print(shape.size)
-        print(shape.area)  # Area computed the first time
-        shape.area = 99    # Now update an attribute
-        print(shape.area)  # Same result returned, not recomputed
-        del shape.area     # This will purge the cache
-        print(shape.area)  # Updated result, it's computed again
+        >>> from plumbing.cache import property_cached
+        >>>
+        >>> class Square:
+        >>>     def __init__(self, size):
+        >>>         self.size = size
+        >>>
+        >>>     @property_cached
+        >>>     def area(self):
+        >>>         print("Evaluating...")
+        >>>         return self.size * self.size
+        >>>
+        >>> shape = Square(5)
+        >>> print(shape.size)
+        >>> print(shape.area)  # Area computed the first time
+        >>> shape.area = 99    # Now update an attribute
+        >>> print(shape.area)  # Same result returned, not recomputed
+        >>> del shape.area     # This will purge the cache
+        >>> print(shape.area)  # Updated result, it's computed again
     """
 
     def __init__(self, func):
+        """
+        If you see this docstring or code in a seemingly unrelated part of
+        an auto-generated documentation, it means the program making the
+        documentation was unable to correctly traverse a decorated property.
+        """
+        # Record the function that we are decorating #
         self.func    = func
-        self.__doc__ = getattr(func, '__doc__')
+        # Set the documentation string of the underlying function here #
+        self.__doc__ = func.__doc__
+        self.__get__.__func__.__doc__ = func.__doc__
+        self.__init__.__func__.__doc__ = func.__doc__
+        # Get the plain name of the function #
         self.name    = self.func.__name__
 
     def __get__(self, instance, owner):
@@ -99,7 +109,7 @@ class property_pickled(object):
     """
     Same thing as `property_cached` but the cache will be stored on disk
     with the `pickle` module. So you should check that the return value of the
-    function you decorate can be pickled. Otherwise checkout the `dill` module.
+    function you decorate can be pickled. Otherwise, checkout the `dill` module.
 
     The path of the pickle file will be determined by looking for the
     `cache_dir` attribute of the instance containing the cached property
@@ -112,18 +122,28 @@ class property_pickled(object):
     The location will default to the temporary directory plus a very short
     hash of the function's import path, so you could get something like this:
 
-        /var/temporary/pickled_properties/EfEZTAubgXI
+        '/var/temporary/pickled_properties/EfEZTAubgXI'
     """
 
-    def __init__(self, func, at=None):
+    def __init__(self, func, at=None, path=None):
+        """
+        If you see this docstring or code in a seemingly unrelated part of
+        an auto-generated documentation, it means the program making the
+        documentation was unable to correctly traverse a decorated property.
+        """
         # Record the function that we are decorating #
-        self.func    = func
+        self.func = func
         # Set the documentation string of the underlying function here #
-        self.__doc__ = getattr(func, '__doc__')
+        self.__doc__ = func.__doc__
+        self.__get__.__func__.__doc__ = func.__doc__
+        self.__init__.__func__.__doc__ = func.__doc__
         # Get the plain name of the function #
-        self.name    = self.func.__name__
-        # Optionally specify the location at which we should pickle #
-        self.at      = at
+        self.name  = self.func.__name__
+        # Optionally, specify the name of the property that will tell us the
+        # path at which we should pickle.
+        self.at = at
+        # Optionally, specify the path at which we should pickle directly #
+        self.path = path
 
     def __get__(self, instance, owner):
         """
@@ -179,10 +199,12 @@ class property_pickled(object):
     def get_pickle_path(self, instance):
         # First check if an `at` parameter was specified #
         if self.at is not None: path = Path(getattr(instance, self.at))
-        # Secondly check if the instance has a cache_dir specified #
+        # Secondly check if a `path` parameter was specified #
+        if self.path is not None: path = Path(self.path)
+        # Thirdly check if the instance has a cache_dir specified #
         elif 'cache_dir' in instance.__dict__:
             path = Path(instance.cache_dir + self.name + '.pickle')
-        # Otherwise we go the default route (no instance passed) #
+        # Otherwise, we go the default route (no instance passed) #
         else: path = Path(self.get_default_path())
         # Make the directory #
         path.make_directory()
@@ -211,6 +233,15 @@ def property_pickled_at(at):
     hence return the same path for every equivalent instance.
     """
     def wrapper(function): return property_pickled(function, at=at)
+    return wrapper
+
+################################################################################
+def property_pickled_path(path):
+    """
+    Same thing as above, but you can specify the path of the pickle file
+    directly.
+    """
+    def wrapper(function): return property_pickled(function, path=path)
     return wrapper
 
 ################################################################################

@@ -127,7 +127,7 @@ def download_from_url(url,
         # To detect tar.gz we rely on the extension #
         if destination.endswith('.tar.gz'):
             return destination.untargz_to()
-        # Otherwise read the magic number #
+        # Otherwise, read the magic number #
         with open(destination, 'rb') as f:
             header = f.read(4)
         # If it's a zip file #
