@@ -57,6 +57,7 @@ class Graph(object):
         ('dpi'    , None),
         ('bbox'   , None),
         ('remove_frame', None),
+        ('transparent', None),
     ))
 
     def __repr__(self):
@@ -87,6 +88,8 @@ class Graph(object):
                 self.base_dir = self.parent.autopaths.graphs_dir
             elif hasattr(self.parent, 'graphs_dir'):
                 self.base_dir = self.parent.graphs_dir
+            elif hasattr(self.parent, 'out_path'):
+                self.base_dir = FilePath(self.parent.out_path).directory
             else:
                 raise Exception("Please specify a `base_dir` for this graph.")
         else:
@@ -201,9 +204,14 @@ class Graph(object):
         save_args = {}
         if 'dpi'  in self.params: save_args['dpi']  = self.params['dpi']
         if 'bbox' in self.params: save_args['bbox_inches'] = self.params['bbox']
+        # Alpha channel #
+        if 'transparent' in self.params:
+            save_args['transparent'] = self.params['transparent']
         # Save it as different formats #
         for ext in self.params['formats']:
-            fig.savefig(path.replace_extension(ext), **save_args)
+            out_path = path.replace_extension(ext)
+            if self.params.get('verbose'): print("Saving to: '%s'" % out_path)
+            fig.savefig(str(out_path), **save_args)
         # Close it #
         if self.params['close']: pyplot.close(fig)
 
