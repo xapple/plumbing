@@ -109,7 +109,8 @@ class property_pickled(object):
     """
     Same thing as `property_cached` but the cache will be stored on disk
     with the `pickle` module. So you should check that the return value of the
-    function you decorate can be pickled. Otherwise, checkout the `dill` module.
+    function you decorate can be pickled. Otherwise, checkout the `dill`
+    module.
 
     The path of the pickle file will be determined by looking for the
     `cache_dir` attribute of the instance containing the cached property
@@ -200,7 +201,7 @@ class property_pickled(object):
         # First check if an `at` parameter was specified #
         if self.at is not None: path = Path(getattr(instance, self.at))
         # Secondly check if a `path` parameter was specified #
-        if self.path is not None: path = Path(self.path)
+        elif self.path is not None: path = Path(self.path)
         # Thirdly check if the instance has a cache_dir specified #
         elif 'cache_dir' in instance.__dict__:
             path = Path(instance.cache_dir + self.name + '.pickle')
