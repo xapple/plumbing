@@ -25,21 +25,33 @@ def rich_panel_print(text, title=None):
     rich_print(Padding(Panel(text, title=title, padding=2, expand=False), (2,10)))
 
 ################################################################################
+def no_single_newline(text):
+    """
+    Remove single newlines in a string, but preserve multiple newlines.
+    Taken from https://stackoverflow.com/questions/22649851
+    """
+    return re.sub('(?<![\r\n])(\r?\n|\n?\r)(?![\r\n])', ' ', text)
+
+################################################################################
 def ascii(text):
     """Make a safe, ASCII version a string. For instance for use on the web."""
     return unicodedata.normalize('NFKD', unicode(text)).encode('ASCII', 'ignore')
 
 def alphanumeric(text):
-    r"""Make an ultra-safe, ASCII version a string.
+    r"""
+    Make an ultra-safe, ASCII version a string.
     For instance for use as a filename.
-    \w matches any alphanumeric character and the underscore."""
+    \w matches any alphanumeric character and the underscore.
+    """
     return "".join([c for c in text if re.match(r'\w', c)])
 
 ################################################################################
 def sanitize_text(text):
-    r"""Make a safe representation of a string.
+    r"""
+    Make a safe representation of a string.
     Note: the `\s` special character matches any whitespace character.
-    This is equivalent to the set [\t\n\r\f\v] as well as ` ` (whitespace)."""
+    This is equivalent to the set [\t\n\r\f\v] as well as ` ` (whitespace).
+    """
     # First replace characters that have specific effects with their repr #
     text = re.sub("(\\s)", lambda m: repr(m.group(0)).strip("'"), text)
     # Make it a unicode string (the try supports python 2 and 3) #
@@ -232,7 +244,7 @@ def get_next_item(iterable):
 
 ################################################################################
 def pretty_now():
-    """Returns some thing like '2019-02-15 15:58:22 CET+0100'"""
+    """Returns something like '2019-02-15 15:58:22 CET+0100'"""
     import datetime, tzlocal
     time_zone = tzlocal.get_localzone()
     now       = datetime.datetime.now(time_zone)
