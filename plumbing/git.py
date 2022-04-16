@@ -24,13 +24,12 @@ class GitRepo(DirectoryPath):
     """
 
     def __bool__(self): return self.is_a_repos
-    __nonzero__ = __bool__
 
     def __init__(self, path, empty=False):
         # Super #
         DirectoryPath.__init__(self, path)
         # The git directory #
-        self.git_dir = self.path + '.git'
+        self.git_dir = self.path + '.git/'
         # Check exists #
         if not empty and not self:
             raise Exception("No git repository at '%s'" % self.git_dir)

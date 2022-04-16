@@ -13,23 +13,28 @@ from autopaths.file_path import FilePath
 ################################################################################
 class Graph(object):
     """
-    A nice class to make graphs with matplotlib. Example usage:
+    A nice class to make graphs with matplotlib.
 
-        from plumbing.graphs import Graph
+    Here is an example usage that will generate six graphs from
+    three datasets in two formats:
 
-        class RegressionGraph(Graph):
-            formats = ('pdf', 'svg')
-            def plot(self, **kwargs):
-                fig = pyplot.figure()
-                seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
-                self.save_plot(fig, **kwargs)
-
-        for x_name in x_names:
-            graph            = PearsonGraph(short_name = x_name)
-            graph.title      = "Regression between y and '%s'" % (x_name)
-            graph.x_data     = x_data[x_name]
-            graph.y_data     = y_data
-            graph.plot()
+        >>> from plumbing.graphs import Graph
+        >>>
+        >>> class RegressionGraph(Graph):
+        >>>     formats = ('pdf', 'svg')
+        >>>     title = "Regression graph of two variables"
+        >>>     def plot(self, **kwargs):
+        >>>         fig = pyplot.figure()
+        >>>         seaborn.regplot(self.x_data, self.y_data, fit_reg=True);
+        >>>         self.save_plot(fig, **kwargs)
+        >>>
+        >>> names = ['first', 'second', 'third']
+        >>> for x_name in names:
+        >>>     graph            = PearsonGraph(short_name = x_name)
+        >>>     graph.title      = "Regression between y and '%s'" % (x_name)
+        >>>     graph.x_data     = x_data[x_name]
+        >>>     graph.y_data     = y_data
+        >>>     graph.plot()
     """
 
     default_params = OrderedDict((
@@ -112,7 +117,7 @@ class Graph(object):
     def __call__(self, *args, **kwargs):
         """
         Plot the graph if it doesn't exist. Then return the path to it.
-        Force the re-runing with rerun=True.
+        Force the reruning by passing `rerun=True`.
         """
         if not self or kwargs.get('rerun'): self.plot(*args, **kwargs)
         return self.path

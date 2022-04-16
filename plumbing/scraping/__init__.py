@@ -42,7 +42,7 @@ def request(url,
 def retrieve_from_url(url, user_agent=None, **kwargs):
     """
     Return the text content of a resource (e.g. the HTML).
-    By default we will retry if an HTTP error arises.
+    By default, we will retry if an HTTP error arises.
     """
     # Custom user agent if needed #
     if user_agent is not None: header = make_headers(user_agent)
@@ -57,35 +57,36 @@ def stream_from_url(*args, **kwargs):
     """
     Save the resource as a file on disk iteratively by first asking
     for the 'content-length' header entry and downloading in chunks.
-    By default we will retry if an HTTP error arises.
-    By default we will uncompress a downloaded file if it is zipped.
+    By default, we will retry if an HTTP error arises.
+    By default, we will uncompress a downloaded file if it is zipped.
     """
     # Just redirect to download_from_url #
-    kwargs.update({'steam': True})
+    kwargs.update({'stream': True})
     return download_from_url(*args, **kwargs)
 
+###############################################################################
 def download_from_url(url,
                       destination = None,
                       uncompress  = False,
-                      user_agent  = 1,
+                      user_agent  = None,
                       stream      = False,
                       progress    = False,
                       desc        = None,
+                      cleanup     = False,
                       **kwargs):
     """
     Save the resource as a file on disk.
     """
     # Custom user agent if needed #
-    if user_agent is not None: header = make_headers(user_agent)
-    else: header = ""
+    if user_agent is not None: magic = make_headers(user_agent)
+    else: magic = ""
     # Download #
-    if stream: response = request(url, header, response=True, stream=True, **kwargs)
-    else:      content  = request(url, header, content=True, **kwargs)
+    if stream: response = request(url, magic, response=True, stream=True, **kwargs)
+    else:      content  = request(url, magic, content=True, **kwargs)
     # Get total size #
     if stream:
         total_size = int(response.headers.get('content-length', -1))
-        num_blocks = 1500
-        block_size = int(total_size/num_blocks)
+        block_size = int(5e5)
     # Sometimes we don't get content-length #
     if stream and total_size < 0:
         return download_from_url(url, destination, uncompress, user_agent,
@@ -106,7 +107,7 @@ def download_from_url(url,
                 bar = tqdm(bar_format   = bar,
                            desc         = desc,
                            total        = total_size,
-                           unit         = 'iB',
+                           unit         = 'B',
                            unit_scale   = True)
                 with open(destination, "wb") as handle:
                     for data in generator:
@@ -119,8 +120,9 @@ def download_from_url(url,
         # Without streaming #
         if not stream:
             with open(destination, "wb") as handle: handle.write(content)
+    # Remove the destination before raising any error #
     except:
-        if os.path.exists(destination): os.remove(destination)
+        if cleanup and os.path.exists(destination): os.remove(destination)
         raise
     # Uncompress the result #
     if uncompress:
@@ -129,12 +131,12 @@ def download_from_url(url,
             return destination.untargz_to()
         # Otherwise, read the magic number #
         with open(destination, 'rb') as f:
-            header = f.read(4)
+            magic = f.read(4)
         # If it's a zip file #
-        if header == b"PK\x03\x04":
+        if magic == b"PK\x03\x04":
             return destination.unzip_to(inplace=True)
         # If it's a gzip file #
-        elif header[:3] == b"\x1f\x8b\x08":
+        elif magic[:3] == b"\x1f\x8b\x08":
             return destination.ungzip_to()
     # Return #
     return destination
