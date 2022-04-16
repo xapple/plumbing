@@ -10,8 +10,10 @@ Contact at www.sinclair.bio
 # Built-in modules #
 import os, time, inspect, tempfile, pickle, hashlib, base64
 
-# Internal modules #
+# First party modules #
 from autopaths import Path
+from autopaths.dir_path import DirectoryPath
+from autopaths.file_path import FilePath
 
 ################################################################################
 def cached(f):
@@ -31,6 +33,9 @@ class property_cached(object):
     into a property cached on the instance.
 
     In other words, it's like `@property` but memoized.
+
+    Since Python 3.6 we have `@functools.cached_property` which is
+    mostly the same as this.
 
         >>> from plumbing.cache import property_cached
         >>>
@@ -59,13 +64,13 @@ class property_cached(object):
         documentation was unable to correctly traverse a decorated property.
         """
         # Record the function that we are decorating #
-        self.func    = func
+        self.func = func
         # Set the documentation string of the underlying function here #
         self.__doc__ = func.__doc__
         self.__get__.__func__.__doc__ = func.__doc__
         self.__init__.__func__.__doc__ = func.__doc__
         # Get the plain name of the function #
-        self.name    = self.func.__name__
+        self.name = self.func.__name__
 
     def __get__(self, instance, owner):
         """
@@ -105,7 +110,7 @@ class property_cached(object):
         if '__cache__' not in instance.__dict__: instance.__cache__ = {}
 
 ###############################################################################
-class property_pickled(object):
+class property_pickled:
     """
     Same thing as `property_cached` but the cache will be stored on disk
     with the `pickle` module. So you should check that the return value of the
@@ -146,7 +151,7 @@ class property_pickled(object):
         # Optionally, specify the path at which we should pickle directly #
         self.path = path
 
-    def __get__(self, instance, owner):
+    def __get__(self, instance, owner, debug=False):
         """
         If you see this docstring or code in a seemingly unrelated part of
         an auto-generated documentation, it means the program making the
@@ -160,6 +165,11 @@ class property_pickled(object):
         if self.name in instance.__cache__: return instance.__cache__[self.name]
         # Where should we look in the file system ? #
         path = self.get_pickle_path(instance)
+        path.directory.create_if_not_exists()
+        # Debugging message #
+        if debug:
+            msg = "-> The pickle cache path for '%s' is '%s'."
+            print(msg % (instance, path))
         # Is the answer already on the file system? #
         if path.exists:
             with open(path, 'rb') as handle: result = pickle.load(handle)
@@ -182,6 +192,7 @@ class property_pickled(object):
         instance.__cache__[self.name] = value
         # Where should we look in the file system ? #
         path = self.get_pickle_path(instance)
+        path.directory.create_if_not_exists()
         # And also overwrite it on the disk #
         with open(path, 'wb') as handle: pickle.dump(value, handle)
 
@@ -199,17 +210,29 @@ class property_pickled(object):
 
     def get_pickle_path(self, instance):
         # First check if an `at` parameter was specified #
-        if self.at is not None: path = Path(getattr(instance, self.at))
+        if self.at is not None:
+            return Path(getattr(instance, self.at))
         # Secondly check if a `path` parameter was specified #
-        elif self.path is not None: path = Path(self.path)
+        if self.path is not None:
+            if isinstance(self.path, str):      self.path = Path(self.path)
+            if isinstance(self.path, FilePath): return self.path
+            # If it's a directory we can create the full file path #
+            if isinstance(self.path, DirectoryPath):
+                if isinstance(instance, FilePath):
+                    return instance.replace_extension(self.name + '.pickle')
+                else:
+                    return self.path + self.name + ".pickle"
         # Thirdly check if the instance has a cache_dir specified #
-        elif 'cache_dir' in instance.__dict__:
-            path = Path(instance.cache_dir + self.name + '.pickle')
+        if 'cache_dir' in instance.__dict__:
+            return Path(instance.cache_dir + self.name + '.pickle')
+        # Fourthly, check if the instance has autopaths activated and if
+        # there is a cache directory specified there.
+        if hasattr(instance, 'autopaths'):
+            directory = instance.autopaths.get('cache_dir')
+            if directory is not None:
+                return directory + self.name + '.pickle'
         # Otherwise, we go the default route (no instance passed) #
-        else: path = Path(self.get_default_path())
-        # Make the directory #
-        path.make_directory()
-        return path
+        return self.get_default_path()
 
     def get_default_path(self):
         # Get the temporary directory (platform dependant) #
@@ -223,7 +246,7 @@ class property_pickled(object):
         short_name = base64.urlsafe_b64encode(short_name).decode()
         short_name = short_name.replace('=','')
         # Return #
-        return path + short_name
+        return Path(path + short_name)
 
 ################################################################################
 def property_pickled_at(at):
@@ -240,7 +263,7 @@ def property_pickled_at(at):
 def property_pickled_path(path):
     """
     Same thing as above, but you can specify the path of the pickle file
-    directly.
+    directly in the decorator (instead of specifying a property name).
     """
     def wrapper(function): return property_pickled(function, path=path)
     return wrapper
