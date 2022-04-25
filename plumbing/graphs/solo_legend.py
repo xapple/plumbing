@@ -33,11 +33,12 @@ class SoloLegend(Graph):
         fig  = pyplot.figure()
         axes = fig.add_subplot(111)
         # Get each item #
-        items = self.label_to_color.items()
+        titles, colors = zip(*self.label_to_color.items())
         # Modify the labels #
-        if self.capitalize: items = [(k.capitalize(), v) for k,v in items]
+        if self.capitalize: titles = [t.capitalize() for t in titles]
         # Create the patches #
-        patches = [matplotlib.patches.Patch(color=v, label=k) for k,v in items]
+        patches = [matplotlib.patches.Patch(color=c, label=t)
+                   for c,t in zip(colors, titles)]
         # Suppress a warning #
         import warnings
         with warnings.catch_warnings():

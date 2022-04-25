@@ -11,7 +11,7 @@ from autopaths           import Path
 from autopaths.file_path import FilePath
 
 ################################################################################
-class Graph(object):
+class Graph:
     """
     A nice class to make graphs with matplotlib.
 
@@ -165,8 +165,11 @@ class Graph(object):
         if self.params.get('height'): fig.set_figheight(self.params['height'])
         # Adjust #
         if self.params.get('bottom'):
-            fig.subplots_adjust(hspace=0.0, bottom = self.params['bottom'], top   = self.params['top'],
-                                            left   = self.params['left'],   right = self.params['right'])
+            fig.subplots_adjust(hspace=0.0,
+                                bottom = self.params.get('bottom'),
+                                top    = self.params.get('top'),
+                                left   = self.params.get('left'),
+                                right  = self.params.get('right'))
         # Grid #
         if 'x_grid' in self.params:
             if self.params['x_grid']: axes.xaxis.grid(True, linestyle=':')
