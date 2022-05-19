@@ -31,6 +31,44 @@ def pandas_df_to_named_r_df(pandas_df, r_name):
     eval("return %s" % r_name)
 
 ################################################################################
+def df_to_pdf(df, pdf_path):
+    """Make a PDF from a data frame that is styled with some CSS."""
+    # Convert to HTML as a string #
+    table = df.to_html(classes='mystyle')
+    # Add our custom styling #
+    template = '''
+    <html>
+      <head>
+        <title>HTML Pandas Dataframe with CSS</title></head>
+        <style>
+            .mystyle {
+                font-size: 11pt; 
+                font-family: Arial;
+                border-collapse: collapse; 
+                border: 1px solid silver;
+            }
+            .mystyle td, th {
+                padding: 5px;
+            }
+            .mystyle tr:nth-child(even) {
+                background: #E0E0E0;
+            }
+            .mystyle tr:hover {
+                background: silver;
+                cursor: pointer;
+            }
+        </style>
+      <body>
+        %s
+      </body>
+    </html>
+    '''
+    # Use a library #
+    import weasyprint
+    result = weasyprint.HTML(string=template % table)
+    result.write_pdf(pdf_path)
+
+################################################################################
 def string_to_df(string, **kwargs):
     """
     Parse a string as a dataframe. Example:
