@@ -117,7 +117,7 @@ class Graph:
     def __call__(self, *args, **kwargs):
         """
         Plot the graph if it doesn't exist. Then return the path to it.
-        Force the reruning by passing `rerun=True`.
+        Force the rerunning by passing `rerun=True`.
         """
         if not self or kwargs.get('rerun'): self.plot(*args, **kwargs)
         return self.path
