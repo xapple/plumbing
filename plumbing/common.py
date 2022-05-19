@@ -671,3 +671,14 @@ def pretty_print_xml(xml_string=None, xml_path=None):
             handle.write(xml_string)
 
 ###############################################################################
+def combine_pdf_pages(input_pdfs, out_path):
+    """
+    Given a list of PDF files, we will combine all the pages together in a
+    single output file.
+    """
+    import PyPDF2
+    merger = PyPDF2.PdfFileMerger()
+    for pdf in input_pdfs:
+        merger.append(pdf)
+    merger.write(out_path)
+    merger.close()
