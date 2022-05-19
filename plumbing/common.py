@@ -287,7 +287,7 @@ def isubsample(full_sample, k, full_sample_len=None):
     # Do it #
     picked = 0
     for i, element in enumerate(full_sample):
-        prob = (k-picked) / (full_sample_len-i)
+        prob = (k - picked) / (full_sample_len - i)
         if random.random() < prob:
             yield element
             picked += 1
@@ -648,3 +648,26 @@ def query_yes_no(question, default="no"):
         if default is not None and choice == '': return valid[default]
         elif choice in valid:                    return valid[choice]
         else: sys.stdout.write("Please respond with 'yes' or 'no'\n")
+
+###############################################################################
+def pretty_print_xml(xml_string=None, xml_path=None):
+    """
+    Will convert XML to a more human readable version.
+    You should either pass an XML string, or a path to an XML file.
+    In the latter, we will convert it in place, and rewrite the file.
+    """
+    # Check if we got a file #
+    if xml_path is not None:
+        with open(xml_path) as handle:
+            xml_string = handle.read()
+    # Convert it #
+    import xml.etree.ElementTree as etree
+    element = etree.XML(xml_string)
+    etree.indent(element)
+    xml_string = etree.tostring(element, encoding='unicode')
+    # Check if we got a file #
+    if xml_path is not None:
+        with open(xml_path, 'w') as handle:
+            handle.write(xml_string)
+
+###############################################################################
