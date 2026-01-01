@@ -8,7 +8,7 @@ Contact at www.sinclair.bio
 """
 
 ###############################################################################
-class MultiDownload(Download):
+class MultiDownload():
     """
     Taken and adapted from:
     https://github.com/soda480/pypbars/blob/main/examples/example3.py
