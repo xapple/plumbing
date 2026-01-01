@@ -8,4 +8,4 @@ Contact at www.sinclair.bio
 """
 
 # Special variables #
-__version__ = '2.11.2'
+__version__ = '2.11.3'
