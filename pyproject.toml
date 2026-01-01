@@ -29,6 +29,7 @@ dependencies = [
   "requests",
   "rich",
   "tzlocal",
+  "brewer2mpl",
 ]
 
 [project.optional-dependencies]
