@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plumbing"
+version = "2.11.2"
+
+description = "Helps with plumbing-type programing in python."
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { file = "LICENSE.txt" }
+requires-python = ">=3.8"
+
+authors = [
+  { name = "Lucas Sinclair", email = "lucas.sinclair@me.com" },
+]
+
+dependencies = [
+  "autopaths>=1.6.2",
+  "pandas",
+  "retry",
+  "requests",
+  "rich",
+]
+
+[project.optional-dependencies]
+pretty_now = ["tzlocal"]
+graphs = ["matplotlib", "numpy"]
+check_module = ["packaging"]
+
+[project.urls]
+Homepage = "http://github.com/xapple/plumbing/"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+namespaces = true
+exclude = ["testing"]
