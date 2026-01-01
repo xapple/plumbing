@@ -7,14 +7,8 @@ MIT Licensed.
 Contact at www.sinclair.bio
 """
 
-# Built-in modules #
-
-# Internal modules #
-
 # First party modules #
 from plumbing.graphs import Graph
-
-# Third party modules #
 
 ###############################################################################
 class SoloLegend(Graph):

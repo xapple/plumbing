@@ -7,10 +7,6 @@ MIT Licensed.
 Contact at www.sinclair.bio
 """
 
-# Built-in modules #
-
-# Internal modules #
-
 # First party modules #
 from autopaths.file_path import FilePath
 

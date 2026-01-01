@@ -13,8 +13,6 @@ import os
 # Internal modules #
 from plumbing.cache import property_cached
 
-# Third party modules #
-
 ###############################################################################
 class InstanceEC2(object):
     """An EC2 instance provided by Amazon Web Services."""

@@ -11,8 +11,6 @@ Call it like this:
     $ ipython3 -i ~/repos/plumbing/test/scraping/test_user_agent.py
 """
 
-# Internal modules #
-
 ###############################################################################
 url = "http://example.com/index.html"
 

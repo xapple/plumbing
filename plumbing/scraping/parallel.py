@@ -7,16 +7,6 @@ MIT Licensed.
 Contact at www.sinclair.bio
 """
 
-# Built-in modules #
-
-# Internal modules #
-
-# First party modules #
-
-# Third party modules #
-
-# Constants #
-
 ###############################################################################
 class MultiDownload(Download):
     """

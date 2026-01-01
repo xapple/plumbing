@@ -13,7 +13,7 @@ import getpass, hashlib, collections
 import unicodedata
 from itertools import compress, product
 
-# One liners #
+# One-liners #
 flatter = lambda x: [item for sublist in x for item in sublist]
 
 ###############################################################################

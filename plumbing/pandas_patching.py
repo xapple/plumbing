@@ -7,14 +7,8 @@ MIT Licensed.
 Contact at www.sinclair.bio
 """
 
-# Built-in modules #
-
-# First party modules #
-
 # Third party modules #
 import pandas
-
-# Internal modules #
 
 ###############################################################################
 def flexible_join(first, other, on=None, how=None, lsuffix=None, rsuffix=None):
@@ -61,4 +55,3 @@ pandas.DataFrame.left_join  = left_join
 pandas.DataFrame.right_join = right_join
 pandas.DataFrame.inner_join = inner_join
 pandas.DataFrame.outer_join = outer_join
-

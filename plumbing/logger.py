@@ -10,10 +10,6 @@ Contact at www.sinclair.bio
 # Built-in modules #
 import logging
 
-# Internal modules #
-
-# Third party modules #
-
 ###############################################################################
 def create_file_logger(name, path, file_level='debug', console_level='error'):
     # Create a custom logger #

@@ -13,8 +13,6 @@ import os, sys
 # Internal modules #
 from autopaths.dir_path import DirectoryPath
 
-# Third party modules #
-
 ###############################################################################
 class GitRepo(DirectoryPath):
     """

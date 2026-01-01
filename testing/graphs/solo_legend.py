@@ -16,7 +16,7 @@ import inspect
 from autopaths import Path
 from plumbing.graphs.solo_legend import SoloLegend
 
-# Constants #
+# Constants #
 this_file = Path((inspect.stack()[0])[1])
 this_dir  = this_file.directory
 

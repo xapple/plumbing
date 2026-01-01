@@ -7,15 +7,11 @@ MIT Licensed.
 Contact at www.sinclair.bio
 """
 
-# Built-in modules #
-
 # Internal modules #
 import inspect, os
 
 # First party modules #
 from autopaths import Path
-
-# Third party modules #
 
 # Constants #
 file_name = inspect.getframeinfo(inspect.currentframe()).filename

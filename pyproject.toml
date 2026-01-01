@@ -15,16 +15,23 @@ authors = [
   { name = "Lucas Sinclair", email = "lucas.sinclair@me.com" },
 ]
 
+keywords = ["automation"]
+
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
 dependencies = [
   "autopaths>=1.6.2",
   "pandas",
   "retry",
   "requests",
   "rich",
+  "tzlocal",
 ]
 
 [project.optional-dependencies]
-pretty_now = ["tzlocal"]
 graphs = ["matplotlib", "numpy"]
 check_module = ["packaging"]
 

@@ -15,8 +15,6 @@ import os
 # Internal modules #
 from plumbing.dependencies import check_setup_py
 
-# Third party modules #
-
 ###############################################################################
 path = os.path.expanduser("~/repos/pacmill/setup.py")
 result = check_setup_py(path)

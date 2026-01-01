@@ -7,12 +7,6 @@ MIT Licensed.
 Contact at www.sinclair.bio
 """
 
-# Built-in modules #
-
-# First party modules #
-
-# Third party modules #
-
 ###############################################################################
 # This provides extra information for certain packages #
 extra_clues = {
