@@ -16,7 +16,7 @@ from itertools import compress, product
 # One liners #
 flatter = lambda x: [item for sublist in x for item in sublist]
 
-################################################################################
+###############################################################################
 def rich_panel_print(text, title=None):
     """Make a pretty box around a text with the `rich` library."""
     from rich import print as rich_print
@@ -24,7 +24,7 @@ def rich_panel_print(text, title=None):
     from rich.padding import Padding
     rich_print(Padding(Panel(text, title=title, padding=2, expand=False), (2,10)))
 
-################################################################################
+###############################################################################
 def no_single_newline(text):
     """
     Remove single newlines in a string, but preserve multiple newlines.
@@ -32,7 +32,7 @@ def no_single_newline(text):
     """
     return re.sub('(?<![\r\n])(\r?\n|\n?\r)(?![\r\n])', ' ', text)
 
-################################################################################
+###############################################################################
 def ascii(text):
     """Make a safe, ASCII version a string. For instance for use on the web."""
     return unicodedata.normalize('NFKD', unicode(text)).encode('ASCII', 'ignore')
@@ -45,7 +45,7 @@ def alphanumeric(text):
     """
     return "".join([c for c in text if re.match(r'\w', c)])
 
-################################################################################
+###############################################################################
 def sanitize_text(text):
     r"""
     Make a safe representation of a string.
@@ -61,7 +61,7 @@ def sanitize_text(text):
     text = unicodedata.normalize('NFC', text)
     return text
 
-################################################################################
+###############################################################################
 def camel_to_snake(text):
     """
     Will convert CamelCaseStrings to snake_case_strings. Examples:
@@ -118,7 +118,7 @@ def camel_to_snake(text):
     # Return #
     return result
 
-################################################################################
+###############################################################################
 def bool_to_unicode(b):
     """
     Different possibilities for True: ☑️✔︎✓✅👍✔️
@@ -145,19 +145,19 @@ def access_dict_like_obj(obj, prop, new_value=None):
         if len(props)==1: return obj[prop]
         else: return access_dict_like_obj(obj[props[0]], '.'.join(props[1:]))
 
-################################################################################
+###############################################################################
 def all_combinations(items):
     """Generate all combinations of a given list of items."""
     return (set(compress(items,mask)) for mask in product(*[[0,1]]*len(items)))
 
-################################################################################
+###############################################################################
 def pad_equal_whitespace(string, pad=None):
     """Given a multiline string, add whitespaces to every line
     so that every line has the same length."""
     if pad is None: pad = max(map(len, string.split('\n'))) + 1
     return '\n'.join(('{0: <%i}' % pad).format(line) for line in string.split('\n'))
 
-################################################################################
+###############################################################################
 def pad_extra_whitespace(string, pad):
     """Given a multiline string, add extra whitespaces to the front of every line."""
     return '\n'.join(' ' * pad + line for line in string.split('\n'))
@@ -173,7 +173,7 @@ def concatenate_by_line(first, second):
     """Zip two strings together, line wise"""
     return '\n'.join(x+y for x,y in zip(first.split('\n'), second.split('\n')))
 
-################################################################################
+###############################################################################
 def sort_string_by_pairs(strings):
     """Group a list of strings by pairs, by matching those with only
     one character difference between each other together."""
@@ -190,13 +190,13 @@ def sort_string_by_pairs(strings):
                 break
     return pairs
 
-################################################################################
+###############################################################################
 def count_string_diff(a,b):
     """Return the number of characters in two strings that don't exactly match"""
     shortest = min(len(a), len(b))
     return sum(a[i] != b[i] for i in range(shortest))
 
-################################################################################
+###############################################################################
 def iflatten(L):
     """Iterative flatten."""
     for sublist in L:
@@ -204,12 +204,12 @@ def iflatten(L):
             for item in iflatten(sublist): yield item
         else: yield sublist
 
-################################################################################
+###############################################################################
 def uniquify_list(L):
     """Same order unique list using only a list compression."""
     return [e for i, e in enumerate(L) if L.index(e) == i]
 
-################################################################################
+###############################################################################
 def average(iterator):
     """Iterative mean."""
     count = 0
@@ -219,7 +219,7 @@ def average(iterator):
         total += num
     return float(total)/count
 
-################################################################################
+###############################################################################
 def round_to_halves(number):
     """Round a number to the closest half integer.
     >>> round_to_halves(1.3)
@@ -233,7 +233,7 @@ def round_to_halves(number):
     """
     return round(number * 2) / 2
 
-################################################################################
+###############################################################################
 def get_next_item(iterable):
     """Gets the next item of an iterable.
     If the iterable is exhausted, returns None."""
@@ -242,7 +242,7 @@ def get_next_item(iterable):
     except AttributeError: x = None
     return x
 
-################################################################################
+###############################################################################
 def pretty_now():
     """Returns something like '2019-02-15 15:58:22 CET+0100'"""
     import datetime, tzlocal
@@ -250,7 +250,7 @@ def pretty_now():
     now       = datetime.datetime.now(time_zone)
     return now.strftime("%Y-%m-%d %H:%M:%S %Z%z")
 
-################################################################################
+###############################################################################
 def andify(list_of_strings):
     """
     Given a list of strings will join them with commas
@@ -264,7 +264,7 @@ def andify(list_of_strings):
     if comma_index > -1: result = result[:comma_index] + ' and' + result[comma_index+1:]
     return result
 
-################################################################################
+###############################################################################
 def num_to_ith(num):
     """1 becomes 1st, 2 becomes 2nd, etc."""
     value             = str(num)
@@ -276,7 +276,6 @@ def num_to_ith(num):
     if last_digit == '3': return value + 'rd'
     return value + 'th'
 
-################################################################################
 def isubsample(full_sample, k, full_sample_len=None):
     """Down-sample an enumerable list of things"""
     # Determine length #
@@ -371,7 +370,7 @@ def moving_average(interval, windowsize, borders=None):
         right = numpy.ones(half)*result[-1]
         return numpy.concatenate((left, result, right))
 
-################################################################################
+###############################################################################
 def wait(predicate, interval=1, message=lambda: "Waiting..."):
     """Wait until the predicate turns true and display a turning ball."""
     ball, next_ball = u"|/-\\", "|"
@@ -419,20 +418,20 @@ def split_thousands(s):
     # Return #
     return result
 
-################################################################################
+###############################################################################
 def gps_deg_to_float(data):
     m = re.search("(\\d+?)°(\\d+?)\'(\\d+?)\'\'", data.strip())
     degs, mins, secs = [0.0 if m.group(i) is None else int(m.group(i)) for i in range(1, 4)]
     comp_dir = -1 if data[-1] in ('N', 'E') else 1
     return (degs + (mins / 60) + (secs / 3600)) * comp_dir
 
-################################################################################
+###############################################################################
 def is_integer(string):
     try: int(string)
     except ValueError: return False
     return True
 
-################################################################################
+###############################################################################
 def reverse_compl_with_name(old_seq):
     """Reverse a SeqIO sequence, but keep its name intact."""
     new_seq = old_seq.reverse_complement()
@@ -440,7 +439,7 @@ def reverse_compl_with_name(old_seq):
     new_seq.description = old_seq.description
     return new_seq
 
-################################################################################
+###############################################################################
 class GenWithLength(object):
     """A generator with a length attribute"""
     def __init__(self, gen, length): self.gen, self.length = gen, length
@@ -460,7 +459,7 @@ class Password(object):
         if self._value is None: self._value = getpass.getpass(self.prompt)
         return self._value
 
-################################################################################
+###############################################################################
 class OrderedSet(collections.OrderedDict, collections.abc.MutableSet):
     """
     A recipe for an ordered set.
@@ -491,7 +490,7 @@ class OrderedSet(collections.OrderedDict, collections.abc.MutableSet):
     symmetric_difference_update = property(lambda self: self.__ixor__)
     union                       = property(lambda self: self.__or__)
 
-################################################################################
+###############################################################################
 def load_json_path(path):
     """Load a file with the json module, but report errors better if it
     fails. And have it ordered too !"""
@@ -509,7 +508,7 @@ def find_file_by_name(name, root=os.curdir):
         if name in filenames: return os.path.join(dirpath, name)
     raise Exception("Could not find file '%s' in '%s'" % (name, root))
 
-################################################################################
+###############################################################################
 def md5sum(file_path, blocksize=65536):
     """Compute the md5 of a file. Pretty fast."""
     md5 = hashlib.md5()
@@ -542,7 +541,7 @@ def reversed_blocks(handle, blocksize=4096):
         handle.seek(here, os.SEEK_SET)
         yield handle.read(delta)
 
-################################################################################
+###############################################################################
 def prepend_to_file(path, data, bufsize=1<<15):
     """TODO:
     * Add a random string to the backup file.
@@ -569,7 +568,7 @@ def append_to_file(path, data):
     with open(path, "a") as handle:
         handle.write(data)
 
-################################################################################
+###############################################################################
 def tail(path, window=20):
     with open(path, 'r') as f:
         BUFSIZ = 1024
@@ -682,3 +681,70 @@ def combine_pdf_pages(input_pdfs, out_path):
         merger.append(pdf)
     merger.write(out_path)
     merger.close()
+
+##############################################################################
+class LazyStringIO:
+    """
+    A class that mimics the behavior of StringIO but integrates an iterator.
+    This version uses an internal buffer to store data instead of StringIO.
+
+    Usage:
+
+        >>> iterator = iter([b"Hello", b", ", b"World", b"!"])
+        >>>
+        >>> with LazyStringIO(iterator) as stream:
+        >>>     print(stream.read(7))    # Hello//,
+        >>>     print(stream.read(8))    # //World//
+        >>>     print(stream.read())     # !
+    """
+
+    def __init__(self, iterator, separator="//\n", encoding="latin1"):
+        self.buffer    = ""
+        self.iterator  = iterator
+        self.separator = separator
+        self.encoding  = encoding
+        self.exhausted = False
+
+    def fetch_next(self):
+        try:
+            return next(self.iterator).decode(self.encoding)
+        except StopIteration:
+            self.exhausted = True
+            return None
+
+    def read(self, n=-1):
+        """If n is -1 (default value), it means read all"""
+        # Use the buffer #
+        values = [self.buffer]
+        total  = len(self.buffer)
+        self.buffer = ''
+        # Now we will read just enough items #
+        while True:
+            # If we have enough data #
+            if 0 < n <= total: break
+            # Get one value and add it #
+            next_value = self.fetch_next()
+            # If we reached the end #
+            if next_value is None: break
+            # Add it with a separator #
+            values += [next_value, self.separator]
+            # Calculate the amount of data we have #
+            total += len(next_value) + len(self.separator)
+        # Compute the long string #
+        data = ''.join(values)
+        # If we still didn't get enough, send everything we have #
+        if n < 0 or total <= n: return data
+        # We have more than enough #
+        result = data[:n]
+        self.buffer = data[n:]
+        # Return #
+        return result
+
+    def close(self):
+        pass  # Nothing to do for closing in this refactored version
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()

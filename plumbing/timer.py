@@ -15,7 +15,7 @@ import tzlocal
 from plumbing.cache import property_cached
 from plumbing.color import Color
 
-################################################################################
+###############################################################################
 class Timer(object):
     """
     Useful for timing the different steps in a pipeline.
@@ -82,7 +82,7 @@ class Timer(object):
         # Parameters #
         time = self.get_now() - self.last_mark
         # Make message #
-        msg += "Elapsed time: %s" % time
+        msg += " - Elapsed time: %s" % time
         # Print #
         self.print(self.prefix + msg + self.suffix)
         # Set #
@@ -117,7 +117,7 @@ class Timer(object):
     def print(self, *args, **kwargs):
         print(*args, **kwargs)
 
-################################################################################
+###############################################################################
 class LogTimer(Timer):
     """
     Same as a Timer, except the messages go to a logger object instead of

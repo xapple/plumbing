@@ -19,7 +19,7 @@ module_names = {
     "biom-format":  "biom",
 }
 
-################################################################################
+###############################################################################
 def check_setup_py(path_of_setup):
     """
     Parses the required modules from a `setup.py` file and checks they are
@@ -63,7 +63,7 @@ def check_setup_py(path_of_setup):
     # Loop #
     for package, version in requires.items(): check_module(package, version)
 
-################################################################################
+###############################################################################
 def check_module(mod_name, min_version=None):
     """
     Raise an exception if the given module is either not found or has a
@@ -121,6 +121,3 @@ def check_module(mod_name, min_version=None):
     min_version = Version(min_version)
     # If the version is too low #
     if cur_version < min_version: raise ImportError(msg)
-
-
-

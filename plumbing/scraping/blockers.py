@@ -14,10 +14,10 @@ Contact at www.sinclair.bio
 # First party modules #
 from autopaths.file_path import FilePath
 
-################################################################################
+###############################################################################
 def check_blocked_request(tree):
     """
-    Check if the request was denied by the server.
+    Check if the server denied the request.
     And raise an exception if it was.
     """
     # Modules #
@@ -33,11 +33,12 @@ def check_blocked_request(tree):
     # Try Incapsula #
     blocked = blocked or check_incapsula(tree)
     # If we were indeed blocked, we can stop here #
-    if blocked: raise Exception("The request was flagged and blocked by the server.")
+    if blocked: raise Exception("The request was flagged and blocked by the "
+                                "server.")
 
-################################################################################
+###############################################################################
 def check_incapsula(tree):
-    # By default we are good #
+    # By default, we are good #
     blocked = False
     # Result type 1 from Incapsula #
     meta = tree.xpath("//head/meta[@name='ROBOTS']")

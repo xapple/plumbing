@@ -1,5 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Written by Lucas Sinclair.
+MIT Licensed.
+Contact at www.sinclair.bio
+"""
 # Built-in modules #
-import os, time, inspect, getpass
+import os, time, inspect, getpass, warnings
 from collections import OrderedDict
 
 # Internal modules #
@@ -10,7 +17,7 @@ from plumbing.cache  import property_cached
 from autopaths           import Path
 from autopaths.file_path import FilePath
 
-################################################################################
+###############################################################################
 class Graph:
     """
     A nice class to make graphs with matplotlib.
@@ -74,17 +81,30 @@ class Graph:
     def __init__(self, parent=None, base_dir=None, short_name=None):
         # Save parent #
         self.parent = parent
-        # If we got a file as base_dir #
+        # Short name #
+        if short_name: self.short_name = short_name
+        # Use the parents name or the base class name #
+        if not hasattr(self, 'short_name'):
+            if hasattr(self.parent, 'short_name'):
+                self.short_name = self.parent.short_name
+            else:
+                self.short_name = camel_to_snake(self.__class__.__name__)
+        # If we got a file as base_dir then find the directory #
         if isinstance(base_dir, FilePath):
             self.base_dir = base_dir.directory
             short_name    = base_dir.short_prefix
+        # If the object has a base_dir specified as an attribute #
+        elif base_dir is None and hasattr(self, 'base_dir'):
+            self.base_dir = Path(self.base_dir)
         # If no parent and no directory given get the calling script #
-        if base_dir is None and parent is None:
+        elif base_dir is None and parent is None:
             file_name     = os.path.abspath((inspect.stack()[1])[1])
             self.base_dir = os.path.dirname(os.path.abspath(file_name)) + '/'
             self.base_dir = Path(self.base_dir)
-        # If no directory given but a parent is present we can guess #
-        if base_dir is None:
+            msg = "Used the script path to determine the base_dir"
+            warnings.warn(msg + " of the graph '%s'" % self.short_name)
+        # If no directory given but a parent is present, then we can guess #
+        elif base_dir is None:
             if hasattr(self.parent, 'p'):
                 self.base_dir = self.parent.p.graphs_dir
             elif hasattr(self.parent, 'paths'):
@@ -101,14 +121,6 @@ class Graph:
             self.base_dir = Path(base_dir)
         # Make sure the directory exists #
         self.base_dir.create_if_not_exists()
-        # Short name #
-        if short_name: self.short_name = short_name
-        # Use the parents name or the base class name #
-        if not hasattr(self, 'short_name'):
-            if hasattr(self.parent, 'short_name'):
-                self.short_name = self.parent.short_name
-            else:
-                self.short_name = camel_to_snake(self.__class__.__name__)
 
     @property_cached
     def path(self):

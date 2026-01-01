@@ -22,7 +22,7 @@ file_name = inspect.getframeinfo(inspect.currentframe()).filename
 this_dir  = os.path.dirname(os.path.abspath(file_name)) + '/'
 destin    = Path(this_dir + 'user_agent_strings.txt')
 
-################################################################################
+###############################################################################
 def get_popular_user_agents():
     """
     Retrieve most popular user agent strings.
@@ -30,7 +30,7 @@ def get_popular_user_agents():
     """
     return ''
 
-################################################################################
+###############################################################################
 if __name__ == '__main__':
     content = get_popular_user_agents()
     destin.write(content)

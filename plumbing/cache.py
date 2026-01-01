@@ -15,7 +15,7 @@ from autopaths import Path
 from autopaths.dir_path import DirectoryPath
 from autopaths.file_path import FilePath
 
-################################################################################
+###############################################################################
 def cached(f):
     """Decorator for functions evaluated only once."""
     def memoized(*args, **kwargs):
@@ -248,7 +248,7 @@ class property_pickled:
         # Return #
         return Path(path + short_name)
 
-################################################################################
+###############################################################################
 def property_pickled_at(at):
     """
     Same thing as above, but you can specify the name of another property as
@@ -259,7 +259,7 @@ def property_pickled_at(at):
     def wrapper(function): return property_pickled(function, at=at)
     return wrapper
 
-################################################################################
+###############################################################################
 def property_pickled_path(path):
     """
     Same thing as above, but you can specify the path of the pickle file
@@ -268,7 +268,7 @@ def property_pickled_path(path):
     def wrapper(function): return property_pickled(function, path=path)
     return wrapper
 
-################################################################################
+###############################################################################
 def expiry_every(seconds=0):
     def memoize_with_expiry(func, *args, **kwargs):
         # Get the cache #

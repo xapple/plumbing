@@ -1,7 +1,16 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Written by Lucas Sinclair.
+MIT Licensed.
+Contact at www.sinclair.bio
+"""
+
 # Built-in modules #
 import sys
 
-################################################################################
+###############################################################################
 class RedirectStdStreams(object):
     """
     See file `plumbing/test/redirect/test_redirect.py`
@@ -30,7 +39,7 @@ class RedirectStdStreams(object):
         sys.stdout = self.old_stdout
         sys.stderr = self.old_stderr
 
-################################################################################
+###############################################################################
 class SuppressAllOutput(object):
     """For those annoying modules that can't shut-up about warnings."""
 

@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Written by Lucas Sinclair.
+MIT Licensed.
+Contact at www.sinclair.bio
+"""
+
 # Built-in modules #
 import os, sqlite3, types
 
@@ -10,7 +19,7 @@ from autopaths.file_path import FilePath
 # Third party modules #
 import pandas
 
-################################################################################
+###############################################################################
 class SQLiteDatabase(FilePath):
     """A wrapper for an SQLite3 database."""
 

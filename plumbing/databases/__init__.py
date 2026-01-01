@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Written by Lucas Sinclair.
+MIT Licensed.
+Contact at www.sinclair.bio
+"""
+
 # Built-in modules #
 import os, sqlite3
 
@@ -7,7 +16,7 @@ from itertools import islice
 # First party modules #
 from plumbing.color import Color
 
-################################################################################
+###############################################################################
 def convert_to_sql(dest, keys, values, sql_field_types=None):
     if sql_field_types is None: sql_field_types = {}
     with sqlite3.connect(dest) as connection:

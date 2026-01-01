@@ -13,7 +13,7 @@ Contact at www.sinclair.bio
 
 # Third party modules #
 
-################################################################################
+###############################################################################
 # This provides extra information for certain packages #
 extra_clues = {
     'apt': "It is likely the `apt` command is missing because we are not "
@@ -28,7 +28,7 @@ msg_base = "The executable '%s' is required for this operation." \
            " Either you need to install '%s' on your system" \
            " or you need to fix the $PATH environment variable."
 
-################################################################################
+###############################################################################
 def check_cmd(cmd_name, exception=True, extra_msg=None, fancy_box=True):
     """
     Checks if the given executable is found in the path.

@@ -16,7 +16,7 @@ from plumbing.check_cmd_found import check_cmd
 # Third party modules #
 import sh
 
-################################################################################
+###############################################################################
 def get_apt_packages(all_packages, verbose=False):
     """
     Checks if the given aptitude packages are presently installed on the
@@ -27,7 +27,7 @@ def get_apt_packages(all_packages, verbose=False):
         if check_apt_pkg(pkg_name): continue
         else: install_apt_pkg(pkg_name, verbose, verbose)
 
-################################################################################
+###############################################################################
 def check_apt_pkg(pkg_name, exception=False):
     """
     Checks if the given aptitude package is presently installed on the
@@ -53,7 +53,7 @@ def check_apt_pkg(pkg_name, exception=False):
     # Return #
     return False
 
-################################################################################
+###############################################################################
 def install_apt_pkg(pkg_name, verbose=False, redirect=False):
     """
     Install a given apt package.
@@ -68,7 +68,7 @@ def install_apt_pkg(pkg_name, verbose=False, redirect=False):
     else:
         sh.sudo.apt('install', '--yes', pkg_name)
 
-################################################################################
+###############################################################################
 def check_apt_exists(exception=True):
     """
     Checks that the aptitude package manager is accessible on the current

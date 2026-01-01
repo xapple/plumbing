@@ -13,24 +13,24 @@ from io import StringIO
 # Third party modules #
 import pandas
 
-################################################################################
+###############################################################################
 def r_matrix_to_dataframe(matrix):
     import numpy
     cols = list(matrix.colnames)
     rows = list(matrix.rownames)
     return pandas.DataFrame(numpy.array(matrix), index=rows, columns=cols)
 
-################################################################################
+###############################################################################
 def pandas_df_to_r_df(pandas_df):
     from pandas.rpy.common import convert_to_r_dataframe
     return convert_to_r_dataframe(pandas_df)
 
-################################################################################
+###############################################################################
 def pandas_df_to_named_r_df(pandas_df, r_name):
     eval("%s = convert_to_r_dataframe(pandas_df)" % r_name)
     eval("return %s" % r_name)
 
-################################################################################
+###############################################################################
 def df_to_pdf(df, pdf_path):
     """Make a PDF from a data frame that is styled with some CSS."""
     # Convert to HTML as a string #
@@ -68,7 +68,7 @@ def df_to_pdf(df, pdf_path):
     result = weasyprint.HTML(string=template % table)
     result.write_pdf(pdf_path)
 
-################################################################################
+###############################################################################
 def string_to_df(string, **kwargs):
     """
     Parse a string as a dataframe. Example:
@@ -92,7 +92,7 @@ def string_to_df(string, **kwargs):
     df     = pandas.read_csv(handle, sep="|", header=0, **kwargs)
     return df
 
-################################################################################
+###############################################################################
 def count_unique_index(df, by):
     """
     This function enables you to quickly see how many unique combinations of
@@ -135,7 +135,7 @@ def count_unique_index(df, by):
     """
     return df.groupby(by).size().reset_index().rename(columns={0: 'count'})
 
-################################################################################
+###############################################################################
 def multiply_propagate_nan(df, series):
     """
     This function enables you to multiply a dataframe by a series with 'smart'

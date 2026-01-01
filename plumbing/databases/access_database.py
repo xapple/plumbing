@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Written by Lucas Sinclair.
+MIT Licensed.
+Contact at www.sinclair.bio
+"""
+
 # Built-in modules #
 import os, platform, base64, shutil, gzip
 from io import StringIO
@@ -14,7 +23,7 @@ from autopaths.tmp_path  import new_temp_path
 # Third party modules #
 import pandas
 
-################################################################################
+###############################################################################
 class AccessDatabase(FilePath):
     """
     A wrapper for a Microsoft Access database via pyodbc.
