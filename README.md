@@ -40,4 +40,4 @@ More documentation is available at:
 
 This documentation is simply generated with:
 
-    $ pdoc --html --output-dir docs --force plumbing
+    $ pdoc --output-dir docs plumbing
