@@ -73,5 +73,5 @@ class SoloLegend(Graph):
         # Save #
         self.dpi = 'figure'
         self.save_plot(**kwargs)
-        # Return for display in notebooks for instance #
+        # Return for display in notebooks, for instance #
         return fig

@@ -8,7 +8,7 @@ Contact at www.sinclair.bio
 """
 
 ###############################################################################
-class MultiDownload():
+class MultiDownload:
     """
     Taken and adapted from:
     https://github.com/soda480/pypbars/blob/main/examples/example3.py
@@ -25,7 +25,7 @@ class MultiDownload():
             import random
             queue.put({'total': random.randint(100, 150)})
 
-    def download_one(self, worker_id, total):
+    def download_one(self, total):
         for index in range(total):
             import time, random
             time.sleep(random.choice([.001, .003, .008]))
@@ -36,7 +36,7 @@ class MultiDownload():
         while True:
             try:
                 total = queue.get(timeout=1)['total']
-                result += self.download_one(worker_id, total)
+                result += self.download_one(worker_id)
             except Empty:
                 break
         return result
@@ -61,7 +61,7 @@ class MultiDownload():
             # Start a pool of workers #
             with Pool(self.num_proc) as pool:
                 # Arguments that will be sent to the function #
-                process_data = [('name%i'%i, data_queue, lines_queue)
+                process_data = [('name%i' % i, data_queue, lines_queue)
                                 for i in range(self.num_proc)]
                 # Map our function to each item #
                 results = pool.starmap_async(self.run_queue, process_data)
