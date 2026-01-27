@@ -7,9 +7,6 @@ MIT Licensed.
 Contact at www.sinclair.bio
 """
 
-# Third party modules #
-import pandas
-
 ###############################################################################
 def flexible_join(first, other, on=None, how=None, lsuffix=None, rsuffix=None):
     """
@@ -50,8 +47,10 @@ def outer_join(*args, **kwargs):
     return flexible_join(*args, **kwargs, how='outer')
 
 ###############################################################################
-# Add a nice method to pandas.DataFrame objects #
-pandas.DataFrame.left_join  = left_join
-pandas.DataFrame.right_join = right_join
-pandas.DataFrame.inner_join = inner_join
-pandas.DataFrame.outer_join = outer_join
+def patch_pandas():
+    """Add a nice method to pandas.DataFrame objects."""
+    import pandas
+    pandas.DataFrame.left_join  = left_join
+    pandas.DataFrame.right_join = right_join
+    pandas.DataFrame.inner_join = inner_join
+    pandas.DataFrame.outer_join = outer_join
