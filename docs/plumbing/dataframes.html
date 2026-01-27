@@ -89,17 +89,17 @@ Contact at <a href="www.sinclair.bio">www.sinclair.bio</a></p>
 </span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>
 </span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="c1"># Third party modules #</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="kn">import</span> <span class="nn">pandas</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>
-</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="c1">###############################################################################</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a><span class="k">def</span> <span class="nf">r_matrix_to_dataframe</span><span class="p">(</span><span class="n">matrix</span><span class="p">):</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>    <span class="kn">import</span> <span class="nn">numpy</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>    <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">colnames</span><span class="p">)</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>    <span class="n">rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">rownames</span><span class="p">)</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>    <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>
-</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="c1">###############################################################################</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a><span class="k">def</span> <span class="nf">pandas_df_to_r_df</span><span class="p">(</span><span class="n">pandas_df</span><span class="p">):</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a><span class="c1">###############################################################################</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a><span class="k">def</span> <span class="nf">r_matrix_to_dataframe</span><span class="p">(</span><span class="n">matrix</span><span class="p">):</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>    <span class="kn">import</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">pandas</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>    <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">colnames</span><span class="p">)</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>    <span class="n">rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">rownames</span><span class="p">)</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>    <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="c1">###############################################################################</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="k">def</span> <span class="nf">pandas_df_to_r_df</span><span class="p">(</span><span class="n">pandas_df</span><span class="p">):</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>    <span class="kn">import</span> <span class="nn">pandas</span>
 </span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>    <span class="kn">from</span> <span class="nn">pandas.rpy.common</span> <span class="kn">import</span> <span class="n">convert_to_r_dataframe</span>
 </span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>    <span class="k">return</span> <span class="n">convert_to_r_dataframe</span><span class="p">(</span><span class="n">pandas_df</span><span class="p">)</span>
 </span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>
@@ -166,110 +166,111 @@ Contact at <a href="www.sinclair.bio">www.sinclair.bio</a></p>
 </span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">        1  For  w  3  3</span>
 </span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">        2  For  w  4  4</span>
 </span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>    <span class="n">handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">))</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>    <span class="n">df</span>     <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>    <span class="k">return</span> <span class="n">df</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>
-</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="c1">###############################################################################</span>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="k">def</span> <span class="nf">count_unique_index</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">):</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">    This function enables you to quickly see how many unique combinations of</span>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">    column values exist in a data frame. Here are two examples:</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a><span class="sd">        &gt;&gt;&gt; df = &#39;&#39;&#39; i   | A  | B | C</span>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 1 | x</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 2 | x</span>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 3 | y &#39;&#39;&#39;</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import string_to_df</span>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="sd">        &gt;&gt;&gt; df = string_to_df(df)</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">        &gt;&gt;&gt; count_unique_index(df, by=[&#39;A&#39;, &#39;C&#39;])</span>
-</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>
-</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="sd">           A  C  count</span>
-</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="sd">        0  3  x      2</span>
-</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">        1  3  y      1</span>
-</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>
-</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">        &gt;&gt;&gt; import seaborn</span>
-</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="sd">        &gt;&gt;&gt; tips = seaborn.load_dataset(&quot;tips&quot;)</span>
-</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;]))</span>
-</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>
-</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">              sex smoker  count</span>
-</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">        0    Male    Yes     60</span>
-</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">        1    Male     No     97</span>
-</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">        2  Female    Yes     33</span>
-</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">        3  Female     No     54</span>
-</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>
-</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="sd">        &gt;&gt;&gt; tips = seaborn.load_dataset(&quot;tips&quot;)</span>
-</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;, &#39;day&#39;]))</span>
-</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>
-</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="sd">              sex smoker    time  count</span>
-</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="sd">        0    Male    Yes   Lunch     13</span>
-</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">        1    Male    Yes  Dinner     47</span>
-</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">        2    Male     No   Lunch     20</span>
-</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">        3    Male     No  Dinner     77</span>
-</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="sd">        4  Female    Yes   Lunch     10</span>
-</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">        5  Female    Yes  Dinner     23</span>
-</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a><span class="sd">        6  Female     No   Lunch     25</span>
-</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">        7  Female     No  Dinner     29</span>
-</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a>    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;count&#39;</span><span class="p">})</span>
-</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>
-</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="c1">###############################################################################</span>
-</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="k">def</span> <span class="nf">multiply_propagate_nan</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">series</span><span class="p">):</span>
-</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">    This function enables you to multiply a dataframe by a series with &#39;smart&#39;</span>
-</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">    propagation of NaN values.</span>
-</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>
-</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">    We implement a simple rule where:</span>
-</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>
-</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="sd">        x * NaN = NaN | ∀x≠0</span>
-</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="sd">        0 * NaN = 0</span>
-</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>
-</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="sd">    In essence, multipling a NaN with a zero will yield a zero and multipling</span>
-</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">    a NaN with anything else will yield a NaN.</span>
-</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">    This is usefull in some scenarios where NaN simply indicates a missing</span>
-</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="sd">    value in a dataset, which is known to be a dataset of real numbers.</span>
-</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">    For instance, when a scientist knows that all values considered in a given</span>
-</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a><span class="sd">    experiment are scalars but a few of the values were not recorded or were</span>
-</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="sd">    lost.</span>
-</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a><span class="sd">    This is done because, as it stands, NaN can represent anything even the</span>
-</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">    result of an operation yielding infinity. But there is no float named &quot;IaN&quot;</span>
-</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="sd">    that would stand for &quot;Is a Number&quot;, where we know that the number is</span>
-</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="sd">    in R or N, but are missing its particular value.</span>
-</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a>
-</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a><span class="sd">    #TODO restore zeros from the series too not only the dataframe.</span>
-</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a>
-</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd">    An example follows:</span>
-</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a>
-</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">        &gt;&gt;&gt; one = &#39;&#39;&#39;    | W1   | W2   | W3</span>
-</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a><span class="sd">        &gt;&gt;&gt;           A  | 0.0  | 0.7  | NaN</span>
-</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a><span class="sd">        &gt;&gt;&gt;           B  | 0.1  | 1.0  | 1.0</span>
-</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a><span class="sd">        &gt;&gt;&gt;           C  | 0.2  | 0.8  | 0.49</span>
-</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">        &gt;&gt;&gt;           D  | 0.0  | 0.0  | 1.0  &#39;&#39;&#39;</span>
-</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a><span class="sd">        &gt;&gt;&gt;</span>
-</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a><span class="sd">        &gt;&gt;&gt; two = &#39;&#39;&#39;    | Y</span>
-</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a><span class="sd">        &gt;&gt;&gt;           W3 | 8.0</span>
-</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a><span class="sd">        &gt;&gt;&gt;           W1 | NaN</span>
-</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a><span class="sd">        &gt;&gt;&gt;           W2 | 9.0  &#39;&#39;&#39;</span>
-</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a><span class="sd">        &gt;&gt;&gt;</span>
-</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import string_to_df</span>
-</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a><span class="sd">        &gt;&gt;&gt; one = string_to_df(one, index_col=0)</span>
-</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a><span class="sd">        &gt;&gt;&gt; two = string_to_df(two, index_col=0)</span>
-</span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a><span class="sd">        &gt;&gt;&gt;</span>
-</span><span id="L-180"><a href="#L-180"><span class="linenos">180</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import multiply_propagate_nan</span>
-</span><span id="L-181"><a href="#L-181"><span class="linenos">181</span></a><span class="sd">        &gt;&gt;&gt; print(multiply_propagate_nan(one, two[&#39;Y&#39;]))</span>
-</span><span id="L-182"><a href="#L-182"><span class="linenos">182</span></a>
-</span><span id="L-183"><a href="#L-183"><span class="linenos">183</span></a><span class="sd">                W1   W2    W3</span>
-</span><span id="L-184"><a href="#L-184"><span class="linenos">184</span></a><span class="sd">            A  0.0  6.3   NaN</span>
-</span><span id="L-185"><a href="#L-185"><span class="linenos">185</span></a><span class="sd">            B  NaN  9.0  8.00</span>
-</span><span id="L-186"><a href="#L-186"><span class="linenos">186</span></a><span class="sd">            C  NaN  7.2  3.92</span>
-</span><span id="L-187"><a href="#L-187"><span class="linenos">187</span></a><span class="sd">            D  0.0  0.0  8.00</span>
-</span><span id="L-188"><a href="#L-188"><span class="linenos">188</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-189"><a href="#L-189"><span class="linenos">189</span></a>    <span class="c1"># Multiply #</span>
-</span><span id="L-190"><a href="#L-190"><span class="linenos">190</span></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">df</span> <span class="o">*</span> <span class="n">series</span>
-</span><span id="L-191"><a href="#L-191"><span class="linenos">191</span></a>    <span class="c1"># Restore the zeros where they should be #</span>
-</span><span id="L-192"><a href="#L-192"><span class="linenos">192</span></a>    <span class="n">result</span><span class="p">[</span><span class="n">df</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span id="L-193"><a href="#L-193"><span class="linenos">193</span></a>    <span class="c1"># Return #</span>
-</span><span id="L-194"><a href="#L-194"><span class="linenos">194</span></a>    <span class="k">return</span> <span class="n">result</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>    <span class="kn">import</span> <span class="nn">pandas</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>    <span class="n">handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">))</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>    <span class="n">df</span>     <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>    <span class="k">return</span> <span class="n">df</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="c1">###############################################################################</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="k">def</span> <span class="nf">count_unique_index</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">):</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">    This function enables you to quickly see how many unique combinations of</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">    column values exist in a data frame. Here are two examples:</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">        &gt;&gt;&gt; df = &#39;&#39;&#39; i   | A  | B | C</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 1 | x</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 2 | x</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 3 | y &#39;&#39;&#39;</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import string_to_df</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">        &gt;&gt;&gt; df = string_to_df(df)</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">        &gt;&gt;&gt; count_unique_index(df, by=[&#39;A&#39;, &#39;C&#39;])</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="sd">           A  C  count</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">        0  3  x      2</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd">        1  3  y      1</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="sd">        &gt;&gt;&gt; import seaborn</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">        &gt;&gt;&gt; tips = seaborn.load_dataset(&quot;tips&quot;)</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a><span class="sd">        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;]))</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">              sex smoker  count</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">        0    Male    Yes     60</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">        1    Male     No     97</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">        2  Female    Yes     33</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">        3  Female     No     54</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">        &gt;&gt;&gt; tips = seaborn.load_dataset(&quot;tips&quot;)</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a><span class="sd">        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;, &#39;day&#39;]))</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="sd">              sex smoker    time  count</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">        0    Male    Yes   Lunch     13</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">        1    Male    Yes  Dinner     47</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">        2    Male     No   Lunch     20</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="sd">        3    Male     No  Dinner     77</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">        4  Female    Yes   Lunch     10</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a><span class="sd">        5  Female    Yes  Dinner     23</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">        6  Female     No   Lunch     25</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a><span class="sd">        7  Female     No  Dinner     29</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;count&#39;</span><span class="p">})</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="c1">###############################################################################</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="k">def</span> <span class="nf">multiply_propagate_nan</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">series</span><span class="p">):</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">    This function enables you to multiply a dataframe by a series with &#39;smart&#39;</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="sd">    propagation of NaN values.</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">    We implement a simple rule where:</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="sd">        x * NaN = NaN | ∀x≠0</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="sd">        0 * NaN = 0</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">    In essence, multipling a NaN with a zero will yield a zero and multipling</span>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">    a NaN with anything else will yield a NaN.</span>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="sd">    This is usefull in some scenarios where NaN simply indicates a missing</span>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">    value in a dataset, which is known to be a dataset of real numbers.</span>
+</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a><span class="sd">    For instance, when a scientist knows that all values considered in a given</span>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="sd">    experiment are scalars but a few of the values were not recorded or were</span>
+</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a><span class="sd">    lost.</span>
+</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">    This is done because, as it stands, NaN can represent anything even the</span>
+</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="sd">    result of an operation yielding infinity. But there is no float named &quot;IaN&quot;</span>
+</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="sd">    that would stand for &quot;Is a Number&quot;, where we know that the number is</span>
+</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a><span class="sd">    in R or N, but are missing its particular value.</span>
+</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a>
+</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a><span class="sd">    #TODO restore zeros from the series too not only the dataframe.</span>
+</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">    An example follows:</span>
+</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a>
+</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a><span class="sd">        &gt;&gt;&gt; one = &#39;&#39;&#39;    | W1   | W2   | W3</span>
+</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a><span class="sd">        &gt;&gt;&gt;           A  | 0.0  | 0.7  | NaN</span>
+</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a><span class="sd">        &gt;&gt;&gt;           B  | 0.1  | 1.0  | 1.0</span>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">        &gt;&gt;&gt;           C  | 0.2  | 0.8  | 0.49</span>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a><span class="sd">        &gt;&gt;&gt;           D  | 0.0  | 0.0  | 1.0  &#39;&#39;&#39;</span>
+</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a><span class="sd">        &gt;&gt;&gt;</span>
+</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a><span class="sd">        &gt;&gt;&gt; two = &#39;&#39;&#39;    | Y</span>
+</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a><span class="sd">        &gt;&gt;&gt;           W3 | 8.0</span>
+</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a><span class="sd">        &gt;&gt;&gt;           W1 | NaN</span>
+</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a><span class="sd">        &gt;&gt;&gt;           W2 | 9.0  &#39;&#39;&#39;</span>
+</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a><span class="sd">        &gt;&gt;&gt;</span>
+</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import string_to_df</span>
+</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a><span class="sd">        &gt;&gt;&gt; one = string_to_df(one, index_col=0)</span>
+</span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a><span class="sd">        &gt;&gt;&gt; two = string_to_df(two, index_col=0)</span>
+</span><span id="L-180"><a href="#L-180"><span class="linenos">180</span></a><span class="sd">        &gt;&gt;&gt;</span>
+</span><span id="L-181"><a href="#L-181"><span class="linenos">181</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import multiply_propagate_nan</span>
+</span><span id="L-182"><a href="#L-182"><span class="linenos">182</span></a><span class="sd">        &gt;&gt;&gt; print(multiply_propagate_nan(one, two[&#39;Y&#39;]))</span>
+</span><span id="L-183"><a href="#L-183"><span class="linenos">183</span></a>
+</span><span id="L-184"><a href="#L-184"><span class="linenos">184</span></a><span class="sd">                W1   W2    W3</span>
+</span><span id="L-185"><a href="#L-185"><span class="linenos">185</span></a><span class="sd">            A  0.0  6.3   NaN</span>
+</span><span id="L-186"><a href="#L-186"><span class="linenos">186</span></a><span class="sd">            B  NaN  9.0  8.00</span>
+</span><span id="L-187"><a href="#L-187"><span class="linenos">187</span></a><span class="sd">            C  NaN  7.2  3.92</span>
+</span><span id="L-188"><a href="#L-188"><span class="linenos">188</span></a><span class="sd">            D  0.0  0.0  8.00</span>
+</span><span id="L-189"><a href="#L-189"><span class="linenos">189</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-190"><a href="#L-190"><span class="linenos">190</span></a>    <span class="c1"># Multiply #</span>
+</span><span id="L-191"><a href="#L-191"><span class="linenos">191</span></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">df</span> <span class="o">*</span> <span class="n">series</span>
+</span><span id="L-192"><a href="#L-192"><span class="linenos">192</span></a>    <span class="c1"># Restore the zeros where they should be #</span>
+</span><span id="L-193"><a href="#L-193"><span class="linenos">193</span></a>    <span class="n">result</span><span class="p">[</span><span class="n">df</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="L-194"><a href="#L-194"><span class="linenos">194</span></a>    <span class="c1"># Return #</span>
+</span><span id="L-195"><a href="#L-195"><span class="linenos">195</span></a>    <span class="k">return</span> <span class="n">result</span>
 </span></pre></div>
 
 
@@ -285,11 +286,11 @@ Contact at <a href="www.sinclair.bio">www.sinclair.bio</a></p>
 
     </div>
     <a class="headerlink" href="#r_matrix_to_dataframe"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="r_matrix_to_dataframe-18"><a href="#r_matrix_to_dataframe-18"><span class="linenos">18</span></a><span class="k">def</span> <span class="nf">r_matrix_to_dataframe</span><span class="p">(</span><span class="n">matrix</span><span class="p">):</span>
-</span><span id="r_matrix_to_dataframe-19"><a href="#r_matrix_to_dataframe-19"><span class="linenos">19</span></a>    <span class="kn">import</span> <span class="nn">numpy</span>
-</span><span id="r_matrix_to_dataframe-20"><a href="#r_matrix_to_dataframe-20"><span class="linenos">20</span></a>    <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">colnames</span><span class="p">)</span>
-</span><span id="r_matrix_to_dataframe-21"><a href="#r_matrix_to_dataframe-21"><span class="linenos">21</span></a>    <span class="n">rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">rownames</span><span class="p">)</span>
-</span><span id="r_matrix_to_dataframe-22"><a href="#r_matrix_to_dataframe-22"><span class="linenos">22</span></a>    <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="r_matrix_to_dataframe-17"><a href="#r_matrix_to_dataframe-17"><span class="linenos">17</span></a><span class="k">def</span> <span class="nf">r_matrix_to_dataframe</span><span class="p">(</span><span class="n">matrix</span><span class="p">):</span>
+</span><span id="r_matrix_to_dataframe-18"><a href="#r_matrix_to_dataframe-18"><span class="linenos">18</span></a>    <span class="kn">import</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">pandas</span>
+</span><span id="r_matrix_to_dataframe-19"><a href="#r_matrix_to_dataframe-19"><span class="linenos">19</span></a>    <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">colnames</span><span class="p">)</span>
+</span><span id="r_matrix_to_dataframe-20"><a href="#r_matrix_to_dataframe-20"><span class="linenos">20</span></a>    <span class="n">rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">rownames</span><span class="p">)</span>
+</span><span id="r_matrix_to_dataframe-21"><a href="#r_matrix_to_dataframe-21"><span class="linenos">21</span></a>    <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -307,7 +308,8 @@ Contact at <a href="www.sinclair.bio">www.sinclair.bio</a></p>
 
     </div>
     <a class="headerlink" href="#pandas_df_to_r_df"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="pandas_df_to_r_df-25"><a href="#pandas_df_to_r_df-25"><span class="linenos">25</span></a><span class="k">def</span> <span class="nf">pandas_df_to_r_df</span><span class="p">(</span><span class="n">pandas_df</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="pandas_df_to_r_df-24"><a href="#pandas_df_to_r_df-24"><span class="linenos">24</span></a><span class="k">def</span> <span class="nf">pandas_df_to_r_df</span><span class="p">(</span><span class="n">pandas_df</span><span class="p">):</span>
+</span><span id="pandas_df_to_r_df-25"><a href="#pandas_df_to_r_df-25"><span class="linenos">25</span></a>    <span class="kn">import</span> <span class="nn">pandas</span>
 </span><span id="pandas_df_to_r_df-26"><a href="#pandas_df_to_r_df-26"><span class="linenos">26</span></a>    <span class="kn">from</span> <span class="nn">pandas.rpy.common</span> <span class="kn">import</span> <span class="n">convert_to_r_dataframe</span>
 </span><span id="pandas_df_to_r_df-27"><a href="#pandas_df_to_r_df-27"><span class="linenos">27</span></a>    <span class="k">return</span> <span class="n">convert_to_r_dataframe</span><span class="p">(</span><span class="n">pandas_df</span><span class="p">)</span>
 </span></pre></div>
@@ -421,9 +423,10 @@ Contact at <a href="www.sinclair.bio">www.sinclair.bio</a></p>
 </span><span id="string_to_df-89"><a href="#string_to_df-89"><span class="linenos">89</span></a><span class="sd">        1  For  w  3  3</span>
 </span><span id="string_to_df-90"><a href="#string_to_df-90"><span class="linenos">90</span></a><span class="sd">        2  For  w  4  4</span>
 </span><span id="string_to_df-91"><a href="#string_to_df-91"><span class="linenos">91</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="string_to_df-92"><a href="#string_to_df-92"><span class="linenos">92</span></a>    <span class="n">handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">))</span>
-</span><span id="string_to_df-93"><a href="#string_to_df-93"><span class="linenos">93</span></a>    <span class="n">df</span>     <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="string_to_df-94"><a href="#string_to_df-94"><span class="linenos">94</span></a>    <span class="k">return</span> <span class="n">df</span>
+</span><span id="string_to_df-92"><a href="#string_to_df-92"><span class="linenos">92</span></a>    <span class="kn">import</span> <span class="nn">pandas</span>
+</span><span id="string_to_df-93"><a href="#string_to_df-93"><span class="linenos">93</span></a>    <span class="n">handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">))</span>
+</span><span id="string_to_df-94"><a href="#string_to_df-94"><span class="linenos">94</span></a>    <span class="n">df</span>     <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="string_to_df-95"><a href="#string_to_df-95"><span class="linenos">95</span></a>    <span class="k">return</span> <span class="n">df</span>
 </span></pre></div>
 
 
@@ -459,47 +462,47 @@ Contact at <a href="www.sinclair.bio">www.sinclair.bio</a></p>
 
     </div>
     <a class="headerlink" href="#count_unique_index"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="count_unique_index-97"><a href="#count_unique_index-97"><span class="linenos"> 97</span></a><span class="k">def</span> <span class="nf">count_unique_index</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">):</span>
-</span><span id="count_unique_index-98"><a href="#count_unique_index-98"><span class="linenos"> 98</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="count_unique_index-99"><a href="#count_unique_index-99"><span class="linenos"> 99</span></a><span class="sd">    This function enables you to quickly see how many unique combinations of</span>
-</span><span id="count_unique_index-100"><a href="#count_unique_index-100"><span class="linenos">100</span></a><span class="sd">    column values exist in a data frame. Here are two examples:</span>
-</span><span id="count_unique_index-101"><a href="#count_unique_index-101"><span class="linenos">101</span></a>
-</span><span id="count_unique_index-102"><a href="#count_unique_index-102"><span class="linenos">102</span></a><span class="sd">        &gt;&gt;&gt; df = &#39;&#39;&#39; i   | A  | B | C</span>
-</span><span id="count_unique_index-103"><a href="#count_unique_index-103"><span class="linenos">103</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 1 | x</span>
-</span><span id="count_unique_index-104"><a href="#count_unique_index-104"><span class="linenos">104</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 2 | x</span>
-</span><span id="count_unique_index-105"><a href="#count_unique_index-105"><span class="linenos">105</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 3 | y &#39;&#39;&#39;</span>
-</span><span id="count_unique_index-106"><a href="#count_unique_index-106"><span class="linenos">106</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import string_to_df</span>
-</span><span id="count_unique_index-107"><a href="#count_unique_index-107"><span class="linenos">107</span></a><span class="sd">        &gt;&gt;&gt; df = string_to_df(df)</span>
-</span><span id="count_unique_index-108"><a href="#count_unique_index-108"><span class="linenos">108</span></a><span class="sd">        &gt;&gt;&gt; count_unique_index(df, by=[&#39;A&#39;, &#39;C&#39;])</span>
-</span><span id="count_unique_index-109"><a href="#count_unique_index-109"><span class="linenos">109</span></a>
-</span><span id="count_unique_index-110"><a href="#count_unique_index-110"><span class="linenos">110</span></a><span class="sd">           A  C  count</span>
-</span><span id="count_unique_index-111"><a href="#count_unique_index-111"><span class="linenos">111</span></a><span class="sd">        0  3  x      2</span>
-</span><span id="count_unique_index-112"><a href="#count_unique_index-112"><span class="linenos">112</span></a><span class="sd">        1  3  y      1</span>
-</span><span id="count_unique_index-113"><a href="#count_unique_index-113"><span class="linenos">113</span></a>
-</span><span id="count_unique_index-114"><a href="#count_unique_index-114"><span class="linenos">114</span></a><span class="sd">        &gt;&gt;&gt; import seaborn</span>
-</span><span id="count_unique_index-115"><a href="#count_unique_index-115"><span class="linenos">115</span></a><span class="sd">        &gt;&gt;&gt; tips = seaborn.load_dataset(&quot;tips&quot;)</span>
-</span><span id="count_unique_index-116"><a href="#count_unique_index-116"><span class="linenos">116</span></a><span class="sd">        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;]))</span>
-</span><span id="count_unique_index-117"><a href="#count_unique_index-117"><span class="linenos">117</span></a>
-</span><span id="count_unique_index-118"><a href="#count_unique_index-118"><span class="linenos">118</span></a><span class="sd">              sex smoker  count</span>
-</span><span id="count_unique_index-119"><a href="#count_unique_index-119"><span class="linenos">119</span></a><span class="sd">        0    Male    Yes     60</span>
-</span><span id="count_unique_index-120"><a href="#count_unique_index-120"><span class="linenos">120</span></a><span class="sd">        1    Male     No     97</span>
-</span><span id="count_unique_index-121"><a href="#count_unique_index-121"><span class="linenos">121</span></a><span class="sd">        2  Female    Yes     33</span>
-</span><span id="count_unique_index-122"><a href="#count_unique_index-122"><span class="linenos">122</span></a><span class="sd">        3  Female     No     54</span>
-</span><span id="count_unique_index-123"><a href="#count_unique_index-123"><span class="linenos">123</span></a>
-</span><span id="count_unique_index-124"><a href="#count_unique_index-124"><span class="linenos">124</span></a><span class="sd">        &gt;&gt;&gt; tips = seaborn.load_dataset(&quot;tips&quot;)</span>
-</span><span id="count_unique_index-125"><a href="#count_unique_index-125"><span class="linenos">125</span></a><span class="sd">        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;, &#39;day&#39;]))</span>
-</span><span id="count_unique_index-126"><a href="#count_unique_index-126"><span class="linenos">126</span></a>
-</span><span id="count_unique_index-127"><a href="#count_unique_index-127"><span class="linenos">127</span></a><span class="sd">              sex smoker    time  count</span>
-</span><span id="count_unique_index-128"><a href="#count_unique_index-128"><span class="linenos">128</span></a><span class="sd">        0    Male    Yes   Lunch     13</span>
-</span><span id="count_unique_index-129"><a href="#count_unique_index-129"><span class="linenos">129</span></a><span class="sd">        1    Male    Yes  Dinner     47</span>
-</span><span id="count_unique_index-130"><a href="#count_unique_index-130"><span class="linenos">130</span></a><span class="sd">        2    Male     No   Lunch     20</span>
-</span><span id="count_unique_index-131"><a href="#count_unique_index-131"><span class="linenos">131</span></a><span class="sd">        3    Male     No  Dinner     77</span>
-</span><span id="count_unique_index-132"><a href="#count_unique_index-132"><span class="linenos">132</span></a><span class="sd">        4  Female    Yes   Lunch     10</span>
-</span><span id="count_unique_index-133"><a href="#count_unique_index-133"><span class="linenos">133</span></a><span class="sd">        5  Female    Yes  Dinner     23</span>
-</span><span id="count_unique_index-134"><a href="#count_unique_index-134"><span class="linenos">134</span></a><span class="sd">        6  Female     No   Lunch     25</span>
-</span><span id="count_unique_index-135"><a href="#count_unique_index-135"><span class="linenos">135</span></a><span class="sd">        7  Female     No  Dinner     29</span>
-</span><span id="count_unique_index-136"><a href="#count_unique_index-136"><span class="linenos">136</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="count_unique_index-137"><a href="#count_unique_index-137"><span class="linenos">137</span></a>    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;count&#39;</span><span class="p">})</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="count_unique_index-98"><a href="#count_unique_index-98"><span class="linenos"> 98</span></a><span class="k">def</span> <span class="nf">count_unique_index</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">by</span><span class="p">):</span>
+</span><span id="count_unique_index-99"><a href="#count_unique_index-99"><span class="linenos"> 99</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="count_unique_index-100"><a href="#count_unique_index-100"><span class="linenos">100</span></a><span class="sd">    This function enables you to quickly see how many unique combinations of</span>
+</span><span id="count_unique_index-101"><a href="#count_unique_index-101"><span class="linenos">101</span></a><span class="sd">    column values exist in a data frame. Here are two examples:</span>
+</span><span id="count_unique_index-102"><a href="#count_unique_index-102"><span class="linenos">102</span></a>
+</span><span id="count_unique_index-103"><a href="#count_unique_index-103"><span class="linenos">103</span></a><span class="sd">        &gt;&gt;&gt; df = &#39;&#39;&#39; i   | A  | B | C</span>
+</span><span id="count_unique_index-104"><a href="#count_unique_index-104"><span class="linenos">104</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 1 | x</span>
+</span><span id="count_unique_index-105"><a href="#count_unique_index-105"><span class="linenos">105</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 2 | x</span>
+</span><span id="count_unique_index-106"><a href="#count_unique_index-106"><span class="linenos">106</span></a><span class="sd">        &gt;&gt;&gt;          For | 3  | 3 | y &#39;&#39;&#39;</span>
+</span><span id="count_unique_index-107"><a href="#count_unique_index-107"><span class="linenos">107</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import string_to_df</span>
+</span><span id="count_unique_index-108"><a href="#count_unique_index-108"><span class="linenos">108</span></a><span class="sd">        &gt;&gt;&gt; df = string_to_df(df)</span>
+</span><span id="count_unique_index-109"><a href="#count_unique_index-109"><span class="linenos">109</span></a><span class="sd">        &gt;&gt;&gt; count_unique_index(df, by=[&#39;A&#39;, &#39;C&#39;])</span>
+</span><span id="count_unique_index-110"><a href="#count_unique_index-110"><span class="linenos">110</span></a>
+</span><span id="count_unique_index-111"><a href="#count_unique_index-111"><span class="linenos">111</span></a><span class="sd">           A  C  count</span>
+</span><span id="count_unique_index-112"><a href="#count_unique_index-112"><span class="linenos">112</span></a><span class="sd">        0  3  x      2</span>
+</span><span id="count_unique_index-113"><a href="#count_unique_index-113"><span class="linenos">113</span></a><span class="sd">        1  3  y      1</span>
+</span><span id="count_unique_index-114"><a href="#count_unique_index-114"><span class="linenos">114</span></a>
+</span><span id="count_unique_index-115"><a href="#count_unique_index-115"><span class="linenos">115</span></a><span class="sd">        &gt;&gt;&gt; import seaborn</span>
+</span><span id="count_unique_index-116"><a href="#count_unique_index-116"><span class="linenos">116</span></a><span class="sd">        &gt;&gt;&gt; tips = seaborn.load_dataset(&quot;tips&quot;)</span>
+</span><span id="count_unique_index-117"><a href="#count_unique_index-117"><span class="linenos">117</span></a><span class="sd">        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;]))</span>
+</span><span id="count_unique_index-118"><a href="#count_unique_index-118"><span class="linenos">118</span></a>
+</span><span id="count_unique_index-119"><a href="#count_unique_index-119"><span class="linenos">119</span></a><span class="sd">              sex smoker  count</span>
+</span><span id="count_unique_index-120"><a href="#count_unique_index-120"><span class="linenos">120</span></a><span class="sd">        0    Male    Yes     60</span>
+</span><span id="count_unique_index-121"><a href="#count_unique_index-121"><span class="linenos">121</span></a><span class="sd">        1    Male     No     97</span>
+</span><span id="count_unique_index-122"><a href="#count_unique_index-122"><span class="linenos">122</span></a><span class="sd">        2  Female    Yes     33</span>
+</span><span id="count_unique_index-123"><a href="#count_unique_index-123"><span class="linenos">123</span></a><span class="sd">        3  Female     No     54</span>
+</span><span id="count_unique_index-124"><a href="#count_unique_index-124"><span class="linenos">124</span></a>
+</span><span id="count_unique_index-125"><a href="#count_unique_index-125"><span class="linenos">125</span></a><span class="sd">        &gt;&gt;&gt; tips = seaborn.load_dataset(&quot;tips&quot;)</span>
+</span><span id="count_unique_index-126"><a href="#count_unique_index-126"><span class="linenos">126</span></a><span class="sd">        &gt;&gt;&gt; print(count_unique_index(tips, [&#39;sex&#39;, &#39;smoker&#39;, &#39;day&#39;]))</span>
+</span><span id="count_unique_index-127"><a href="#count_unique_index-127"><span class="linenos">127</span></a>
+</span><span id="count_unique_index-128"><a href="#count_unique_index-128"><span class="linenos">128</span></a><span class="sd">              sex smoker    time  count</span>
+</span><span id="count_unique_index-129"><a href="#count_unique_index-129"><span class="linenos">129</span></a><span class="sd">        0    Male    Yes   Lunch     13</span>
+</span><span id="count_unique_index-130"><a href="#count_unique_index-130"><span class="linenos">130</span></a><span class="sd">        1    Male    Yes  Dinner     47</span>
+</span><span id="count_unique_index-131"><a href="#count_unique_index-131"><span class="linenos">131</span></a><span class="sd">        2    Male     No   Lunch     20</span>
+</span><span id="count_unique_index-132"><a href="#count_unique_index-132"><span class="linenos">132</span></a><span class="sd">        3    Male     No  Dinner     77</span>
+</span><span id="count_unique_index-133"><a href="#count_unique_index-133"><span class="linenos">133</span></a><span class="sd">        4  Female    Yes   Lunch     10</span>
+</span><span id="count_unique_index-134"><a href="#count_unique_index-134"><span class="linenos">134</span></a><span class="sd">        5  Female    Yes  Dinner     23</span>
+</span><span id="count_unique_index-135"><a href="#count_unique_index-135"><span class="linenos">135</span></a><span class="sd">        6  Female     No   Lunch     25</span>
+</span><span id="count_unique_index-136"><a href="#count_unique_index-136"><span class="linenos">136</span></a><span class="sd">        7  Female     No  Dinner     29</span>
+</span><span id="count_unique_index-137"><a href="#count_unique_index-137"><span class="linenos">137</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="count_unique_index-138"><a href="#count_unique_index-138"><span class="linenos">138</span></a>    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;count&#39;</span><span class="p">})</span>
 </span></pre></div>
 
 
@@ -556,62 +559,62 @@ column values exist in a data frame. Here are two examples:</p>
 
     </div>
     <a class="headerlink" href="#multiply_propagate_nan"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="multiply_propagate_nan-140"><a href="#multiply_propagate_nan-140"><span class="linenos">140</span></a><span class="k">def</span> <span class="nf">multiply_propagate_nan</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">series</span><span class="p">):</span>
-</span><span id="multiply_propagate_nan-141"><a href="#multiply_propagate_nan-141"><span class="linenos">141</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="multiply_propagate_nan-142"><a href="#multiply_propagate_nan-142"><span class="linenos">142</span></a><span class="sd">    This function enables you to multiply a dataframe by a series with &#39;smart&#39;</span>
-</span><span id="multiply_propagate_nan-143"><a href="#multiply_propagate_nan-143"><span class="linenos">143</span></a><span class="sd">    propagation of NaN values.</span>
-</span><span id="multiply_propagate_nan-144"><a href="#multiply_propagate_nan-144"><span class="linenos">144</span></a>
-</span><span id="multiply_propagate_nan-145"><a href="#multiply_propagate_nan-145"><span class="linenos">145</span></a><span class="sd">    We implement a simple rule where:</span>
-</span><span id="multiply_propagate_nan-146"><a href="#multiply_propagate_nan-146"><span class="linenos">146</span></a>
-</span><span id="multiply_propagate_nan-147"><a href="#multiply_propagate_nan-147"><span class="linenos">147</span></a><span class="sd">        x * NaN = NaN | ∀x≠0</span>
-</span><span id="multiply_propagate_nan-148"><a href="#multiply_propagate_nan-148"><span class="linenos">148</span></a><span class="sd">        0 * NaN = 0</span>
-</span><span id="multiply_propagate_nan-149"><a href="#multiply_propagate_nan-149"><span class="linenos">149</span></a>
-</span><span id="multiply_propagate_nan-150"><a href="#multiply_propagate_nan-150"><span class="linenos">150</span></a><span class="sd">    In essence, multipling a NaN with a zero will yield a zero and multipling</span>
-</span><span id="multiply_propagate_nan-151"><a href="#multiply_propagate_nan-151"><span class="linenos">151</span></a><span class="sd">    a NaN with anything else will yield a NaN.</span>
-</span><span id="multiply_propagate_nan-152"><a href="#multiply_propagate_nan-152"><span class="linenos">152</span></a><span class="sd">    This is usefull in some scenarios where NaN simply indicates a missing</span>
-</span><span id="multiply_propagate_nan-153"><a href="#multiply_propagate_nan-153"><span class="linenos">153</span></a><span class="sd">    value in a dataset, which is known to be a dataset of real numbers.</span>
-</span><span id="multiply_propagate_nan-154"><a href="#multiply_propagate_nan-154"><span class="linenos">154</span></a><span class="sd">    For instance, when a scientist knows that all values considered in a given</span>
-</span><span id="multiply_propagate_nan-155"><a href="#multiply_propagate_nan-155"><span class="linenos">155</span></a><span class="sd">    experiment are scalars but a few of the values were not recorded or were</span>
-</span><span id="multiply_propagate_nan-156"><a href="#multiply_propagate_nan-156"><span class="linenos">156</span></a><span class="sd">    lost.</span>
-</span><span id="multiply_propagate_nan-157"><a href="#multiply_propagate_nan-157"><span class="linenos">157</span></a><span class="sd">    This is done because, as it stands, NaN can represent anything even the</span>
-</span><span id="multiply_propagate_nan-158"><a href="#multiply_propagate_nan-158"><span class="linenos">158</span></a><span class="sd">    result of an operation yielding infinity. But there is no float named &quot;IaN&quot;</span>
-</span><span id="multiply_propagate_nan-159"><a href="#multiply_propagate_nan-159"><span class="linenos">159</span></a><span class="sd">    that would stand for &quot;Is a Number&quot;, where we know that the number is</span>
-</span><span id="multiply_propagate_nan-160"><a href="#multiply_propagate_nan-160"><span class="linenos">160</span></a><span class="sd">    in R or N, but are missing its particular value.</span>
-</span><span id="multiply_propagate_nan-161"><a href="#multiply_propagate_nan-161"><span class="linenos">161</span></a>
-</span><span id="multiply_propagate_nan-162"><a href="#multiply_propagate_nan-162"><span class="linenos">162</span></a><span class="sd">    #TODO restore zeros from the series too not only the dataframe.</span>
-</span><span id="multiply_propagate_nan-163"><a href="#multiply_propagate_nan-163"><span class="linenos">163</span></a>
-</span><span id="multiply_propagate_nan-164"><a href="#multiply_propagate_nan-164"><span class="linenos">164</span></a><span class="sd">    An example follows:</span>
-</span><span id="multiply_propagate_nan-165"><a href="#multiply_propagate_nan-165"><span class="linenos">165</span></a>
-</span><span id="multiply_propagate_nan-166"><a href="#multiply_propagate_nan-166"><span class="linenos">166</span></a><span class="sd">        &gt;&gt;&gt; one = &#39;&#39;&#39;    | W1   | W2   | W3</span>
-</span><span id="multiply_propagate_nan-167"><a href="#multiply_propagate_nan-167"><span class="linenos">167</span></a><span class="sd">        &gt;&gt;&gt;           A  | 0.0  | 0.7  | NaN</span>
-</span><span id="multiply_propagate_nan-168"><a href="#multiply_propagate_nan-168"><span class="linenos">168</span></a><span class="sd">        &gt;&gt;&gt;           B  | 0.1  | 1.0  | 1.0</span>
-</span><span id="multiply_propagate_nan-169"><a href="#multiply_propagate_nan-169"><span class="linenos">169</span></a><span class="sd">        &gt;&gt;&gt;           C  | 0.2  | 0.8  | 0.49</span>
-</span><span id="multiply_propagate_nan-170"><a href="#multiply_propagate_nan-170"><span class="linenos">170</span></a><span class="sd">        &gt;&gt;&gt;           D  | 0.0  | 0.0  | 1.0  &#39;&#39;&#39;</span>
-</span><span id="multiply_propagate_nan-171"><a href="#multiply_propagate_nan-171"><span class="linenos">171</span></a><span class="sd">        &gt;&gt;&gt;</span>
-</span><span id="multiply_propagate_nan-172"><a href="#multiply_propagate_nan-172"><span class="linenos">172</span></a><span class="sd">        &gt;&gt;&gt; two = &#39;&#39;&#39;    | Y</span>
-</span><span id="multiply_propagate_nan-173"><a href="#multiply_propagate_nan-173"><span class="linenos">173</span></a><span class="sd">        &gt;&gt;&gt;           W3 | 8.0</span>
-</span><span id="multiply_propagate_nan-174"><a href="#multiply_propagate_nan-174"><span class="linenos">174</span></a><span class="sd">        &gt;&gt;&gt;           W1 | NaN</span>
-</span><span id="multiply_propagate_nan-175"><a href="#multiply_propagate_nan-175"><span class="linenos">175</span></a><span class="sd">        &gt;&gt;&gt;           W2 | 9.0  &#39;&#39;&#39;</span>
-</span><span id="multiply_propagate_nan-176"><a href="#multiply_propagate_nan-176"><span class="linenos">176</span></a><span class="sd">        &gt;&gt;&gt;</span>
-</span><span id="multiply_propagate_nan-177"><a href="#multiply_propagate_nan-177"><span class="linenos">177</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import string_to_df</span>
-</span><span id="multiply_propagate_nan-178"><a href="#multiply_propagate_nan-178"><span class="linenos">178</span></a><span class="sd">        &gt;&gt;&gt; one = string_to_df(one, index_col=0)</span>
-</span><span id="multiply_propagate_nan-179"><a href="#multiply_propagate_nan-179"><span class="linenos">179</span></a><span class="sd">        &gt;&gt;&gt; two = string_to_df(two, index_col=0)</span>
-</span><span id="multiply_propagate_nan-180"><a href="#multiply_propagate_nan-180"><span class="linenos">180</span></a><span class="sd">        &gt;&gt;&gt;</span>
-</span><span id="multiply_propagate_nan-181"><a href="#multiply_propagate_nan-181"><span class="linenos">181</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import multiply_propagate_nan</span>
-</span><span id="multiply_propagate_nan-182"><a href="#multiply_propagate_nan-182"><span class="linenos">182</span></a><span class="sd">        &gt;&gt;&gt; print(multiply_propagate_nan(one, two[&#39;Y&#39;]))</span>
-</span><span id="multiply_propagate_nan-183"><a href="#multiply_propagate_nan-183"><span class="linenos">183</span></a>
-</span><span id="multiply_propagate_nan-184"><a href="#multiply_propagate_nan-184"><span class="linenos">184</span></a><span class="sd">                W1   W2    W3</span>
-</span><span id="multiply_propagate_nan-185"><a href="#multiply_propagate_nan-185"><span class="linenos">185</span></a><span class="sd">            A  0.0  6.3   NaN</span>
-</span><span id="multiply_propagate_nan-186"><a href="#multiply_propagate_nan-186"><span class="linenos">186</span></a><span class="sd">            B  NaN  9.0  8.00</span>
-</span><span id="multiply_propagate_nan-187"><a href="#multiply_propagate_nan-187"><span class="linenos">187</span></a><span class="sd">            C  NaN  7.2  3.92</span>
-</span><span id="multiply_propagate_nan-188"><a href="#multiply_propagate_nan-188"><span class="linenos">188</span></a><span class="sd">            D  0.0  0.0  8.00</span>
-</span><span id="multiply_propagate_nan-189"><a href="#multiply_propagate_nan-189"><span class="linenos">189</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="multiply_propagate_nan-190"><a href="#multiply_propagate_nan-190"><span class="linenos">190</span></a>    <span class="c1"># Multiply #</span>
-</span><span id="multiply_propagate_nan-191"><a href="#multiply_propagate_nan-191"><span class="linenos">191</span></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">df</span> <span class="o">*</span> <span class="n">series</span>
-</span><span id="multiply_propagate_nan-192"><a href="#multiply_propagate_nan-192"><span class="linenos">192</span></a>    <span class="c1"># Restore the zeros where they should be #</span>
-</span><span id="multiply_propagate_nan-193"><a href="#multiply_propagate_nan-193"><span class="linenos">193</span></a>    <span class="n">result</span><span class="p">[</span><span class="n">df</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span id="multiply_propagate_nan-194"><a href="#multiply_propagate_nan-194"><span class="linenos">194</span></a>    <span class="c1"># Return #</span>
-</span><span id="multiply_propagate_nan-195"><a href="#multiply_propagate_nan-195"><span class="linenos">195</span></a>    <span class="k">return</span> <span class="n">result</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="multiply_propagate_nan-141"><a href="#multiply_propagate_nan-141"><span class="linenos">141</span></a><span class="k">def</span> <span class="nf">multiply_propagate_nan</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">series</span><span class="p">):</span>
+</span><span id="multiply_propagate_nan-142"><a href="#multiply_propagate_nan-142"><span class="linenos">142</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="multiply_propagate_nan-143"><a href="#multiply_propagate_nan-143"><span class="linenos">143</span></a><span class="sd">    This function enables you to multiply a dataframe by a series with &#39;smart&#39;</span>
+</span><span id="multiply_propagate_nan-144"><a href="#multiply_propagate_nan-144"><span class="linenos">144</span></a><span class="sd">    propagation of NaN values.</span>
+</span><span id="multiply_propagate_nan-145"><a href="#multiply_propagate_nan-145"><span class="linenos">145</span></a>
+</span><span id="multiply_propagate_nan-146"><a href="#multiply_propagate_nan-146"><span class="linenos">146</span></a><span class="sd">    We implement a simple rule where:</span>
+</span><span id="multiply_propagate_nan-147"><a href="#multiply_propagate_nan-147"><span class="linenos">147</span></a>
+</span><span id="multiply_propagate_nan-148"><a href="#multiply_propagate_nan-148"><span class="linenos">148</span></a><span class="sd">        x * NaN = NaN | ∀x≠0</span>
+</span><span id="multiply_propagate_nan-149"><a href="#multiply_propagate_nan-149"><span class="linenos">149</span></a><span class="sd">        0 * NaN = 0</span>
+</span><span id="multiply_propagate_nan-150"><a href="#multiply_propagate_nan-150"><span class="linenos">150</span></a>
+</span><span id="multiply_propagate_nan-151"><a href="#multiply_propagate_nan-151"><span class="linenos">151</span></a><span class="sd">    In essence, multipling a NaN with a zero will yield a zero and multipling</span>
+</span><span id="multiply_propagate_nan-152"><a href="#multiply_propagate_nan-152"><span class="linenos">152</span></a><span class="sd">    a NaN with anything else will yield a NaN.</span>
+</span><span id="multiply_propagate_nan-153"><a href="#multiply_propagate_nan-153"><span class="linenos">153</span></a><span class="sd">    This is usefull in some scenarios where NaN simply indicates a missing</span>
+</span><span id="multiply_propagate_nan-154"><a href="#multiply_propagate_nan-154"><span class="linenos">154</span></a><span class="sd">    value in a dataset, which is known to be a dataset of real numbers.</span>
+</span><span id="multiply_propagate_nan-155"><a href="#multiply_propagate_nan-155"><span class="linenos">155</span></a><span class="sd">    For instance, when a scientist knows that all values considered in a given</span>
+</span><span id="multiply_propagate_nan-156"><a href="#multiply_propagate_nan-156"><span class="linenos">156</span></a><span class="sd">    experiment are scalars but a few of the values were not recorded or were</span>
+</span><span id="multiply_propagate_nan-157"><a href="#multiply_propagate_nan-157"><span class="linenos">157</span></a><span class="sd">    lost.</span>
+</span><span id="multiply_propagate_nan-158"><a href="#multiply_propagate_nan-158"><span class="linenos">158</span></a><span class="sd">    This is done because, as it stands, NaN can represent anything even the</span>
+</span><span id="multiply_propagate_nan-159"><a href="#multiply_propagate_nan-159"><span class="linenos">159</span></a><span class="sd">    result of an operation yielding infinity. But there is no float named &quot;IaN&quot;</span>
+</span><span id="multiply_propagate_nan-160"><a href="#multiply_propagate_nan-160"><span class="linenos">160</span></a><span class="sd">    that would stand for &quot;Is a Number&quot;, where we know that the number is</span>
+</span><span id="multiply_propagate_nan-161"><a href="#multiply_propagate_nan-161"><span class="linenos">161</span></a><span class="sd">    in R or N, but are missing its particular value.</span>
+</span><span id="multiply_propagate_nan-162"><a href="#multiply_propagate_nan-162"><span class="linenos">162</span></a>
+</span><span id="multiply_propagate_nan-163"><a href="#multiply_propagate_nan-163"><span class="linenos">163</span></a><span class="sd">    #TODO restore zeros from the series too not only the dataframe.</span>
+</span><span id="multiply_propagate_nan-164"><a href="#multiply_propagate_nan-164"><span class="linenos">164</span></a>
+</span><span id="multiply_propagate_nan-165"><a href="#multiply_propagate_nan-165"><span class="linenos">165</span></a><span class="sd">    An example follows:</span>
+</span><span id="multiply_propagate_nan-166"><a href="#multiply_propagate_nan-166"><span class="linenos">166</span></a>
+</span><span id="multiply_propagate_nan-167"><a href="#multiply_propagate_nan-167"><span class="linenos">167</span></a><span class="sd">        &gt;&gt;&gt; one = &#39;&#39;&#39;    | W1   | W2   | W3</span>
+</span><span id="multiply_propagate_nan-168"><a href="#multiply_propagate_nan-168"><span class="linenos">168</span></a><span class="sd">        &gt;&gt;&gt;           A  | 0.0  | 0.7  | NaN</span>
+</span><span id="multiply_propagate_nan-169"><a href="#multiply_propagate_nan-169"><span class="linenos">169</span></a><span class="sd">        &gt;&gt;&gt;           B  | 0.1  | 1.0  | 1.0</span>
+</span><span id="multiply_propagate_nan-170"><a href="#multiply_propagate_nan-170"><span class="linenos">170</span></a><span class="sd">        &gt;&gt;&gt;           C  | 0.2  | 0.8  | 0.49</span>
+</span><span id="multiply_propagate_nan-171"><a href="#multiply_propagate_nan-171"><span class="linenos">171</span></a><span class="sd">        &gt;&gt;&gt;           D  | 0.0  | 0.0  | 1.0  &#39;&#39;&#39;</span>
+</span><span id="multiply_propagate_nan-172"><a href="#multiply_propagate_nan-172"><span class="linenos">172</span></a><span class="sd">        &gt;&gt;&gt;</span>
+</span><span id="multiply_propagate_nan-173"><a href="#multiply_propagate_nan-173"><span class="linenos">173</span></a><span class="sd">        &gt;&gt;&gt; two = &#39;&#39;&#39;    | Y</span>
+</span><span id="multiply_propagate_nan-174"><a href="#multiply_propagate_nan-174"><span class="linenos">174</span></a><span class="sd">        &gt;&gt;&gt;           W3 | 8.0</span>
+</span><span id="multiply_propagate_nan-175"><a href="#multiply_propagate_nan-175"><span class="linenos">175</span></a><span class="sd">        &gt;&gt;&gt;           W1 | NaN</span>
+</span><span id="multiply_propagate_nan-176"><a href="#multiply_propagate_nan-176"><span class="linenos">176</span></a><span class="sd">        &gt;&gt;&gt;           W2 | 9.0  &#39;&#39;&#39;</span>
+</span><span id="multiply_propagate_nan-177"><a href="#multiply_propagate_nan-177"><span class="linenos">177</span></a><span class="sd">        &gt;&gt;&gt;</span>
+</span><span id="multiply_propagate_nan-178"><a href="#multiply_propagate_nan-178"><span class="linenos">178</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import string_to_df</span>
+</span><span id="multiply_propagate_nan-179"><a href="#multiply_propagate_nan-179"><span class="linenos">179</span></a><span class="sd">        &gt;&gt;&gt; one = string_to_df(one, index_col=0)</span>
+</span><span id="multiply_propagate_nan-180"><a href="#multiply_propagate_nan-180"><span class="linenos">180</span></a><span class="sd">        &gt;&gt;&gt; two = string_to_df(two, index_col=0)</span>
+</span><span id="multiply_propagate_nan-181"><a href="#multiply_propagate_nan-181"><span class="linenos">181</span></a><span class="sd">        &gt;&gt;&gt;</span>
+</span><span id="multiply_propagate_nan-182"><a href="#multiply_propagate_nan-182"><span class="linenos">182</span></a><span class="sd">        &gt;&gt;&gt; from plumbing.dataframes import multiply_propagate_nan</span>
+</span><span id="multiply_propagate_nan-183"><a href="#multiply_propagate_nan-183"><span class="linenos">183</span></a><span class="sd">        &gt;&gt;&gt; print(multiply_propagate_nan(one, two[&#39;Y&#39;]))</span>
+</span><span id="multiply_propagate_nan-184"><a href="#multiply_propagate_nan-184"><span class="linenos">184</span></a>
+</span><span id="multiply_propagate_nan-185"><a href="#multiply_propagate_nan-185"><span class="linenos">185</span></a><span class="sd">                W1   W2    W3</span>
+</span><span id="multiply_propagate_nan-186"><a href="#multiply_propagate_nan-186"><span class="linenos">186</span></a><span class="sd">            A  0.0  6.3   NaN</span>
+</span><span id="multiply_propagate_nan-187"><a href="#multiply_propagate_nan-187"><span class="linenos">187</span></a><span class="sd">            B  NaN  9.0  8.00</span>
+</span><span id="multiply_propagate_nan-188"><a href="#multiply_propagate_nan-188"><span class="linenos">188</span></a><span class="sd">            C  NaN  7.2  3.92</span>
+</span><span id="multiply_propagate_nan-189"><a href="#multiply_propagate_nan-189"><span class="linenos">189</span></a><span class="sd">            D  0.0  0.0  8.00</span>
+</span><span id="multiply_propagate_nan-190"><a href="#multiply_propagate_nan-190"><span class="linenos">190</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="multiply_propagate_nan-191"><a href="#multiply_propagate_nan-191"><span class="linenos">191</span></a>    <span class="c1"># Multiply #</span>
+</span><span id="multiply_propagate_nan-192"><a href="#multiply_propagate_nan-192"><span class="linenos">192</span></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">df</span> <span class="o">*</span> <span class="n">series</span>
+</span><span id="multiply_propagate_nan-193"><a href="#multiply_propagate_nan-193"><span class="linenos">193</span></a>    <span class="c1"># Restore the zeros where they should be #</span>
+</span><span id="multiply_propagate_nan-194"><a href="#multiply_propagate_nan-194"><span class="linenos">194</span></a>    <span class="n">result</span><span class="p">[</span><span class="n">df</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="multiply_propagate_nan-195"><a href="#multiply_propagate_nan-195"><span class="linenos">195</span></a>    <span class="c1"># Return #</span>
+</span><span id="multiply_propagate_nan-196"><a href="#multiply_propagate_nan-196"><span class="linenos">196</span></a>    <span class="k">return</span> <span class="n">result</span>
 </span></pre></div>
 
 
