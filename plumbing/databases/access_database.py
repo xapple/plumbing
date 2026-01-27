@@ -20,9 +20,6 @@ from plumbing.databases.sqlite_database import SQLiteDatabase
 from autopaths.file_path import FilePath
 from autopaths.tmp_path  import new_temp_path
 
-# Third party modules #
-import pandas
-
 ###############################################################################
 class AccessDatabase(FilePath):
     """
@@ -175,6 +172,7 @@ class AccessDatabase(FilePath):
     def table_as_df_via_query(self, table_name):
         """Use an SQL query to create the dataframe."""
         query = "SELECT * FROM `%s`" % table_name.lower()
+        import pandas
         return pandas.read_sql(query, self.own_conn)
 
     def table_as_df_via_mdbtools(self, table_name, *args, **kwargs):
@@ -182,6 +180,7 @@ class AccessDatabase(FilePath):
         import subprocess
         cmd = ['mdb-export', self.path, table_name]
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        import pandas
         return pandas.read_csv(proc.stdout, *args, **kwargs)
 
     def insert_df(self, table_name, df):

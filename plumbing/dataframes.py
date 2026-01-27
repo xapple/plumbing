@@ -11,17 +11,17 @@ Contact at www.sinclair.bio
 from io import StringIO
 
 # Third party modules #
-import pandas
 
 ###############################################################################
 def r_matrix_to_dataframe(matrix):
-    import numpy
+    import numpy, pandas
     cols = list(matrix.colnames)
     rows = list(matrix.rownames)
     return pandas.DataFrame(numpy.array(matrix), index=rows, columns=cols)
 
 ###############################################################################
 def pandas_df_to_r_df(pandas_df):
+    import pandas
     from pandas.rpy.common import convert_to_r_dataframe
     return convert_to_r_dataframe(pandas_df)
 
@@ -88,6 +88,7 @@ def string_to_df(string, **kwargs):
         1  For  w  3  3
         2  For  w  4  4
     """
+    import pandas
     handle = StringIO(string.replace(' ',''))
     df     = pandas.read_csv(handle, sep="|", header=0, **kwargs)
     return df

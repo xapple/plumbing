@@ -16,9 +16,6 @@ from plumbing.cache      import property_cached
 from plumbing.scraping   import download_from_url
 from autopaths.file_path import FilePath
 
-# Third party modules #
-import pandas
-
 ###############################################################################
 class SQLiteDatabase(FilePath):
     """A wrapper for an SQLite3 database."""
@@ -384,6 +381,7 @@ class SQLiteDatabase(FilePath):
         # Make the query to avoid SQLAlchemy dependency #
         query = 'SELECT * FROM "%s";' % table
         # Call pandas function #
+        import pandas
         return pandas.read_sql_query(query, con = self.own_connection)
 
     # ----------------------------- Unfinished ------------------------------ #
@@ -419,5 +417,6 @@ class SQLiteDatabase(FilePath):
     def import_table(self, source, table_name):
         """Copy a table from another SQLite database to this one."""
         query = "SELECT * FROM `%s`" % table_name.lower()
+        import pandas
         df = pandas.read_sql(query, source.connection)
         df.to_sql(table_name, con=self.own_connection)
