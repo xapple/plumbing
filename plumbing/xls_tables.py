@@ -10,9 +10,6 @@ Contact at www.sinclair.bio
 # First party modules #
 from autopaths import Path
 
-# Third party modules #
-import pandas
-
 # Internal modules #
 from plumbing.cache import property_cached
 
@@ -57,6 +54,8 @@ class MultiDataFrameXLS:
         """
         Write several dataframes, to several excel sheets.
         """
+        # Imports #
+        import pandas
         # Create path if not exists #
         self.path.directory.create_if_not_exists()
         # Create a writer #
@@ -78,6 +77,8 @@ class MultiDataFrameXLS:
         It will append a custom title before hand for each
         dataframe.
         """
+        # Imports #
+        import pandas
         # Get sheet #
         sheet = self.writer.sheets[key]
         # Get dataframes #
@@ -134,10 +135,12 @@ class ConvertExcelToCSV:
     @property_cached
     def handle(self):
         """Pandas handle to the excel file."""
+        import pandas
         return pandas.ExcelFile(str(self.source))
 
     def mono_sheet(self):
         """Supports only one work sheet per file."""
+        import pandas
         xls = pandas.read_excel(str(self.source))
         xls.to_csv(str(self.dest), **self.kwargs)
 
@@ -147,6 +150,8 @@ class ConvertExcelToCSV:
         Will concatenate sheets together by adding an extra column
         containing the original sheet name.
         """
+        # Imports #
+        import pandas
         # Initialize #
         all_sheets = []
         # Loop #

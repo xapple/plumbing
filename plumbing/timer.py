@@ -9,7 +9,6 @@ Contact at www.sinclair.bio
 
 # Built-in modules #
 from datetime import datetime
-import tzlocal
 
 # Internal modules #
 from plumbing.cache import property_cached
@@ -44,6 +43,7 @@ class Timer(object):
         return time.strftime(self.format)
 
     def __init__(self, msg=None):
+        import tzlocal
         self.time_zone  = tzlocal.get_localzone()
         self.start_time = self.get_now()
         self.last_mark  = self.get_now()
